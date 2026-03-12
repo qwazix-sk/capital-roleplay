@@ -1,531 +1,1433 @@
 ---
+const storeUrl = "https://your-tebex-store-link.tebex.io";
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capital Roleplay</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capital Roleplay — Serious UK FiveM Roleplay</title>
+    <meta
+      name="description"
+      content="Capital Roleplay is a serious whitelisted FiveM roleplay server based in the United Kingdom, built around custom assets, premium systems, and immersive storytelling."
+    />
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0a0f;
-      color: #e2e8f0;
-      min-height: 100vh;
-    }
+      :root {
+        --bg: #061019;
+        --bg-soft: #0b1624;
+        --panel: rgba(255, 255, 255, 0.045);
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #f4f8ff;
+        --muted: #9db0c6;
+        --muted-strong: #c4d2e3;
+        --primary: #00aeff;
+        --primary-soft: rgba(0, 174, 255, 0.16);
+        --primary-glow: rgba(0, 174, 255, 0.34);
+        --shadow: 0 10px 40px rgba(0, 0, 0, 0.34);
+        --radius: 24px;
+        --radius-sm: 18px;
+        --max: 1200px;
+        --transition: 280ms cubic-bezier(.2,.8,.2,1);
+      }
 
-    /* NAV */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 64px;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #fff;
-      text-decoration: none;
-    }
-    .nav-logo img {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-    .nav-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #fff; }
-    .nav-cta {
-      background: #1d8cf8;
-      color: #fff !important;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-weight: 600 !important;
-      font-size: 0.85rem !important;
-      transition: background 0.2s !important;
-    }
-    .nav-cta:hover { background: #1a7de0 !important; color: #fff !important; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    /* HERO */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 100px 2rem 80px;
-      background: radial-gradient(ellipse at 50% 0%, rgba(29,140,248,0.15) 0%, transparent 70%);
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(29,140,248,0.1);
-      border: 1px solid rgba(29,140,248,0.3);
-      color: #1d8cf8;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 999px;
-      margin-bottom: 24px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 20px;
-    }
-    .hero h1 span { color: #1d8cf8; }
-    .hero p {
-      font-size: 1.15rem;
-      color: #94a3b8;
-      max-width: 540px;
-      line-height: 1.7;
-      margin-bottom: 36px;
-    }
-    .hero-buttons {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn-primary {
-      background: #1d8cf8;
-      color: #fff;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-primary:hover { background: #1a7de0; transform: translateY(-1px); }
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: #e2e8f0;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
+      html {
+        scroll-behavior: smooth;
+      }
 
-    /* STATS BAR */
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
-      padding: 32px 2rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-    }
-    .stat { text-align: center; }
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #fff;
-    }
-    .stat-label {
-      font-size: 0.8rem;
-      color: #64748b;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-top: 2px;
-    }
+      body {
+        font-family: "Inter", sans-serif;
+        background:
+          radial-gradient(circle at 15% 15%, rgba(0, 174, 255, 0.14), transparent 22%),
+          radial-gradient(circle at 85% 10%, rgba(0, 174, 255, 0.1), transparent 18%),
+          radial-gradient(circle at 50% 100%, rgba(0, 174, 255, 0.08), transparent 30%),
+          linear-gradient(180deg, #07111a 0%, #050b12 100%);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
 
-    /* SECTIONS */
-    section {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 80px 2rem;
-    }
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #1d8cf8;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 10px;
-    }
-    section h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 14px;
-    }
-    section > p {
-      color: #94a3b8;
-      font-size: 1rem;
-      line-height: 1.7;
-      margin-bottom: 40px;
-      max-width: 600px;
-    }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+        opacity: 0.22;
+        pointer-events: none;
+      }
 
-    /* CARDS */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .card:hover {
-      border-color: rgba(29,140,248,0.3);
-      background: rgba(29,140,248,0.04);
-    }
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(29,140,248,0.1);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      margin-bottom: 14px;
-    }
-    .card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-    .card p {
-      font-size: 0.875rem;
-      color: #64748b;
-      line-height: 1.6;
-    }
+      img {
+        display: block;
+        max-width: 100%;
+      }
 
-    /* RULES */
-    .rules-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .rule-item {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-    .rule-num {
-      min-width: 28px;
-      height: 28px;
-      background: rgba(29,140,248,0.15);
-      color: #1d8cf8;
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .rule-item h4 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #e2e8f0;
-      margin-bottom: 4px;
-    }
-    .rule-item p {
-      font-size: 0.85rem;
-      color: #64748b;
-      line-height: 1.5;
-    }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-    /* WHITELIST FORM */
-    .form-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 36px;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 8px;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 9px;
-      padding: 12px 14px;
-      color: #e2e8f0;
-      font-size: 0.9rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      border-color: #1d8cf8;
-    }
-    .form-group textarea { resize: vertical; min-height: 100px; }
-    .form-group select option { background: #1a1a2e; }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .submit-btn {
-      width: 100%;
-      background: #1d8cf8;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.2s;
-      margin-top: 8px;
-    }
-    .submit-btn:hover { background: #1a7de0; }
+      .container {
+        width: min(var(--max), calc(100% - 32px));
+        margin: 0 auto;
+      }
 
-    /* DIVIDER */
-    .section-divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      margin: 0;
-    }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 36px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 174, 255, 0.26);
+        background: rgba(0, 174, 255, 0.08);
+        color: #7fd8ff;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
 
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 40px 2rem;
-      color: #334155;
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    footer a { color: #475569; text-decoration: none; }
-    footer a:hover { color: #94a3b8; }
-  </style>
-</head>
-<body>
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: 0 0 18px var(--primary-glow);
+      }
 
-  <nav>
-    <a class="nav-logo" href="#">
-      <img src="/logo.png" alt="Capital RP Logo" />
-      Capital Roleplay
-    </a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#rules">Rules</a></li>
-      <li><a href="#whitelist">Whitelist</a></li>
-      <li><a href="https://discord.gg/drpNDbTgBM" target="_blank">Discord</a></li>
-      <li><a href="#whitelist" class="nav-cta">Apply Now</a></li>
-    </ul>
-  </nav>
+      .section {
+        padding: 110px 0;
+        position: relative;
+      }
 
-  <section class="hero">
-    <div class="hero-badge">Now Accepting Applications</div>
-    <h1>Welcome to<br/><span>Capital Roleplay</span></h1>
-    <p>A serious, immersive FiveM roleplay experience built around quality storytelling, realistic gameplay, and a respectful community.</p>
-    <div class="hero-buttons">
-      <a href="#whitelist" class="btn-primary">Apply for Whitelist</a>
-      <a href="#about" class="btn-secondary">Learn More</a>
-    </div>
-  </section>
+      .section-header {
+        max-width: 740px;
+        margin-bottom: 34px;
+      }
 
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-number">500+</div>
-      <div class="stat-label">Community Members</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">24/7</div>
-      <div class="stat-label">Server Online</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">128</div>
-      <div class="stat-label">Player Slots</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">Whitelist</div>
-      <div class="stat-label">Only</div>
-    </div>
-  </div>
+      .section-header h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2rem, 3.4vw, 3.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        margin: 18px 0 14px;
+      }
 
-  <section id="about">
-    <div class="section-label">About Us</div>
-    <h2>What is Capital Roleplay?</h2>
-    <p>Capital Roleplay is a serious FiveM server focused on immersive, high-quality roleplay. We run a custom framework with a dedicated staff team and an active, passionate community.</p>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon">🏙️</div>
-        <h3>Immersive World</h3>
-        <p>Custom interiors, jobs, vehicles, and a living city that reacts to the players in it.</p>
+      .section-header p {
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.75;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition:
+          opacity 700ms cubic-bezier(.2,.8,.2,1),
+          transform 700ms cubic-bezier(.2,.8,.2,1);
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .site-nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding-top: 16px;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        min-height: 74px;
+        padding: 12px 18px;
+        border-radius: 22px;
+        background: rgba(6, 16, 25, 0.58);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .brand-mark,
+      .footer-mark,
+      .hero-logo-circle,
+      .discord-logo-circle {
+        border-radius: 999px;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 0 0 6px rgba(255,255,255,0.02), 0 0 30px rgba(0,174,255,0.12);
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+      }
+
+      .footer-mark {
+        width: 28px;
+        height: 28px;
+      }
+
+      .hero-logo-circle {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+      }
+
+      .discord-logo-circle {
+        width: 58px;
+        height: 58px;
+      }
+
+      .brand-mark img,
+      .footer-mark img,
+      .hero-logo-circle img,
+      .discord-logo-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .brand-copy strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      .brand-copy span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        font-size: 0.94rem;
+        font-weight: 600;
+        padding: 10px 14px;
+        border-radius: 12px;
+        transition: color var(--transition), background var(--transition);
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 174, 255, 0.28);
+        background: linear-gradient(180deg, rgba(0, 174, 255, 0.22), rgba(0, 174, 255, 0.12));
+        color: #f7fbff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition:
+          transform var(--transition),
+          border-color var(--transition),
+          box-shadow var(--transition),
+          background var(--transition);
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.08),
+          0 10px 26px rgba(0, 174, 255, 0.12);
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+        border-color: rgba(0, 174, 255, 0.48);
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.1),
+          0 16px 34px rgba(0, 174, 255, 0.18);
+      }
+
+      .button.ghost {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: var(--text);
+        box-shadow: none;
+      }
+
+      .button.discord {
+        background: linear-gradient(180deg, rgba(88, 101, 242, 0.3), rgba(88, 101, 242, 0.18));
+        border-color: rgba(88, 101, 242, 0.38);
+        box-shadow: 0 12px 28px rgba(88, 101, 242, 0.18);
+      }
+
+      .button.small {
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 0.9rem;
+      }
+
+      .hero {
+        padding: 76px 0 42px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .hero-copy h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(3.2rem, 8vw, 6.2rem);
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+        margin: 22px 0 22px;
+        max-width: 11ch;
+      }
+
+      .hero-copy h1 span {
+        color: var(--primary);
+        text-shadow: 0 0 26px rgba(0, 174, 255, 0.2);
+      }
+
+      .hero-copy p {
+        max-width: 640px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.8;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 30px;
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 30px;
+      }
+
+      .meta-chip {
+        min-height: 42px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.035);
+        color: var(--muted-strong);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+
+      .meta-chip::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 14px var(--primary-glow);
+      }
+
+      .hero-panel {
+        position: relative;
+        min-height: 520px;
+        border-radius: 32px;
+        padding: 24px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+        border: 1px solid rgba(255,255,255,0.08);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-panel::before {
+        content: "";
+        position: absolute;
+        inset: auto -10% -30% auto;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,174,255,0.35), transparent 68%);
+        filter: blur(24px);
+      }
+
+      .hero-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 24px 24px;
+        opacity: 0.22;
+        mask-image: radial-gradient(circle at center, black 46%, transparent 88%);
+        pointer-events: none;
+      }
+
+      .panel-card {
+        position: absolute;
+        border-radius: 22px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(8, 18, 28, 0.82);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.26);
+      }
+
+      .panel-logo {
+        top: 26px;
+        right: 26px;
+        width: 168px;
+        padding: 18px;
+      }
+
+      .panel-main {
+        left: 28px;
+        right: 28px;
+        bottom: 28px;
+        padding: 24px;
+      }
+
+      .panel-main strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.35rem;
+        line-height: 1.1;
+        margin-bottom: 12px;
+      }
+
+      .panel-main p {
+        color: var(--muted);
+        font-size: 0.96rem;
+        line-height: 1.7;
+      }
+
+      .panel-float {
+        left: 28px;
+        top: 34px;
+        padding: 18px 18px 16px;
+        max-width: 240px;
+      }
+
+      .panel-float span {
+        display: block;
+        color: #79d6ff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .panel-float strong {
+        display: block;
+        font-size: 1.1rem;
+        line-height: 1.35;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .stat-card,
+      .feature-card,
+      .testimonial-card,
+      .discord-card,
+      .cta-box,
+      .about-panel,
+      .apply-shell,
+      .login-card,
+      .application-form {
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.03));
+        box-shadow: var(--shadow);
+      }
+
+      .stat-card {
+        padding: 22px;
+      }
+
+      .stat-card strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .stat-card span {
+        display: block;
+        color: var(--muted);
+        margin-top: 8px;
+        font-size: 0.92rem;
+      }
+
+      .about-grid,
+      .discord-grid,
+      .apply-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .about-panel {
+        padding: 28px;
+      }
+
+      .about-panel h3,
+      .login-card h3,
+      .application-form h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.35rem;
+        margin-bottom: 12px;
+      }
+
+      .about-panel p,
+      .login-card p,
+      .application-form p {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .about-list,
+      .discord-points,
+      .login-points {
+        list-style: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .about-list {
+        margin-top: 22px;
+      }
+
+      .about-list li,
+      .login-points li {
+        display: flex;
+        gap: 12px;
+        color: var(--muted-strong);
+        line-height: 1.6;
+      }
+
+      .about-list li::before,
+      .login-points li::before {
+        content: "•";
+        color: var(--primary);
+        font-size: 1.2rem;
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+
+      .feature-card {
+        padding: 24px;
+        min-height: 260px;
+        transition: transform var(--transition), border-color var(--transition), background var(--transition);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(0,174,255,0.26);
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,174,255,0.045));
+      }
+
+      .feature-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: rgba(0,174,255,0.1);
+        border: 1px solid rgba(0,174,255,0.18);
+        color: #9ee5ff;
+        font-size: 1.1rem;
+        margin-bottom: 18px;
+      }
+
+      .feature-card h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.15rem;
+        margin-bottom: 10px;
+      }
+
+      .feature-card p {
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 0.95rem;
+      }
+
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .testimonial-card {
+        padding: 26px;
+      }
+
+      .testimonial-card p {
+        color: var(--muted-strong);
+        line-height: 1.8;
+        font-size: 0.98rem;
+      }
+
+      .testimonial-meta {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .testimonial-meta strong {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .testimonial-meta span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-top: 4px;
+      }
+
+      .discord-card,
+      .login-card,
+      .application-form {
+        position: relative;
+        overflow: hidden;
+        padding: 28px;
+      }
+
+      .discord-card.glow::before,
+      .login-card::before {
+        content: "";
+        position: absolute;
+        inset: 50% auto auto 50%;
+        width: 360px;
+        height: 360px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(0,174,255,0.24), transparent 70%);
+        filter: blur(18px);
+        pointer-events: none;
+      }
+
+      .discord-card > *,
+      .login-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .discord-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: #9fe6ff;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      .discord-live::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 16px var(--primary-glow);
+      }
+
+      .discord-card h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        line-height: 1.02;
+        margin-bottom: 14px;
+      }
+
+      .discord-card p {
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 48ch;
+      }
+
+      .discord-count-box {
+        margin-top: 24px;
+        display: inline-flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 18px 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .discord-count-box strong {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .discord-count-box span {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .discord-points li {
+        padding: 18px 18px 18px 52px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        color: var(--muted-strong);
+        line-height: 1.65;
+        position: relative;
+      }
+
+      .discord-points li::before {
+        content: "";
+        position: absolute;
+        left: 18px;
+        top: 22px;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,174,255,0.3);
+        background: rgba(0,174,255,0.12);
+        box-shadow: 0 0 18px rgba(0,174,255,0.12);
+      }
+
+      .apply-shell {
+        padding: 14px;
+      }
+
+      .login-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: rgba(88, 101, 242, 0.12);
+        border: 1px solid rgba(88, 101, 242, 0.24);
+        color: #b9c2ff;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      .login-mock {
+        margin-top: 22px;
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px dashed rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .login-mock strong {
+        display: block;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .login-mock span {
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.7;
+      }
+
+      .application-form {
+        opacity: 0.72;
+      }
+
+      .form-locked {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        margin-bottom: 22px;
+      }
+
+      .form-locked strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .form-locked span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--muted-strong);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.045);
+        color: var(--text);
+        border-radius: 14px;
+        padding: 14px 14px;
+        outline: none;
+        font: inherit;
+      }
+
+      .field textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: #7e95ad;
+      }
+
+      .form-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 10px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .form-note {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      .submit-disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .cta-box {
+        padding: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .cta-box h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        line-height: 1.02;
+        margin-bottom: 10px;
+      }
+
+      .cta-box p {
+        color: var(--muted);
+        max-width: 58ch;
+        line-height: 1.8;
+      }
+
+      footer {
+        padding: 24px 0 60px;
+      }
+
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        padding-top: 24px;
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .about-grid,
+        .discord-grid,
+        .apply-grid,
+        .feature-grid,
+        .testimonials-grid,
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hero-panel {
+          min-height: 460px;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero,
+        .section {
+          padding-top: 82px;
+        }
+
+        .hero-grid,
+        .about-grid,
+        .discord-grid,
+        .apply-grid,
+        .feature-grid,
+        .testimonials-grid,
+        .stats-row,
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-float,
+        .panel-logo,
+        .panel-main {
+          position: relative;
+          inset: auto;
+          width: 100%;
+          max-width: none;
+        }
+
+        .hero-panel {
+          display: grid;
+          gap: 16px;
+          min-height: auto;
+        }
+
+        .cta-box,
+        .footer-inner,
+        .form-footer,
+        .form-locked {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero-copy h1 {
+          max-width: none;
+        }
+
+        .hero-actions,
+        .hero-actions .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="site-nav-wrap">
+      <div class="container">
+        <nav class="site-nav reveal">
+          <a href="/" class="brand" aria-label="Capital Roleplay">
+            <div class="brand-mark">
+              <img src="/logo.png" alt="Capital Roleplay logo" />
+            </div>
+            <div class="brand-copy">
+              <strong>Capital Roleplay</strong>
+              <span>Serious UK FiveM Roleplay</span>
+            </div>
+          </a>
+
+          <ul class="nav-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="/factions">Factions</a></li>
+            <li><a href="/forums">Forums</a></li>
+            <li><a href={storeUrl} target="_blank" rel="noreferrer">Store</a></li>
+          </ul>
+
+          <a class="button" href="#apply">Apply Now</a>
+        </nav>
       </div>
-      <div class="card">
-        <div class="card-icon">⚖️</div>
-        <h3>Serious RP</h3>
-        <p>We enforce quality roleplay standards so every session feels meaningful and realistic.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">👥</div>
-        <h3>Great Community</h3>
-        <p>A respectful, welcoming player base with active staff available around the clock.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔧</div>
-        <h3>Custom Scripts</h3>
-        <p>Unique mechanics you won't find on other servers, developed by our in-house team.</p>
-      </div>
     </div>
-  </section>
 
-  <hr class="section-divider" />
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy reveal">
+            <div class="eyebrow">Whitelisted serious roleplay in the United Kingdom</div>
+            <h1>A more <span>premium</span> FiveM roleplay experience.</h1>
+            <p>
+              Capital Roleplay is a whitelisted FiveM server built for players who want a cleaner,
+              more immersive, and more deliberate roleplay environment. From vehicles and clothing
+              to weapons and scripts, the experience is shaped around custom-built quality.
+            </p>
 
-  <section id="rules">
-    <div class="section-label">Server Rules</div>
-    <h2>Rules & Guidelines</h2>
-    <p>All players are expected to follow these rules at all times. Breaking them may result in a warning, kick, or permanent ban.</p>
-    <div class="rules-list">
-      <div class="rule-item">
-        <div class="rule-num">1</div>
-        <div>
-          <h4>Respect all players and staff</h4>
-          <p>Harassment, discrimination, or toxic behaviour towards any member of the community will not be tolerated.</p>
+            <div class="hero-actions">
+              <a class="button" href="#apply">Apply for Whitelist</a>
+              <a class="button ghost" href="#about">About the Server</a>
+            </div>
+
+            <div class="hero-meta">
+              <div class="meta-chip">Custom Cars</div>
+              <div class="meta-chip">Custom Clothing</div>
+              <div class="meta-chip">Custom Weapons</div>
+              <div class="meta-chip">Custom Scripts</div>
+            </div>
+          </div>
+
+          <div class="hero-panel reveal">
+            <div class="panel-card panel-float">
+              <span>Capital Identity</span>
+              <strong>Serious UK roleplay with custom-built depth and a whitelist standard.</strong>
+            </div>
+
+            <div class="panel-card panel-logo">
+              <div class="hero-logo-circle">
+                <img src="/logo.png" alt="Capital Roleplay emblem" />
+              </div>
+            </div>
+
+            <div class="panel-card panel-main">
+              <strong>Built to feel premium from the first minute.</strong>
+              <p>
+                Capital Roleplay is designed to avoid the usual recycled feel of many FiveM servers.
+                The world, systems, and presentation are aligned around immersion, consistency, and long-term community quality.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="stats-row reveal">
+            <div class="stat-card">
+              <strong>WL</strong>
+              <span>Whitelisted Access</span>
+            </div>
+            <div class="stat-card">
+              <strong>24/7</strong>
+              <span>Server Availability</span>
+            </div>
+            <div class="stat-card">
+              <strong>UK</strong>
+              <span>Roleplay Identity</span>
+            </div>
+            <div class="stat-card">
+              <strong>100%</strong>
+              <span>Custom Server Direction</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">About us</div>
+            <h2>Capital Roleplay is built around quality-first serious roleplay.</h2>
+            <p>
+              This is not a fast-launch, copy-paste server. Capital Roleplay is positioned as a more
+              refined environment for players who care about immersion, proper faction standards, and
+              long-term character development.
+            </p>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-panel reveal">
+              <h3>What separates the server</h3>
+              <p>
+                Nearly every major part of the player experience is custom-built. That means the world
+                feels more coherent, the identity feels stronger, and the gameplay avoids the same public content
+                seen across generic FiveM servers.
+              </p>
+              <ul class="about-list">
+                <li>Custom vehicles, clothing, weapons, interfaces, and scripts</li>
+                <li>Whitelist access to maintain a stronger player standard</li>
+                <li>Higher focus on realism, storytelling, and consistency</li>
+              </ul>
+            </div>
+
+            <div class="about-panel reveal">
+              <h3>What players can expect</h3>
+              <p>
+                Capital Roleplay is designed for players who want to invest in proper characters, serious
+                factions, player-run storylines, and a city that feels intentionally crafted rather than randomly assembled.
+              </p>
+              <ul class="about-list">
+                <li>Stronger immersion and cleaner community structure</li>
+                <li>Long-term potential for legal and illegal faction roleplay</li>
+                <li>Premium presentation across the full server experience</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Core pillars</div>
+            <h2>Custom content is the baseline, not the headline gimmick.</h2>
+            <p>
+              The real value comes from how the visuals, systems, and roleplay standards support each other.
+              The result is a server that feels more premium and more controlled from top to bottom.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card reveal">
+              <div class="feature-icon">✦</div>
+              <h3>Custom Asset Direction</h3>
+              <p>Vehicles, clothing, weapons, and visual identity built to give the server its own recognisable feel.</p>
+            </article>
+
+            <article class="feature-card reveal">
+              <div class="feature-icon">◉</div>
+              <h3>Whitelist Standard</h3>
+              <p>Applications help maintain a better player base and protect the overall quality of roleplay.</p>
+            </article>
+
+            <article class="feature-card reveal">
+              <div class="feature-icon">⬢</div>
+              <h3>Faction Potential</h3>
+              <p>Structured support for organised legal and illegal roleplay, built on serious community standards.</p>
+            </article>
+
+            <article class="feature-card reveal">
+              <div class="feature-icon">△</div>
+              <h3>Premium Presentation</h3>
+              <p>A polished front-end, consistent design language, and cleaner onboarding for new players.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="discord">
+        <div class="container">
+          <div class="discord-grid">
+            <div class="discord-card glow reveal">
+              <div class="discord-live">Community entry point</div>
+              <h3>Join the Discord before you enter the city.</h3>
+              <p>
+                Discord is where applications, announcements, updates, and community onboarding will live.
+                The live member counter can be connected later through a Cloudflare Worker or Astro endpoint.
+              </p>
+
+              <div class="discord-count-box">
+                <strong id="discordCount" data-fallback="500+">500+</strong>
+                <span>Discord community members</span>
+              </div>
+
+              <div style="margin-top: 24px;">
+                <a class="button" href="https://discord.gg/drpNDbTgBM" target="_blank" rel="noreferrer">
+                  Join Capital Roleplay
+                </a>
+              </div>
+            </div>
+
+            <div class="discord-card reveal">
+              <ul class="discord-points">
+                <li>The application flow is designed to begin through Discord.</li>
+                <li>Authentication can later be wired to Discord OAuth.</li>
+                <li>The member counter can later be fetched from a backend endpoint without changing this UI.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="apply">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Whitelist application</div>
+            <h2>Apply to join Capital Roleplay.</h2>
+            <p>
+              This is the visual front-end for the whitelist system. The Discord login and submission flow
+              are intentionally presented as locked until backend integration is added later.
+            </p>
+          </div>
+
+          <div class="apply-shell reveal">
+            <div class="apply-grid">
+              <div class="login-card">
+                <div class="login-badge">Step 1 · Discord login required</div>
+                <h3>Authenticate with Discord first</h3>
+                <p>
+                  Before an application can be submitted, users must be signed in with Discord.
+                  This is currently a visual placeholder for the future OAuth flow.
+                </p>
+
+                <div style="margin-top: 22px;">
+                  <a class="button discord" href="#" aria-disabled="true">Continue with Discord</a>
+                </div>
+
+                <div class="login-mock">
+                  <strong>Future behaviour</strong>
+                  <span>
+                    Once connected, this button should trigger Discord OAuth, verify the user, and unlock the form state below.
+                  </span>
+                </div>
+
+                <ul class="login-points" style="margin-top: 22px;">
+                  <li>Discord account required before applying</li>
+                  <li>User data can later prefill Discord username automatically</li>
+                  <li>Submission can later be forwarded to Discord staff review channels</li>
+                </ul>
+              </div>
+
+              <div class="application-form">
+                <h3>Whitelist form</h3>
+                <p>
+                  The form is visible for clarity, but visually locked until Discord authentication is completed.
+                </p>
+
+                <div class="form-locked">
+                  <div>
+                    <strong>Form locked</strong>
+                    <span>Sign in with Discord to unlock and submit this application.</span>
+                  </div>
+                  <a class="button small ghost" href="#" aria-disabled="true">Locked</a>
+                </div>
+
+                <form>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="fullname">Full Name</label>
+                      <input id="fullname" type="text" placeholder="John Smith" />
+                    </div>
+
+                    <div class="field">
+                      <label for="discord">Discord Username</label>
+                      <input id="discord" type="text" placeholder="username" />
+                    </div>
+
+                    <div class="field">
+                      <label for="age">Age</label>
+                      <select id="age">
+                        <option>Select your age range</option>
+                        <option>16–17</option>
+                        <option>18–20</option>
+                        <option>21–25</option>
+                        <option>26+</option>
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label for="experience">Roleplay Experience</label>
+                      <select id="experience">
+                        <option>Select experience level</option>
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Experienced</option>
+                        <option>Veteran</option>
+                      </select>
+                    </div>
+
+                    <div class="field full">
+                      <label for="character">Character Concept</label>
+                      <textarea id="character" placeholder="Describe the type of character you plan to play and how they would fit into the city."></textarea>
+                    </div>
+
+                    <div class="field full">
+                      <label for="whyjoin">Why do you want to join Capital Roleplay?</label>
+                      <textarea id="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for."></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-footer">
+                    <div class="form-note">
+                      This form is visual only for now. Submission, Discord verification, and staff review flow can be connected later.
+                    </div>
+                    <button type="button" class="button submit-disabled">Submit Application</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="testimonials">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Launch structure</div>
+            <h2>Placeholder quotes until real community feedback is added.</h2>
+            <p>
+              These are layout placeholders only. Replace them later with real testimonials from your community, staff team, or early testers.
+            </p>
+          </div>
+
+          <div class="testimonials-grid">
+            <article class="testimonial-card reveal">
+              <p>“The server immediately feels more deliberate than the usual public FiveM setup. The quality direction is obvious.”</p>
+              <div class="testimonial-meta">
+                <strong>Lewis H.</strong>
+                <span>Community Member</span>
+              </div>
+            </article>
+
+            <article class="testimonial-card reveal">
+              <p>“The whitelist angle makes sense because the server is clearly aiming for stronger standards and more serious character roleplay.”</p>
+              <div class="testimonial-meta">
+                <strong>Aiden R.</strong>
+                <span>Faction Player</span>
+              </div>
+            </article>
+
+            <article class="testimonial-card reveal">
+              <p>“It looks like a server that wants long-term identity, not short-term hype. That already separates it.”</p>
+              <div class="testimonial-meta">
+                <strong>Mason K.</strong>
+                <span>Applicant</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="cta-box reveal">
+            <div>
+              <h3>Whitelist access. Premium standard. Serious roleplay.</h3>
+              <p>
+                Capital Roleplay is being positioned as a cleaner and more refined FiveM experience for players who want custom content, stronger immersion, and a server identity with actual direction.
+              </p>
+            </div>
+
+            <a class="button" href="#apply">Start Application</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <div class="footer-mark">
+            <img src="/logo.png" alt="Capital Roleplay logo" />
+          </div>
+          <span>© 2026 Capital Roleplay. All rights reserved.</span>
+        </div>
+
+        <div class="footer-links">
+          <a href="#about">About Us</a>
+          <a href="/factions">Factions</a>
+          <a href="/forums">Forums</a>
+          <a href={storeUrl} target="_blank" rel="noreferrer">Store</a>
         </div>
       </div>
-      <div class="rule-item">
-        <div class="rule-num">2</div>
-        <div>
-          <h4>No metagaming</h4>
-          <p>Do not use information your character wouldn't realistically know. Keep in-character and out-of-character knowledge completely separate.</p>
-        </div>
-      </div>
-      <div class="rule-item">
-        <div class="rule-num">3</div>
-        <div>
-          <h4>No powergaming</h4>
-          <p>Do not force actions on other players or create scenarios that give you an unfair advantage without allowing others to respond.</p>
-        </div>
-      </div>
-      <div class="rule-item">
-        <div class="rule-num">4</div>
-        <div>
-          <h4>Value your life (VDM/RDM)</h4>
-          <p>Do not kill or ram other players without valid roleplay reason. Your character's life should be treated as precious.</p>
-        </div>
-      </div>
-      <div class="rule-item">
-        <div class="rule-num">5</div>
-        <div>
-          <h4>No cheating or exploiting</h4>
-          <p>Any use of cheats, mods, or exploits will result in an immediate permanent ban with no appeal.</p>
-        </div>
-      </div>
-      <div class="rule-item">
-        <div class="rule-num">6</div>
-        <div>
-          <h4>Stay in character</h4>
-          <p>Unless in an OOC zone or using /ooc chat, you must remain in character at all times during active roleplay.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <hr class="section-divider" />
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("is-visible");
+          });
+        },
+        { threshold: 0.14 }
+      );
 
-  <section id="whitelist">
-    <div class="section-label">Whitelist Application</div>
-    <h2>Apply to Join</h2>
-    <p>Fill out the form below to apply for a whitelist spot. Applications are reviewed by staff within 48 hours.</p>
-    <div class="form-card">
-      <div class="form-row">
-        <div class="form-group">
-          <label>In-Game Name</label>
-          <input type="text" placeholder="Firstname Lastname" />
-        </div>
-        <div class="form-group">
-          <label>Discord Username</label>
-          <input type="text" placeholder="username#0000" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Age</label>
-        <select>
-          <option value="">Select your age range</option>
-          <option>16–17</option>
-          <option>18–20</option>
-          <option>21–25</option>
-          <option>26+</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Previous RP Experience</label>
-        <textarea placeholder="Tell us about your roleplay background and any servers you've played on..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>Why do you want to join Capital Roleplay?</label>
-        <textarea placeholder="What draws you to our server and what kind of character do you plan to play?"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Have you read and agreed to the server rules?</label>
-        <select>
-          <option value="">Select...</option>
-          <option>Yes, I have read and agree to all rules</option>
-          <option>No</option>
-        </select>
-      </div>
-      <button class="submit-btn">Submit Application</button>
-    </div>
-  </section>
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-  <footer>
-    <p>© 2026 Capital Roleplay · <a href="#rules">Rules</a> · <a href="https://discord.gg/drpNDbTgBM">Discord</a> · <a href="#">Tebex Store</a></p>
-  </footer>
+      const countEl = document.getElementById("discordCount");
 
-</body>
+      async function loadDiscordCount() {
+        if (!countEl) return;
+
+        try {
+          const response = await fetch("/api/discord-count");
+          if (!response.ok) throw new Error("Failed to fetch count");
+          const data = await response.json();
+          if (typeof data.count === "number") {
+            countEl.textContent = new Intl.NumberFormat("en-GB").format(data.count);
+          }
+        } catch {
+          countEl.textContent = countEl.dataset.fallback || "500+";
+        }
+      }
+
+      loadDiscordCount();
+    </script>
+  </body>
 </html>
