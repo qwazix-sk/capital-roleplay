@@ -1,0 +1,531 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capital Roleplay</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      background: #1d8cf8;
+      color: #fff !important;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: #1a7de0 !important; color: #fff !important; }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 2rem 80px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(29,140,248,0.15) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(29,140,248,0.1);
+      border: 1px solid rgba(29,140,248,0.3);
+      color: #1d8cf8;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: #1d8cf8; }
+    .hero p {
+      font-size: 1.15rem;
+      color: #94a3b8;
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: #1d8cf8;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: #1a7de0; transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: #e2e8f0;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      padding: 32px 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    /* SECTIONS */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 2rem;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #1d8cf8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    section h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    section > p {
+      color: #94a3b8;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .card:hover {
+      border-color: rgba(29,140,248,0.3);
+      background: rgba(29,140,248,0.04);
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(29,140,248,0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* RULES */
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .rule-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .rule-num {
+      min-width: 28px;
+      height: 28px;
+      background: rgba(29,140,248,0.15);
+      color: #1d8cf8;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .rule-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+    .rule-item p {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    /* WHITELIST FORM */
+    .form-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 36px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 9px;
+      padding: 12px 14px;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #1d8cf8;
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group select option { background: #1a1a2e; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .submit-btn {
+      width: 100%;
+      background: #1d8cf8;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .submit-btn:hover { background: #1a7de0; }
+
+    /* DIVIDER */
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px 2rem;
+      color: #334155;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    footer a { color: #475569; text-decoration: none; }
+    footer a:hover { color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">
+      <img src="/logo.png" alt="Capital RP Logo" />
+      Capital Roleplay
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#rules">Rules</a></li>
+      <li><a href="#whitelist">Whitelist</a></li>
+      <li><a href="https://discord.gg/drpNDbTgBM" target="_blank">Discord</a></li>
+      <li><a href="#whitelist" class="nav-cta">Apply Now</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">Now Accepting Applications</div>
+    <h1>Welcome to<br/><span>Capital Roleplay</span></h1>
+    <p>A serious, immersive FiveM roleplay experience built around quality storytelling, realistic gameplay, and a respectful community.</p>
+    <div class="hero-buttons">
+      <a href="#whitelist" class="btn-primary">Apply for Whitelist</a>
+      <a href="#about" class="btn-secondary">Learn More</a>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">500+</div>
+      <div class="stat-label">Community Members</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Server Online</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">128</div>
+      <div class="stat-label">Player Slots</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">Whitelist</div>
+      <div class="stat-label">Only</div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="section-label">About Us</div>
+    <h2>What is Capital Roleplay?</h2>
+    <p>Capital Roleplay is a serious FiveM server focused on immersive, high-quality roleplay. We run a custom framework with a dedicated staff team and an active, passionate community.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🏙️</div>
+        <h3>Immersive World</h3>
+        <p>Custom interiors, jobs, vehicles, and a living city that reacts to the players in it.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3>Serious RP</h3>
+        <p>We enforce quality roleplay standards so every session feels meaningful and realistic.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h3>Great Community</h3>
+        <p>A respectful, welcoming player base with active staff available around the clock.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔧</div>
+        <h3>Custom Scripts</h3>
+        <p>Unique mechanics you won't find on other servers, developed by our in-house team.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <section id="rules">
+    <div class="section-label">Server Rules</div>
+    <h2>Rules & Guidelines</h2>
+    <p>All players are expected to follow these rules at all times. Breaking them may result in a warning, kick, or permanent ban.</p>
+    <div class="rules-list">
+      <div class="rule-item">
+        <div class="rule-num">1</div>
+        <div>
+          <h4>Respect all players and staff</h4>
+          <p>Harassment, discrimination, or toxic behaviour towards any member of the community will not be tolerated.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">2</div>
+        <div>
+          <h4>No metagaming</h4>
+          <p>Do not use information your character wouldn't realistically know. Keep in-character and out-of-character knowledge completely separate.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">3</div>
+        <div>
+          <h4>No powergaming</h4>
+          <p>Do not force actions on other players or create scenarios that give you an unfair advantage without allowing others to respond.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">4</div>
+        <div>
+          <h4>Value your life (VDM/RDM)</h4>
+          <p>Do not kill or ram other players without valid roleplay reason. Your character's life should be treated as precious.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">5</div>
+        <div>
+          <h4>No cheating or exploiting</h4>
+          <p>Any use of cheats, mods, or exploits will result in an immediate permanent ban with no appeal.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">6</div>
+        <div>
+          <h4>Stay in character</h4>
+          <p>Unless in an OOC zone or using /ooc chat, you must remain in character at all times during active roleplay.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <section id="whitelist">
+    <div class="section-label">Whitelist Application</div>
+    <h2>Apply to Join</h2>
+    <p>Fill out the form below to apply for a whitelist spot. Applications are reviewed by staff within 48 hours.</p>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>In-Game Name</label>
+          <input type="text" placeholder="Firstname Lastname" />
+        </div>
+        <div class="form-group">
+          <label>Discord Username</label>
+          <input type="text" placeholder="username#0000" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Age</label>
+        <select>
+          <option value="">Select your age range</option>
+          <option>16–17</option>
+          <option>18–20</option>
+          <option>21–25</option>
+          <option>26+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Previous RP Experience</label>
+        <textarea placeholder="Tell us about your roleplay background and any servers you've played on..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Why do you want to join Capital Roleplay?</label>
+        <textarea placeholder="What draws you to our server and what kind of character do you plan to play?"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Have you read and agreed to the server rules?</label>
+        <select>
+          <option value="">Select...</option>
+          <option>Yes, I have read and agree to all rules</option>
+          <option>No</option>
+        </select>
+      </div>
+      <button class="submit-btn">Submit Application</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Capital Roleplay · <a href="#rules">Rules</a> · <a href="https://discord.gg/drpNDbTgBM">Discord</a> · <a href="#">Tebex Store</a></p>
+  </footer>
+
+</body>
+</html>
