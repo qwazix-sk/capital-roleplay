@@ -1,0 +1,54 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const rules = [
+  {
+    title: "Respect all players and staff",
+    text: "Harassment, discrimination, and persistent toxic behaviour are not tolerated in any part of the community."
+  },
+  {
+    title: "No metagaming",
+    text: "Do not use information your character would not realistically know through in-character roleplay."
+  },
+  {
+    title: "No powergaming",
+    text: "Do not force actions or outcomes on other players without giving them room to respond fairly."
+  },
+  {
+    title: "Value your life",
+    text: "Your character should act with realistic regard for danger, injury, and survival."
+  },
+  {
+    title: "No cheating or exploiting",
+    text: "Any use of cheats, abuse, or exploitative behaviour will be handled severely."
+  },
+  {
+    title: "Stay within serious RP standards",
+    text: "Capital Roleplay is a whitelisted serious server. Behaviour should match that standard at all times."
+  },
+];
+---
+
+<MainLayout title="Rules — Capital Roleplay">
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Roleplay standards</div>
+        <h1>Server rules and roleplay standards.</h1>
+        <p class="lead">
+          This page should hold the full and authoritative ruleset for Capital Roleplay.
+          The items below are a clean placeholder structure for the future complete rule list.
+        </p>
+      </div>
+
+      <div style="display:grid; gap:16px;">
+        {rules.map((rule) => (
+          <article class="rule-card">
+            <strong>{rule.title}</strong>
+            <p>{rule.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>
