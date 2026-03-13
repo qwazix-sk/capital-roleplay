@@ -1,0 +1,329 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Business & Civilian Groups — Capital Roleplay">
+
+  <section class="subfaction-hero subfaction-business">
+    <div class="subfaction-hero-bg"></div>
+    <div class="subfaction-hero-noise"></div>
+    <div class="subfaction-hero-overlay"></div>
+    <div class="container subfaction-hero-inner">
+      <a href="/factions" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        All Factions
+      </a>
+      <div class="subfaction-badge subfaction-badge--gold">Civilian Life</div>
+      <h1>Business &amp; Civilian Groups</h1>
+      <p>
+        Player-run businesses, media organisations, and civilian groups that shape
+        the social and economic fabric of the city.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="subfaction-grid">
+
+        <div class="subfaction-panel">
+          <div class="subfaction-icon subfaction-icon--gold">⬡</div>
+          <h3>Overview</h3>
+          <p>
+            Business &amp; Civilian Groups cover the legal and social layer of Capital Roleplay.
+            From running a restaurant to operating a media company or managing a garage — civilian
+            roleplay is what ties the city together.
+          </p>
+          <p style="margin-top: 14px;">
+            Approved businesses, their owners, and their current openings will be listed here
+            once the server is active.
+          </p>
+        </div>
+
+        <div class="subfaction-panel">
+          <div class="subfaction-icon subfaction-icon--gold">◉</div>
+          <h3>Starting a Business</h3>
+          <p>
+            Players looking to run civilian organisations or businesses will need to go through
+            an approval process managed by server staff. Details will be finalised closer to launch.
+          </p>
+          <ul class="subfaction-list subfaction-list--gold">
+            <li>Business concept must be submitted through Discord</li>
+            <li>Staff review for lore-fit and server direction</li>
+            <li>Approved businesses listed on this page publicly</li>
+          </ul>
+        </div>
+
+        <div class="subfaction-panel subfaction-panel--wide">
+          <div class="subfaction-icon subfaction-icon--gold">✦</div>
+          <h3>Business Categories</h3>
+          <p>This section will expand with active businesses. Placeholder categories below.</p>
+          <div class="dept-grid">
+            <div class="dept-card dept-card--gold">
+              <strong>Retail &amp; Hospitality</strong>
+              <span>Restaurants, bars, clothing stores, and service businesses.</span>
+            </div>
+            <div class="dept-card dept-card--gold">
+              <strong>Media &amp; Press</strong>
+              <span>News outlets, radio stations, and content production groups.</span>
+            </div>
+            <div class="dept-card dept-card--gold">
+              <strong>Transport &amp; Trade</strong>
+              <span>Logistics companies, garages, and trade-related civilian roleplay.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h3>Build something in the city.</h3>
+          <p>Get whitelisted first, then bring your business concept to the Discord for review.</p>
+        </div>
+        <a class="button" href="/#apply">Apply for Whitelist</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>
+
+<style>
+  .subfaction-hero {
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .subfaction-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .subfaction-business .subfaction-hero-bg {
+    background:
+      radial-gradient(circle at 25% 28%, rgba(245, 166, 35, 0.24) 0%, transparent 52%),
+      radial-gradient(circle at 78% 68%, rgba(200, 120, 0, 0.18) 0%, transparent 44%),
+      linear-gradient(160deg, #130f04 0%, #1e1505 40%, #261a06 75%, #110d03 100%);
+  }
+
+  .subfaction-hero-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
+    opacity: 0.4;
+  }
+
+  .subfaction-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(4, 10, 18, 0.3) 60%,
+      rgba(4, 10, 18, 0.9) 100%
+    );
+  }
+
+  .subfaction-hero-inner {
+    position: relative;
+    z-index: 3;
+    padding-top: 100px;
+    padding-bottom: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .subfaction-hero-inner h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    max-width: 18ch;
+  }
+
+  .subfaction-hero-inner p {
+    color: #9db0c6;
+    font-size: 1.05rem;
+    line-height: 1.78;
+    max-width: 56ch;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #9db0c6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+
+  .back-link:hover {
+    color: #f4f8ff;
+  }
+
+  .subfaction-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .subfaction-badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .subfaction-badge--gold {
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.24);
+    color: #f5c96a;
+  }
+  .subfaction-badge--gold::before {
+    background: #f5a623;
+    box-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
+  }
+
+  .subfaction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .subfaction-panel {
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
+    padding: 28px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  }
+
+  .subfaction-panel h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .subfaction-panel p {
+    color: #9db0c6;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .subfaction-panel--wide {
+    grid-column: 1 / -1;
+  }
+
+  .subfaction-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    margin-bottom: 18px;
+  }
+
+  .subfaction-icon--gold {
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    color: #f5c96a;
+  }
+
+  .subfaction-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .subfaction-list li {
+    display: flex;
+    gap: 10px;
+    color: #c8d5e3;
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .subfaction-list--gold li::before {
+    content: "•";
+    color: #f5a623;
+    font-size: 1.1rem;
+    line-height: 1;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .dept-card {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px;
+  }
+
+  .dept-card strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.98rem;
+    margin-bottom: 8px;
+  }
+
+  .dept-card span {
+    color: #9db0c6;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .dept-card--gold {
+    border-color: rgba(245, 166, 35, 0.12);
+  }
+
+  @media (max-width: 860px) {
+    .subfaction-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .subfaction-panel--wide {
+      grid-column: 1;
+    }
+
+    .dept-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

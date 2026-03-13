@@ -1,0 +1,329 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Organised Crime — Capital Roleplay">
+
+  <section class="subfaction-hero subfaction-crime">
+    <div class="subfaction-hero-bg"></div>
+    <div class="subfaction-hero-noise"></div>
+    <div class="subfaction-hero-overlay"></div>
+    <div class="container subfaction-hero-inner">
+      <a href="/factions" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        All Factions
+      </a>
+      <div class="subfaction-badge subfaction-badge--red">Underground</div>
+      <h1>Organised Crime</h1>
+      <p>
+        Illegal faction frameworks, criminal enterprises, and structured underworld operations.
+        Operating beneath the surface of the city.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="subfaction-grid">
+
+        <div class="subfaction-panel">
+          <div class="subfaction-icon subfaction-icon--red">⬡</div>
+          <h3>Overview</h3>
+          <p>
+            Organised Crime in Capital Roleplay operates under strict standards. Criminal factions
+            are expected to maintain serious, structured roleplay and operate with clear internal
+            hierarchy and purpose.
+          </p>
+          <p style="margin-top: 14px;">
+            Active criminal organisations, their current leadership, and available positions will
+            be listed here once factions are approved and running.
+          </p>
+        </div>
+
+        <div class="subfaction-panel">
+          <div class="subfaction-icon subfaction-icon--red">◉</div>
+          <h3>Faction Standards</h3>
+          <p>
+            Criminal factions are not simply open groups. Each organisation must be proposed, reviewed,
+            and approved by server leadership before operating in the city.
+          </p>
+          <ul class="subfaction-list subfaction-list--red">
+            <li>All criminal factions require formal approval from server staff</li>
+            <li>Faction leaders are held to a higher roleplay standard</li>
+            <li>Illegal activity must follow server rules and escalation guidelines</li>
+          </ul>
+        </div>
+
+        <div class="subfaction-panel subfaction-panel--wide">
+          <div class="subfaction-icon subfaction-icon--red">✦</div>
+          <h3>Criminal Organisation Types</h3>
+          <p>Placeholder categories for the types of criminal organisations that may operate in Capital Roleplay. Final structure confirmed at launch.</p>
+          <div class="dept-grid">
+            <div class="dept-card dept-card--red">
+              <strong>Street-Level Gangs</strong>
+              <span>Territory-based operations, lower-tier criminal activity, and recruitment grounds.</span>
+            </div>
+            <div class="dept-card dept-card--red">
+              <strong>Organised Syndicates</strong>
+              <span>Higher-tier criminal organisations with structured operations and influence.</span>
+            </div>
+            <div class="dept-card dept-card--red">
+              <strong>Underground Networks</strong>
+              <span>Black-market, smuggling, and covert criminal infrastructure within the city.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h3>Every empire starts somewhere.</h3>
+          <p>Get whitelisted, establish your character, and bring your criminal concept to the Discord for consideration.</p>
+        </div>
+        <a class="button" href="/#apply">Apply for Whitelist</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>
+
+<style>
+  .subfaction-hero {
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .subfaction-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .subfaction-crime .subfaction-hero-bg {
+    background:
+      radial-gradient(circle at 28% 32%, rgba(220, 38, 68, 0.26) 0%, transparent 52%),
+      radial-gradient(circle at 76% 66%, rgba(160, 20, 40, 0.2) 0%, transparent 44%),
+      linear-gradient(160deg, #130408 0%, #1e060c 40%, #28080f 75%, #110305 100%);
+  }
+
+  .subfaction-hero-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
+    opacity: 0.4;
+  }
+
+  .subfaction-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(4, 10, 18, 0.3) 60%,
+      rgba(4, 10, 18, 0.9) 100%
+    );
+  }
+
+  .subfaction-hero-inner {
+    position: relative;
+    z-index: 3;
+    padding-top: 100px;
+    padding-bottom: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .subfaction-hero-inner h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    max-width: 18ch;
+  }
+
+  .subfaction-hero-inner p {
+    color: #9db0c6;
+    font-size: 1.05rem;
+    line-height: 1.78;
+    max-width: 56ch;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #9db0c6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+
+  .back-link:hover {
+    color: #f4f8ff;
+  }
+
+  .subfaction-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .subfaction-badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .subfaction-badge--red {
+    background: rgba(220, 38, 68, 0.1);
+    border: 1px solid rgba(220, 38, 68, 0.24);
+    color: #ff7a95;
+  }
+  .subfaction-badge--red::before {
+    background: #dc2644;
+    box-shadow: 0 0 12px rgba(220, 38, 68, 0.5);
+  }
+
+  .subfaction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .subfaction-panel {
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
+    padding: 28px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  }
+
+  .subfaction-panel h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .subfaction-panel p {
+    color: #9db0c6;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .subfaction-panel--wide {
+    grid-column: 1 / -1;
+  }
+
+  .subfaction-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    margin-bottom: 18px;
+  }
+
+  .subfaction-icon--red {
+    background: rgba(220, 38, 68, 0.1);
+    border: 1px solid rgba(220, 38, 68, 0.2);
+    color: #ff7a95;
+  }
+
+  .subfaction-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .subfaction-list li {
+    display: flex;
+    gap: 10px;
+    color: #c8d5e3;
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .subfaction-list--red li::before {
+    content: "•";
+    color: #dc2644;
+    font-size: 1.1rem;
+    line-height: 1;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .dept-card {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px;
+  }
+
+  .dept-card strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.98rem;
+    margin-bottom: 8px;
+  }
+
+  .dept-card span {
+    color: #9db0c6;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .dept-card--red {
+    border-color: rgba(220, 38, 68, 0.12);
+  }
+
+  @media (max-width: 860px) {
+    .subfaction-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .subfaction-panel--wide {
+      grid-column: 1;
+    }
+
+    .dept-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
