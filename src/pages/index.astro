@@ -6,7 +6,10 @@ import MainLayout from "../layouts/MainLayout.astro";
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <div class="eyebrow">Whitelisted serious roleplay in the United Kingdom</div>
+        <div class="hero-tag-box">
+          <span>Whitelisted serious roleplay based in the United Kingdom</span>
+        </div>
+
         <h1>A more <span>premium</span> FiveM roleplay experience.</h1>
         <p>
           Capital Roleplay is a whitelisted FiveM server built for players who want a
@@ -75,15 +78,18 @@ import MainLayout from "../layouts/MainLayout.astro";
   <section class="section section-tight">
     <div class="container">
       <div class="showcase-banner">
-        <img src="/logo.png" alt="Capital Roleplay showcase placeholder" />
+        <video
+          src="https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/background.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="none"
+        ></video>
 
         <div class="showcase-inner">
           <div class="showcase-tag">High quality // Ready to play</div>
           <h2>Built for serious roleplay</h2>
-          <p>
-            Replace this placeholder with a looping GIF, MP4, or cinematic server clip to show
-            the quality level of Capital Roleplay before the player reaches the full server overview.
-          </p>
         </div>
       </div>
     </div>
@@ -146,25 +152,25 @@ import MainLayout from "../layouts/MainLayout.astro";
 
       <div class="feature-grid">
         <article class="feature-card">
-          <div class="feature-icon">✦</div>
+          <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
           <h3>Custom Asset Direction</h3>
           <p>Vehicles, clothing, weapons, and visual identity built to give the server its own recognisable feel.</p>
         </article>
 
         <article class="feature-card">
-          <div class="feature-icon">◉</div>
+          <div class="feature-icon"><i class="fa-solid fa-ranking-star"></i></div>
           <h3>Whitelist Standard</h3>
           <p>Applications help maintain a better player base and protect the overall quality of roleplay.</p>
         </article>
 
         <article class="feature-card">
-          <div class="feature-icon">⬢</div>
+          <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
           <h3>Faction Potential</h3>
           <p>Structured support for organised legal and illegal roleplay, built on serious community standards.</p>
         </article>
 
         <article class="feature-card">
-          <div class="feature-icon">△</div>
+          <div class="feature-icon"><i class="fa-solid fa-people-line"></i></div>
           <h3>Premium Presentation</h3>
           <p>A polished front-end, consistent design language, and cleaner onboarding for new players.</p>
         </article>

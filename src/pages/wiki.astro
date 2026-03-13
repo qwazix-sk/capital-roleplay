@@ -1,44 +1,1335 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+const lastUpdated = new Date().toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 ---
 
 <MainLayout title="Wiki — Capital Roleplay">
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <div class="eyebrow">Server reference</div>
-        <h1>Server knowledge, guides, and core information.</h1>
-        <p class="lead">
-          This page should later hold onboarding guides, faction information, economy notes,
-          server systems, legal structures, criminal progression, and other permanent reference content.
-        </p>
-      </div>
+  <div class="wiki-page">
 
-      <div class="cards">
-        <article class="card">
-          <h3>Getting Started</h3>
-          <p>
-            Reserved for joining steps, whitelist guidance, city onboarding,
-            and first-session setup.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Server Systems</h3>
-          <p>
-            Reserved for economy, jobs, businesses, progression systems,
-            and unique gameplay mechanics.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Faction Information</h3>
-          <p>
-            Reserved for legal and illegal faction expectations,
-            requirements, and reference material.
-          </p>
-        </article>
+    <!-- Page header -->
+    <div class="wiki-page-header">
+      <div class="wiki-outer">
+        <h1 class="wiki-page-title">Capital Roleplay<br /><span>Wiki</span></h1>
+        <p class="wiki-page-subtitle">Your complete reference for joining, playing, and getting the most out of Capital Roleplay.</p>
       </div>
     </div>
-  </section>
+
+    <!-- Two column layout -->
+  <div class="wiki-outer">
+  <div class="wiki-shell">
+
+    <!-- Sidebar -->
+    <aside class="wiki-sidebar">
+      <div class="wiki-search" role="button" tabindex="0">
+        <i class="fa-solid fa-magnifying-glass wiki-search-icon"></i>
+        <span>Search wiki...</span>
+        <kbd>Ctrl K</kbd>
+      </div>
+
+      <div class="wiki-group-label">Start Here</div>
+      <nav class="wiki-nav">
+        <a href="#" class="wiki-link active" data-article="home">
+          <i class="fa-solid fa-house"></i>Welcome
+        </a>
+        <a href="#" class="wiki-link" data-article="rules">
+          <i class="fa-solid fa-file-lines"></i>Rules
+        </a>
+        <a href="#" class="wiki-link" data-article="how-to-join">
+          <i class="fa-solid fa-circle-question"></i>How to join the server
+        </a>
+        <a href="#" class="wiki-link" data-article="verify">
+          <i class="fa-solid fa-shield-halved"></i>How to verify
+        </a>
+        <a href="#" class="wiki-link" data-article="whitelist">
+          <i class="fa-solid fa-list-check"></i>How to apply for whitelist
+        </a>
+        <a href="#" class="wiki-link" data-article="faq">
+          <i class="fa-solid fa-circle-info"></i>FAQ
+        </a>
+      </nav>
+
+      <div class="wiki-group-label">In-game Guides</div>
+      <nav class="wiki-nav">
+        <a href="#" class="wiki-link" data-article="starter-guide">
+          <i class="fa-solid fa-rocket"></i>Starter Guide
+        </a>
+        <a href="#" class="wiki-link" data-article="weapon-guide">
+          <i class="fa-solid fa-gun"></i>General Weapon Guide
+        </a>
+        <a href="#" class="wiki-link" data-article="vehicle-guide">
+          <i class="fa-solid fa-car"></i>Vehicle Garage System
+        </a>
+        <a href="#" class="wiki-link" data-article="house-guide">
+          <i class="fa-solid fa-house-chimney"></i>House Guide
+        </a>
+        <a href="#" class="wiki-link" data-article="controls">
+          <i class="fa-solid fa-gamepad"></i>Controls &amp; Keybinds
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="wiki-main">
+      <div class="wiki-body">
+
+        <!-- HOME -->
+        <article class="wiki-article active" id="article-home">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Capital Roleplay</div>
+            <h1>Welcome to the Capital Roleplay Wiki</h1>
+            <p class="wiki-lead">
+              This is the official knowledge base for Capital Roleplay. Find everything you need to get started,
+              understand server systems, and make the most of your roleplay experience.
+            </p>
+          </div>
+
+          <div class="wiki-card-grid">
+            <a class="wiki-card" href="#" data-article="how-to-join">
+              <div class="wiki-card-icon"><i class="fa-solid fa-circle-question"></i></div>
+              <strong>How to Join</strong>
+              <p>Step-by-step guide to joining Capital Roleplay for the first time.</p>
+            </a>
+            <a class="wiki-card" href="#" data-article="rules">
+              <div class="wiki-card-icon"><i class="fa-solid fa-file-lines"></i></div>
+              <strong>Server Rules</strong>
+              <p>Read and understand the rules before entering the city.</p>
+            </a>
+            <a class="wiki-card" href="#" data-article="starter-guide">
+              <div class="wiki-card-icon"><i class="fa-solid fa-rocket"></i></div>
+              <strong>Starter Guide</strong>
+              <p>Your first steps in the city — what to do after joining.</p>
+            </a>
+            <a class="wiki-card" href="#" data-article="controls">
+              <div class="wiki-card-icon"><i class="fa-solid fa-gamepad"></i></div>
+              <strong>Controls &amp; Keybinds</strong>
+              <p>Full list of controls and custom keybinds for Capital Roleplay.</p>
+            </a>
+          </div>
+
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+              <strong>Server restarts every day at 10:00 AM BST.</strong>
+              Downtime is typically 15 minutes to one hour. Check the <code>#status</code> channel in Discord if the server appears down.
+            </div>
+          </div>
+        </article>
+
+        <!-- RULES -->
+        <article class="wiki-article" id="article-rules">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Start Here</div>
+            <h1>Rules</h1>
+            <p class="wiki-lead">
+              All players are expected to read and follow the server rules. Breaking rules can result in a
+              warning, kick, or permanent ban depending on severity.
+            </p>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>The full server rules are maintained on the <a href="/rules" class="wiki-text-link">Rules page</a>. The sections below are a summary — always refer to the full rules page as the authoritative source.</div>
+          </div>
+          <div class="wiki-section">
+            <h2>Core principles</h2>
+            <ul class="wiki-list">
+              <li>Roleplay is the priority at all times. All players must stay in character in the city unless an admin situation requires otherwise.</li>
+              <li>Respect all players and staff. Harassment, discrimination, or toxic behaviour will not be tolerated.</li>
+              <li>No random deathmatch (RDM) — killing without roleplay reason is a bannable offence.</li>
+              <li>No vehicle deathmatch (VDM) — using vehicles as weapons without roleplay context is prohibited.</li>
+              <li>No metagaming — do not use information your character would not reasonably know.</li>
+              <li>No powergaming — do not force outcomes on other players or use exploits to gain an advantage.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Communication</h2>
+            <ul class="wiki-list">
+              <li>All voice chat in-city must be in character. Use out-of-character (OOC) channels only when necessary.</li>
+              <li>Discord is the out-of-character platform for reporting issues, staff contact, and community discussion.</li>
+            </ul>
+          </div>
+          <div class="wiki-cta">
+            <a class="button" href="/rules">Read full rules</a>
+          </div>
+        </article>
+
+        <!-- HOW TO JOIN -->
+        <article class="wiki-article" id="article-how-to-join">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Start Here</div>
+            <h1>How to Join the Server</h1>
+            <p class="wiki-lead">
+              Capital Roleplay is a whitelisted server. Follow the steps below to go from zero to playing.
+            </p>
+          </div>
+          <div class="wiki-steps">
+            <div class="wiki-step">
+              <div class="wiki-step-num">1</div>
+              <div>
+                <strong>Join the Discord</strong>
+                <p>All onboarding starts in Discord. Join via the link on the main site and read through the announcement and information channels.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">2</div>
+              <div>
+                <strong>Verify your account</strong>
+                <p>Follow the verification steps in the <code>#verify</code> channel to gain access to the full Discord server.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">3</div>
+              <div>
+                <strong>Read the rules</strong>
+                <p>Read the server rules in full before applying. Applications that show no knowledge of the rules will be declined.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">4</div>
+              <div>
+                <strong>Submit a whitelist application</strong>
+                <p>Fill out the whitelist form with your character concept and background. Applications are reviewed by staff.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">5</div>
+              <div>
+                <strong>Connect to the server</strong>
+                <p>Once approved, open FiveM, search for "Capital Roleplay" in the server browser, and connect. Your whitelist is tied to your Discord account.</p>
+              </div>
+            </div>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>Make sure FiveM is installed and up to date before attempting to connect. You also need GTA V to be installed.</div>
+          </div>
+        </article>
+
+        <!-- VERIFY -->
+        <article class="wiki-article" id="article-verify">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Start Here</div>
+            <h1>How to Verify</h1>
+            <p class="wiki-lead">
+              Verification is required to gain full access to the Capital Roleplay Discord server.
+            </p>
+          </div>
+          <div class="wiki-steps">
+            <div class="wiki-step">
+              <div class="wiki-step-num">1</div>
+              <div>
+                <strong>Join the Discord</strong>
+                <p>Use the invite link from the Capital Roleplay website to join the official Discord server.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">2</div>
+              <div>
+                <strong>Go to #verify</strong>
+                <p>Navigate to the <code>#verify</code> channel in the Discord server.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">3</div>
+              <div>
+                <strong>Follow the verification prompt</strong>
+                <p>Click the verify button or follow the instructions from the bot. This confirms you are a real member and not a bot.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">4</div>
+              <div>
+                <strong>Access unlocked</strong>
+                <p>Once verified, you will receive the Member role and gain access to all public channels including announcements, guides, and the application channel.</p>
+              </div>
+            </div>
+          </div>
+          <div class="wiki-warn-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>If the verification bot is offline or not responding, open a support ticket in the <code>#support</code> channel and a staff member will assist you.</div>
+          </div>
+        </article>
+
+        <!-- WHITELIST -->
+        <article class="wiki-article" id="article-whitelist">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Start Here</div>
+            <h1>How to Apply for Whitelist</h1>
+            <p class="wiki-lead">
+              The whitelist application is how staff assess whether a player is a good fit for Capital Roleplay.
+              Quality applications are reviewed carefully — take your time.
+            </p>
+          </div>
+          <div class="wiki-section">
+            <h2>Requirements before applying</h2>
+            <ul class="wiki-list">
+              <li>You must be verified in the Discord server.</li>
+              <li>You must have read the server rules in full.</li>
+              <li>You must be 16 or older to apply.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>What the application asks</h2>
+            <ul class="wiki-list">
+              <li><strong>Full name</strong> — your real first name and last initial.</li>
+              <li><strong>Discord username</strong> — used to link your application to your account.</li>
+              <li><strong>Age range</strong> — 16–17, 18–20, 21–25, or 26+.</li>
+              <li><strong>Roleplay experience</strong> — beginner, intermediate, experienced, or veteran.</li>
+              <li><strong>Character concept</strong> — describe the character you plan to play and how they fit into the city.</li>
+              <li><strong>Why you want to join</strong> — explain what draws you to Capital Roleplay specifically.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Tips for a strong application</h2>
+            <ul class="wiki-list">
+              <li>Be specific about your character — a vague concept is harder to approve.</li>
+              <li>Show you understand the difference between serious and casual roleplay.</li>
+              <li>Mention specific things about Capital Roleplay that appeal to you — not just generic roleplay comments.</li>
+              <li>Proofread before submitting. Grammar and effort reflect your seriousness as a player.</li>
+            </ul>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>Applications are reviewed by staff and typically receive a decision within 24–48 hours. You will be notified via Discord DM or a role ping.</div>
+          </div>
+          <div class="wiki-cta">
+            <a class="button" href="/#apply">Go to application</a>
+          </div>
+        </article>
+
+        <!-- FAQ -->
+        <article class="wiki-article" id="article-faq">
+          <div class="wiki-article-header">
+            <div class="eyebrow">Start Here</div>
+            <h1>Frequently Asked Questions</h1>
+            <p class="wiki-lead">
+              Answers to the most common questions about Capital Roleplay.
+            </p>
+          </div>
+          <div class="wiki-faq-list">
+            <details class="wiki-faq-item">
+              <summary>Is Capital Roleplay free to play?</summary>
+              <p>Yes. The server itself is free to join. There is an optional store for cosmetic or quality-of-life items, but nothing that affects gameplay is paywalled.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>What age do I need to be to join?</summary>
+              <p>You must be at least 16 years old to apply for whitelist access.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>How long does a whitelist application take?</summary>
+              <p>Applications are typically reviewed within 24–48 hours. Staff may contact you for additional information before making a decision.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>My application was declined — can I reapply?</summary>
+              <p>Yes. Read the feedback provided with your decline, wait any specified cooldown period, and reapply with an improved application.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>What happens during a server restart?</summary>
+              <p>The server restarts daily at 10:00 AM BST. Downtime is typically 15 minutes to one hour. Your character progress is saved automatically before each restart.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>Can I run multiple characters?</summary>
+              <p>Yes. Capital Roleplay supports multiple character slots. Each character is independent with their own progress, inventory, and faction affiliations.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>How do I report a player or bug?</summary>
+              <p>Open a support ticket in the <code>#support</code> channel on Discord. For in-game situations requiring immediate staff attention, use the in-game report command.</p>
+            </details>
+            <details class="wiki-faq-item">
+              <summary>Is there voice chat in-game?</summary>
+              <p>Yes. Capital Roleplay uses proximity voice chat. Players can hear you based on distance in-game. Ensure your microphone is working before joining.</p>
+            </details>
+          </div>
+        </article>
+
+        <!-- STARTER GUIDE -->
+        <article class="wiki-article" id="article-starter-guide">
+          <div class="wiki-article-header">
+            <div class="eyebrow">In-game Guides</div>
+            <h1>Starter Guide</h1>
+            <p class="wiki-lead">
+              Your first session guide. Follow these steps when you log into Capital Roleplay for the first time.
+            </p>
+          </div>
+          <div class="wiki-steps">
+            <div class="wiki-step">
+              <div class="wiki-step-num">1</div>
+              <div>
+                <strong>Character creation</strong>
+                <p>When you first connect, you will be taken through character creation. Set your appearance carefully — changes later may require a store purchase. Your character name should match the one on your whitelist application.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">2</div>
+              <div>
+                <strong>Spawn at the starting location</strong>
+                <p>New characters spawn at the City Hall area. This is the in-character starting point where your character begins their life in the city.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">3</div>
+              <div>
+                <strong>Find a legal job</strong>
+                <p>New players should start with a legal job to earn money. Common starting jobs include delivery driver, garbage collector, or fishing. Look for job locations marked on your in-game map.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">4</div>
+              <div>
+                <strong>Get a vehicle</strong>
+                <p>Once you have some money, visit the vehicle dealership to purchase your first car. You can also use in-game taxis or the bus system until then.</p>
+              </div>
+            </div>
+            <div class="wiki-step">
+              <div class="wiki-step-num">5</div>
+              <div>
+                <strong>Find housing</strong>
+                <p>Housing is available to rent or buy. Start with a basic apartment before working toward a larger property. Your home is used for clothing storage, item storage, and as a spawn point.</p>
+              </div>
+            </div>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>Use <kbd>F1</kbd> to open the help menu at any time. It contains a full list of available commands and interactions.</div>
+          </div>
+          <div class="wiki-section">
+            <h2>Essential first commands</h2>
+            <div class="wiki-table-wrap">
+              <table class="wiki-table">
+                <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>/me</code></td><td>Perform an action visible to nearby players (e.g. <em>/me pulls out their phone</em>)</td></tr>
+                  <tr><td><code>/do</code></td><td>Describe something about the environment or situation</td></tr>
+                  <tr><td><code>/ooc</code></td><td>Speak out of character to nearby players</td></tr>
+                  <tr><td><code>/report</code></td><td>Send a report to staff</td></tr>
+                  <tr><td><code>F2</code></td><td>Open the character interaction menu</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <!-- WEAPON GUIDE -->
+        <article class="wiki-article" id="article-weapon-guide">
+          <div class="wiki-article-header">
+            <div class="eyebrow">In-game Guides</div>
+            <h1>General Weapon Guide</h1>
+            <p class="wiki-lead">
+              Everything you need to know about weapons in Capital Roleplay — how to obtain them, store them, and use them in roleplay.
+            </p>
+          </div>
+          <div class="wiki-section">
+            <h2>Legal weapons</h2>
+            <p>Legal firearms can be purchased from the licensed gun shop in-city. To purchase a legal weapon you must:</p>
+            <ul class="wiki-list">
+              <li>Have a valid firearms licence (obtained through the licensing office)</li>
+              <li>Pass the background check process (handled in-roleplay)</li>
+              <li>Not be under an active criminal restriction</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Illegal weapons</h2>
+            <p>Illegal weapons are obtained through criminal roleplay channels. These weapons are not licensed and carry significant legal risk in-character. Possession of an illegal firearm by a civilian character without criminal faction backing is not recommended.</p>
+          </div>
+          <div class="wiki-section">
+            <h2>Storing weapons</h2>
+            <ul class="wiki-list">
+              <li>Weapons can be stored in your <strong>personal inventory</strong>, your <strong>vehicle boot</strong>, or your <strong>house storage</strong>.</li>
+              <li>Weapons in the boot are accessible when near your vehicle. Press <kbd>G</kbd> to open the vehicle storage interface.</li>
+              <li>You cannot carry all weapons at once — weight limits apply to the personal inventory.</li>
+            </ul>
+          </div>
+          <div class="wiki-warn-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div><strong>Important:</strong> Using a weapon without proper roleplay justification is considered RDM and is a bannable offence. Always ensure there is a valid in-character reason before escalating to violence.</div>
+          </div>
+          <div class="wiki-section">
+            <h2>Weapon ammo</h2>
+            <p>Ammo is purchased separately from the gun shop or obtained through criminal channels. Ammo is stored per weapon type in your inventory. Running out of ammo mid-situation is a genuine risk — manage it accordingly.</p>
+          </div>
+        </article>
+
+        <!-- VEHICLE GUIDE -->
+        <article class="wiki-article" id="article-vehicle-guide">
+          <div class="wiki-article-header">
+            <div class="eyebrow">In-game Guides</div>
+            <h1>Vehicle Garage System</h1>
+            <p class="wiki-lead">
+              How vehicles work in Capital Roleplay — purchasing, garaging, impounds, and customisation.
+            </p>
+          </div>
+          <div class="wiki-section">
+            <h2>Purchasing a vehicle</h2>
+            <ul class="wiki-list">
+              <li>Go to the vehicle dealership (marked on your map).</li>
+              <li>Browse available vehicles and test drive before purchasing.</li>
+              <li>Once purchased, the vehicle is registered to your character and stored in your personal garage.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Using the garage</h2>
+            <ul class="wiki-list">
+              <li>Drive to any garage blip on the map and press <kbd>E</kbd> to open the garage menu.</li>
+              <li>Select a stored vehicle to bring it out. You will spawn inside or beside the vehicle.</li>
+              <li>To store your vehicle, drive to a garage and press <kbd>E</kbd> — select "Store Vehicle".</li>
+              <li>Vehicles left on the street overnight may be impounded by police or automatically despawned.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Impound</h2>
+            <ul class="wiki-list">
+              <li>If your vehicle is impounded, go to the impound lot (marked on the map).</li>
+              <li>Pay the impound fee to retrieve your vehicle. Fees vary based on the reason for impound.</li>
+              <li>Vehicles with outstanding fines may require those to be paid before retrieval.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Vehicle customisation</h2>
+            <ul class="wiki-list">
+              <li>Visit a mechanic shop or mod garage to customise your vehicle.</li>
+              <li>Available modifications include: colour, wheels, engine upgrades, suspension, and body kits.</li>
+              <li>Capital Roleplay uses custom vehicle packs — not all real-world modifications are available.</li>
+            </ul>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>Vehicle mods that affect performance (engine, transmission, brakes) are subject to in-roleplay inspection by police. An upgraded vehicle is not invisible to law enforcement.</div>
+          </div>
+        </article>
+
+        <!-- HOUSE GUIDE -->
+        <article class="wiki-article" id="article-house-guide">
+          <div class="wiki-article-header">
+            <div class="eyebrow">In-game Guides</div>
+            <h1>House Guide</h1>
+            <p class="wiki-lead">
+              How to rent, purchase, and use housing in Capital Roleplay.
+            </p>
+          </div>
+          <div class="wiki-section">
+            <h2>Finding a property</h2>
+            <ul class="wiki-list">
+              <li>Available properties are marked on the map with a house icon.</li>
+              <li>Walk up to a property and press <kbd>E</kbd> to view details and pricing.</li>
+              <li>Properties range from starter apartments to large detached houses.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Purchasing and renting</h2>
+            <ul class="wiki-list">
+              <li>Some properties are available to rent (weekly in-game fee) or buy outright.</li>
+              <li>Rent is automatically deducted from your bank account at the start of each in-game week.</li>
+              <li>If rent is unpaid, you will be locked out of the property after a grace period.</li>
+            </ul>
+          </div>
+          <div class="wiki-section">
+            <h2>Using your property</h2>
+            <ul class="wiki-list">
+              <li>Press <kbd>E</kbd> at your front door to enter. You can lock/unlock the door from the interaction menu.</li>
+              <li>Access your <strong>house stash</strong> from inside to store items, weapons, and money.</li>
+              <li>You can set your house as your <strong>spawn point</strong> from the character menu.</li>
+              <li>Invite other players in via the interaction menu — uninvited players cannot enter a locked property.</li>
+            </ul>
+          </div>
+          <div class="wiki-warn-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>House stashes are wiped on the first day of each month as part of the server's boot wipe. Do not use your house as a long-term weapon or money vault.</div>
+          </div>
+        </article>
+
+        <!-- CONTROLS -->
+        <article class="wiki-article" id="article-controls">
+          <div class="wiki-article-header">
+            <div class="eyebrow">In-game Guides</div>
+            <h1>Controls &amp; Keybinds</h1>
+            <p class="wiki-lead">
+              A full reference of default controls and custom keybinds for Capital Roleplay.
+            </p>
+          </div>
+          <div class="wiki-section">
+            <h2>General</h2>
+            <div class="wiki-table-wrap">
+              <table class="wiki-table">
+                <thead><tr><th>Key</th><th>Action</th></tr></thead>
+                <tbody>
+                  <tr><td><kbd>F1</kbd></td><td>Open help / command list</td></tr>
+                  <tr><td><kbd>F2</kbd></td><td>Character interaction menu</td></tr>
+                  <tr><td><kbd>F3</kbd></td><td>Emote menu</td></tr>
+                  <tr><td><kbd>F5</kbd></td><td>Phone</td></tr>
+                  <tr><td><kbd>F6</kbd></td><td>Job menu (when on duty)</td></tr>
+                  <tr><td><kbd>M</kbd></td><td>Open map</td></tr>
+                  <tr><td><kbd>Z</kbd></td><td>Hands up / surrender</td></tr>
+                  <tr><td><kbd>X</kbd></td><td>Toggle voice range (whisper / normal / shout)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="wiki-section">
+            <h2>Vehicles</h2>
+            <div class="wiki-table-wrap">
+              <table class="wiki-table">
+                <thead><tr><th>Key</th><th>Action</th></tr></thead>
+                <tbody>
+                  <tr><td><kbd>E</kbd></td><td>Enter / exit vehicle, open garage</td></tr>
+                  <tr><td><kbd>G</kbd></td><td>Open vehicle boot / glovebox</td></tr>
+                  <tr><td><kbd>L</kbd></td><td>Lock / unlock vehicle</td></tr>
+                  <tr><td><kbd>H</kbd></td><td>Toggle seatbelt</td></tr>
+                  <tr><td><kbd>Left Shift</kbd></td><td>Engine on / off (when stationary)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="wiki-section">
+            <h2>Roleplay &amp; chat</h2>
+            <div class="wiki-table-wrap">
+              <table class="wiki-table">
+                <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>/me [action]</code></td><td>Perform a visible roleplay action</td></tr>
+                  <tr><td><code>/do [description]</code></td><td>Describe an environmental action or state</td></tr>
+                  <tr><td><code>/ooc [message]</code></td><td>Local out-of-character message</td></tr>
+                  <tr><td><code>/report [message]</code></td><td>Send a private message to staff</td></tr>
+                  <tr><td><code>/911 [message]</code></td><td>Send an emergency call visible to police</td></tr>
+                  <tr><td><code>/tweet [message]</code></td><td>Post to the in-game social media feed</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="wiki-info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>Some keybinds can be rebound from the FiveM settings menu (<kbd>Esc</kbd> → Settings → Key Bindings → FiveM). Server-specific binds are listed above and may override defaults.</div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Next article + Last updated -->
+      <div class="wiki-nav-footer">
+        <a class="wiki-next-btn" id="wiki-next-btn" href="#">
+          <div class="wiki-next-text">
+            <span class="wiki-next-label">Next</span>
+            <span class="wiki-next-title" id="wiki-next-title">Rules</span>
+          </div>
+          <i class="fa-solid fa-chevron-right wiki-next-arrow"></i>
+        </a>
+        <p class="wiki-last-updated">Last updated <time>{lastUpdated}</time></p>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  </div>
 </MainLayout>
+
+<style>
+  /* --- Page wrapper & grid background --- */
+  .wiki-page {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 106px);
+  }
+
+  /* --- Page header --- */
+  .wiki-page-header {
+    position: relative;
+    z-index: 1;
+    padding: 64px 0 40px;
+  }
+
+  .wiki-page-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
+    letter-spacing: -0.06em;
+    line-height: 0.98;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+
+  .wiki-page-title span {
+    color: var(--primary);
+    text-shadow: 0 0 40px rgba(0, 174, 255, 0.25);
+  }
+
+  .wiki-page-subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 52ch;
+  }
+
+  .wiki-outer {
+    position: relative;
+    z-index: 1;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* --- Layout --- */
+  .wiki-shell {
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    min-height: 70vh;
+    align-items: start;
+  }
+
+  /* --- Sidebar --- */
+  .wiki-sidebar {
+    position: sticky;
+    top: 106px;
+    height: calc(100vh - 106px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 56px 14px 60px;
+    border-right: 1px solid rgba(0, 174, 255, 0.07);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  }
+
+  .wiki-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: text;
+    margin-bottom: 28px;
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .wiki-search:hover {
+    border-color: rgba(0, 174, 255, 0.28);
+    background: rgba(0, 174, 255, 0.04);
+  }
+
+  .wiki-search-icon {
+    color: #3e5870;
+    font-size: 0.8rem;
+  }
+
+  .wiki-search span {
+    flex: 1;
+    color: #3e5870;
+    font-size: 0.86rem;
+  }
+
+  .wiki-search kbd {
+    font-family: inherit;
+    font-size: 0.7rem;
+    color: #2e4558;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
+    padding: 2px 5px;
+  }
+
+  .wiki-group-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #2e4255;
+    padding: 0 10px;
+    margin: 22px 0 5px;
+  }
+
+  .wiki-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .wiki-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    color: #5c7d96;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color var(--transition), background var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .wiki-link i {
+    width: 14px;
+    text-align: center;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+    color: #2e4558;
+    transition: color var(--transition);
+  }
+
+  .wiki-link:hover {
+    color: #a8c8df;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .wiki-link:hover i {
+    color: #4a8baa;
+  }
+
+  .wiki-link.active {
+    color: #cceeff;
+    background: rgba(0, 174, 255, 0.09);
+    border-color: rgba(0, 174, 255, 0.16);
+    font-weight: 600;
+  }
+
+  .wiki-link.active i {
+    color: var(--primary);
+  }
+
+  /* --- Main content --- */
+  .wiki-main {
+    padding: 56px 72px 120px;
+    min-width: 0;
+  }
+
+  .wiki-body {
+    max-width: 760px;
+  }
+
+  /* --- Articles --- */
+  .wiki-article {
+    display: none;
+  }
+
+  .wiki-article.active {
+    display: block;
+  }
+
+  .wiki-article-header {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .wiki-article-header .eyebrow {
+    margin-bottom: 18px;
+  }
+
+  .wiki-article-header h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #f4f8ff 40%, #7ecfff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .wiki-lead {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.85;
+    max-width: 62ch;
+  }
+
+  /* --- Section --- */
+  .wiki-section {
+    margin-top: 36px;
+  }
+
+  .wiki-section h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.18rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .wiki-section > p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  /* --- Lists --- */
+  .wiki-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .wiki-list li {
+    display: flex;
+    gap: 12px;
+    color: var(--muted-2);
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+
+  .wiki-list li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    margin-top: 8px;
+    box-shadow: 0 0 8px rgba(0, 174, 255, 0.5);
+  }
+
+  .wiki-list li strong {
+    color: var(--text);
+  }
+
+  /* --- Info/Warn boxes --- */
+  .wiki-info-box,
+  .wiki-warn-box {
+    display: flex;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    margin-top: 28px;
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .wiki-info-box {
+    background: rgba(0, 174, 255, 0.07);
+    border: 1px solid rgba(0, 174, 255, 0.18);
+    color: #b0dff5;
+  }
+
+  .wiki-info-box > i {
+    color: var(--primary);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .wiki-warn-box {
+    background: rgba(255, 180, 0, 0.07);
+    border: 1px solid rgba(255, 180, 0, 0.2);
+    color: #f5d88a;
+  }
+
+  .wiki-warn-box > i {
+    color: #ffb800;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .wiki-info-box strong,
+  .wiki-warn-box strong {
+    color: inherit;
+  }
+
+  /* --- Steps --- */
+  .wiki-steps {
+    display: grid;
+    gap: 0;
+    margin-top: 8px;
+  }
+
+  .wiki-step {
+    display: flex;
+    gap: 18px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .wiki-step:last-child {
+    border-bottom: none;
+  }
+
+  .wiki-step-num {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 174, 255, 0.1);
+    border: 1px solid rgba(0, 174, 255, 0.22);
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 800;
+    font-family: "Space Grotesk", sans-serif;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+
+  .wiki-step > div:last-child strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .wiki-step > div:last-child p {
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: 0.95rem;
+  }
+
+  /* --- Tables --- */
+  .wiki-table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .wiki-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+  }
+
+  .wiki-table thead tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .wiki-table th {
+    text-align: left;
+    padding: 12px 16px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .wiki-table td {
+    padding: 11px 16px;
+    color: var(--muted-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    line-height: 1.5;
+  }
+
+  .wiki-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .wiki-table code,
+  .wiki-info-box code,
+  .wiki-warn-box code,
+  .wiki-step code,
+  .wiki-list code {
+    font-family: "Courier New", monospace;
+    font-size: 0.9em;
+    background: rgba(0, 174, 255, 0.1);
+    color: #7fd8ff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 174, 255, 0.18);
+  }
+
+  .wiki-table kbd,
+  .wiki-info-box kbd,
+  .wiki-step kbd,
+  .wiki-list kbd {
+    font-family: inherit;
+    font-size: 0.82em;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--muted-2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* --- FAQ --- */
+  .wiki-faq-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .wiki-faq-item {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    transition: border-color var(--transition);
+  }
+
+  .wiki-faq-item:hover {
+    border-color: rgba(0, 174, 255, 0.2);
+  }
+
+  .wiki-faq-item[open] {
+    border-color: rgba(0, 174, 255, 0.24);
+  }
+
+  .wiki-faq-item summary {
+    padding: 16px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.97rem;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  .wiki-faq-item summary::after {
+    content: "+";
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: transform var(--transition);
+  }
+
+  .wiki-faq-item[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .wiki-faq-item p {
+    padding: 0 18px 16px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  /* --- Home cards --- */
+  .wiki-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 0 0 28px;
+  }
+
+  .wiki-card {
+    display: block;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color var(--transition), transform var(--transition), background var(--transition);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .wiki-card:hover {
+    border-color: rgba(0, 174, 255, 0.28);
+    transform: translateY(-2px);
+    background: rgba(0, 174, 255, 0.05);
+  }
+
+  .wiki-card-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 174, 255, 0.1);
+    border: 1px solid rgba(0, 174, 255, 0.18);
+    border-radius: 10px;
+    color: #7fd8ff;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .wiki-card strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+  }
+
+  .wiki-card p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  /* --- Text link --- */
+  .wiki-text-link {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* --- CTA --- */
+  .wiki-cta {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  /* --- Next / Last Updated footer --- */
+  .wiki-nav-footer {
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 760px;
+  }
+
+  .wiki-next-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+
+  .wiki-next-btn:hover {
+    border-color: rgba(0, 174, 255, 0.3);
+    background: rgba(0, 174, 255, 0.05);
+    transform: translateY(-1px);
+  }
+
+  .wiki-next-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .wiki-next-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .wiki-next-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .wiki-next-arrow {
+    color: var(--primary);
+    font-size: 0.88rem;
+    flex-shrink: 0;
+  }
+
+  .wiki-last-updated {
+    font-size: 0.84rem;
+    color: var(--muted);
+  }
+
+  .wiki-last-updated time {
+    color: var(--muted-2);
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 960px) {
+    .wiki-outer {
+      padding: 0 16px;
+    }
+
+    .wiki-page-header {
+      padding: 48px 0 40px;
+    }
+
+    .wiki-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .wiki-sidebar {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 24px 14px 28px;
+    }
+
+    .wiki-main {
+      padding: 36px 20px 60px;
+    }
+
+    .wiki-card-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const links = document.querySelectorAll(".wiki-link");
+  const articles = document.querySelectorAll(".wiki-article");
+  const nextBtn = document.getElementById("wiki-next-btn") as HTMLAnchorElement | null;
+  const nextTitle = document.getElementById("wiki-next-title");
+
+  const articleOrder = [
+    { id: "home",          label: "Welcome" },
+    { id: "rules",         label: "Rules" },
+    { id: "how-to-join",   label: "How to Join the Server" },
+    { id: "verify",        label: "How to Verify" },
+    { id: "whitelist",     label: "How to Apply for Whitelist" },
+    { id: "faq",           label: "FAQ" },
+    { id: "starter-guide", label: "Starter Guide" },
+    { id: "weapon-guide",  label: "General Weapon Guide" },
+    { id: "vehicle-guide", label: "Vehicle Garage System" },
+    { id: "house-guide",   label: "House Guide" },
+    { id: "controls",      label: "Controls & Keybinds" },
+  ];
+
+  function updateNextBtn(currentId: string) {
+    const idx = articleOrder.findIndex((a) => a.id === currentId);
+    if (!nextBtn || !nextTitle) return;
+    if (idx !== -1 && idx < articleOrder.length - 1) {
+      const next = articleOrder[idx + 1];
+      nextBtn.style.display = "flex";
+      nextBtn.dataset.article = next.id;
+      nextTitle.textContent = next.label;
+    } else {
+      nextBtn.style.display = "none";
+    }
+  }
+
+  function showArticle(id: string) {
+    articles.forEach((a) => a.classList.remove("active"));
+    links.forEach((l) => l.classList.remove("active"));
+
+    const target = document.getElementById("article-" + id);
+    if (target) target.classList.add("active");
+
+    const activeLink = document.querySelector(`.wiki-link[data-article="${id}"]`);
+    if (activeLink) activeLink.classList.add("active");
+
+    updateNextBtn(id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = (link as HTMLElement).dataset.article;
+      if (id) showArticle(id);
+    });
+  });
+
+  document.querySelectorAll(".wiki-card[data-article]").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = (card as HTMLElement).dataset.article;
+      if (id) showArticle(id);
+    });
+  });
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = nextBtn.dataset.article;
+      if (id) showArticle(id);
+    });
+  }
+
+  // Initialise next button for the default active article
+  updateNextBtn("home");
+</script>

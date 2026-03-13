@@ -3,42 +3,724 @@ import MainLayout from "../layouts/MainLayout.astro";
 ---
 
 <MainLayout title="Factions — Capital Roleplay">
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <div class="eyebrow">Faction structure</div>
-        <h1>Faction roleplay with structure.</h1>
-        <p class="lead">
-          This page should later become the central overview for legal and illegal factions in Capital Roleplay.
-          For now, it establishes the visual structure and navigation.
+  <div class="factions-page">
+
+    <!-- Page header -->
+    <div class="factions-header">
+      <div class="factions-outer">
+        <div class="eyebrow">Faction Structure</div>
+        <h1 class="factions-title">Roleplay with<br /><span>Structure.</span></h1>
+        <p class="factions-subtitle">
+          Capital Roleplay runs a structured faction system across law enforcement, civilian
+          organisations, and criminal enterprises. Every faction has expectations, standards,
+          and a clear path of progression.
         </p>
       </div>
+    </div>
 
-      <div class="cards">
-        <article class="card">
-          <h3>Police & Emergency Services</h3>
-          <p>
-            Reserved for law enforcement, medical, and public service faction information,
-            recruitment, expectations, and progression.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Business & Civilian Groups</h3>
-          <p>
-            Reserved for player-run businesses, civilian organisations, and other structured
-            community roleplay groups.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Organised Crime</h3>
-          <p>
-            Reserved for illegal faction framework, standards, recruitment requirements,
-            and progression inside the city.
-          </p>
-        </article>
+    <!-- Stats row -->
+    <div class="factions-outer">
+      <div class="factions-stats-row">
+        <div class="factions-stat">
+          <i class="fa-solid fa-users"></i>
+          <span>3 faction categories</span>
+        </div>
+        <div class="factions-stat factions-stat--police">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Whitelisted emergency services</span>
+        </div>
+        <div class="factions-stat factions-stat--civilian">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Player-run businesses</span>
+        </div>
+        <div class="factions-stat factions-stat--crime">
+          <i class="fa-solid fa-user-secret"></i>
+          <span>Registered criminal factions</span>
+        </div>
       </div>
     </div>
-  </section>
+
+    <!-- Factions content -->
+    <div class="factions-outer factions-sections">
+
+      <!-- ──────────────────────────────────────────── -->
+      <!-- POLICE & EMERGENCY SERVICES -->
+      <!-- ──────────────────────────────────────────── -->
+      <div class="faction-section">
+        <div class="faction-section-header faction-section-header--police" data-num="01">
+          <div class="faction-section-watermark">01</div>
+          <div class="faction-section-inner">
+            <div class="faction-section-icon faction-section-icon--police">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="faction-section-copy">
+              <div class="faction-section-badge faction-section-badge--police">Whitelisted</div>
+              <h2>Police &amp; Emergency Services</h2>
+              <p>
+                Law enforcement, medical, and fire service factions. These are whitelisted
+                roles that require an application, interview, and active commitment
+                to on-duty roleplay.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faction-cards">
+
+          <div class="faction-card faction-card--police">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-car-burst"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--police">Law Enforcement</div>
+            </div>
+            <h3>Los Santos Police Department</h3>
+            <p>
+              The primary law enforcement agency of the city. LSPD officers patrol the streets,
+              respond to calls, investigate crimes, and lead pursuits. Officers must follow
+              use-of-force policy and uphold the law through active, consistent roleplay.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Active patrol duties</li>
+              <li><i class="fa-solid fa-check"></i>Criminal investigations</li>
+              <li><i class="fa-solid fa-check"></i>Firearms &amp; pursuit certified</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--police">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--police">Law Enforcement</div>
+            </div>
+            <h3>Los Santos Sheriff's Department</h3>
+            <p>
+              Responsible for policing outer city zones, highways, and rural areas. The
+              Sheriff's Department handles jurisdictional cases outside LSPD boundaries
+              and provides specialist support units including SWAT and K-9.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Highway &amp; outer-zone patrol</li>
+              <li><i class="fa-solid fa-check"></i>SWAT &amp; specialist units</li>
+              <li><i class="fa-solid fa-check"></i>Cross-jurisdiction support</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--police">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-kit-medical"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--police">Emergency Medical</div>
+            </div>
+            <h3>NHS / Emergency Medical Services</h3>
+            <p>
+              EMS personnel respond to injuries, revive downed players, and operate
+              ambulances throughout the city. EMS is a neutral faction — they treat all
+              injured parties regardless of criminal status and cannot be targeted while
+              rendering aid.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Neutral emergency response</li>
+              <li><i class="fa-solid fa-check"></i>Trauma &amp; scene roleplay</li>
+              <li><i class="fa-solid fa-check"></i>Protected while on-duty</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="faction-join faction-join--police">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <strong>How to join:</strong> Emergency service applications are reviewed
+            periodically. Requirements include a clean record, active membership for
+            at least <strong>2 weeks</strong>, and passing an in-character interview.
+            Apply via the Discord ticket system.
+          </div>
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────── -->
+      <!-- BUSINESS & CIVILIAN GROUPS -->
+      <!-- ──────────────────────────────────────────── -->
+      <div class="faction-section">
+        <div class="faction-section-header faction-section-header--civilian" data-num="02">
+          <div class="faction-section-watermark">02</div>
+          <div class="faction-section-inner">
+            <div class="faction-section-icon faction-section-icon--civilian">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="faction-section-copy">
+              <div class="faction-section-badge faction-section-badge--civilian">Open &amp; Whitelisted</div>
+              <h2>Business &amp; Civilian Groups</h2>
+              <p>
+                Player-run businesses, civilian organisations, and structured community groups
+                that add depth to the city's legal economy and social fabric.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faction-cards">
+
+          <div class="faction-card faction-card--civilian">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-scale-balanced"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--civilian">Legal Profession</div>
+            </div>
+            <h3>Legal Firms &amp; Judiciary</h3>
+            <p>
+              Lawyers, barristers, and judges operate within the city's legal system —
+              defending clients in court, negotiating with prosecutors, and upholding
+              civil law. A high-RP role requiring knowledge of server law and procedure.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Criminal defence roleplay</li>
+              <li><i class="fa-solid fa-check"></i>Civil court proceedings</li>
+              <li><i class="fa-solid fa-check"></i>Contract &amp; property law</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--civilian">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-store"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--civilian">Business</div>
+            </div>
+            <h3>Player-Owned Businesses</h3>
+            <p>
+              Approved businesses can operate shops, garages, clubs, restaurants, and service
+              companies in-city. Business owners must maintain active RP operations and are
+              responsible for the conduct of their employees.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Storefront &amp; service RP</li>
+              <li><i class="fa-solid fa-check"></i>Hire &amp; manage staff</li>
+              <li><i class="fa-solid fa-check"></i>Staff-approved premises</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--civilian">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-newspaper"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--civilian">Community</div>
+            </div>
+            <h3>Media &amp; Civilian Organisations</h3>
+            <p>
+              Journalists, content creators, community clubs, and social organisations
+              that shape city culture. These groups document events, run in-character news
+              outlets, and build the social layer of the server.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>In-character journalism</li>
+              <li><i class="fa-solid fa-check"></i>Community event hosting</li>
+              <li><i class="fa-solid fa-check"></i>Cultural &amp; social roleplay</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="faction-join faction-join--civilian">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <strong>How to join:</strong> Most civilian roles are open to all players.
+            Business registration and legal profession roles require a staff-reviewed
+            application via Discord. Businesses must demonstrate an active RP presence
+            before receiving official city approval.
+          </div>
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────── -->
+      <!-- ORGANISED CRIME -->
+      <!-- ──────────────────────────────────────────── -->
+      <div class="faction-section">
+        <div class="faction-section-header faction-section-header--crime" data-num="03">
+          <div class="faction-section-watermark">03</div>
+          <div class="faction-section-inner">
+            <div class="faction-section-icon faction-section-icon--crime">
+              <i class="fa-solid fa-user-secret"></i>
+            </div>
+            <div class="faction-section-copy">
+              <div class="faction-section-badge faction-section-badge--crime">Registered Only</div>
+              <h2>Organised Crime</h2>
+              <p>
+                Criminal factions, street gangs, and underground organisations. All groups
+                operating as organised crime must be registered with server leadership and
+                must maintain RP quality standards to retain their status.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faction-cards">
+
+          <div class="faction-card faction-card--crime">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-road"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--crime">Street Level</div>
+            </div>
+            <h3>Street Gangs</h3>
+            <p>
+              Territory-based crews operating in specific districts of the city. Street gangs
+              control drug corners, run protection rackets, and engage in turf warfare with
+              rival organisations. Membership requires consistent RP activity and a registered
+              faction with active leadership.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Territory &amp; turf systems</li>
+              <li><i class="fa-solid fa-check"></i>Drug trade &amp; street crime</li>
+              <li><i class="fa-solid fa-check"></i>Gang war mechanics</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--crime">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--crime">Upper Echelon</div>
+            </div>
+            <h3>Criminal Organisations</h3>
+            <p>
+              Sophisticated criminal enterprises — mafias, cartels, syndicates — that operate
+              at a higher level. These groups run arms trafficking, large-scale heists, and
+              corruption networks. Leadership structures and internal RP are held to the
+              highest standards.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>Large-scale criminal operations</li>
+              <li><i class="fa-solid fa-check"></i>Corruption &amp; influence RP</li>
+              <li><i class="fa-solid fa-check"></i>Staff-supervised scenarios</li>
+            </ul>
+          </div>
+
+          <div class="faction-card faction-card--crime">
+            <div class="faction-card-top">
+              <div class="faction-card-icon">
+                <i class="fa-solid fa-wrench"></i>
+              </div>
+              <div class="faction-card-tag faction-card-tag--crime">Independent</div>
+            </div>
+            <h3>Independent Criminals</h3>
+            <p>
+              Not every criminal needs a faction. Independent players can run solo operations,
+              freelance for multiple organisations, or build toward starting their own group.
+              Independents still follow all criminal RP rules but have no registration
+              requirements.
+            </p>
+            <ul class="faction-card-list">
+              <li><i class="fa-solid fa-check"></i>No registration required</li>
+              <li><i class="fa-solid fa-check"></i>Freelance criminal work</li>
+              <li><i class="fa-solid fa-check"></i>Path to faction leadership</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="faction-join faction-join--crime">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>Registration required:</strong> Criminal groups with more than 3 regular
+            members must register via a Discord ticket. Unregistered organised activity will
+            be treated as a rule violation. All criminal factions are subject to conduct
+            reviews — groups that fail to maintain RP quality will be disbanded.
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer CTA -->
+      <div class="factions-footer-cta">
+        <div class="factions-footer-cta-icon">
+          <i class="fa-solid fa-file-lines"></i>
+        </div>
+        <div class="factions-footer-cta-text">
+          <strong>Ready to get involved?</strong>
+          <p>Apply for the server, get whitelisted, and start building your story in the city.</p>
+        </div>
+        <a class="button" href="/#apply">Apply Now</a>
+      </div>
+
+    </div>
+  </div>
 </MainLayout>
+
+<style>
+  .factions-page {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 106px);
+  }
+
+  .factions-header {
+    padding: 64px 0 48px;
+  }
+
+  .factions-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
+    letter-spacing: -0.06em;
+    line-height: 0.98;
+    margin: 18px 0 16px;
+    color: var(--text);
+  }
+
+  .factions-title span {
+    color: var(--primary);
+    text-shadow: 0 0 40px rgba(0, 174, 255, 0.25);
+  }
+
+  .factions-subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 58ch;
+  }
+
+  .factions-outer {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .factions-sections {
+    padding-bottom: 120px;
+  }
+
+  /* --- Stats row --- */
+  .factions-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 52px;
+  }
+
+  .factions-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 174, 255, 0.06);
+    border: 1px solid rgba(0, 174, 255, 0.15);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #8ecfee;
+    letter-spacing: 0.01em;
+  }
+
+  .factions-stat i { color: var(--primary); font-size: 0.82rem; }
+
+  .factions-stat--police  { background: rgba(0, 220, 210, 0.06); border-color: rgba(0, 220, 210, 0.18); color: #80e8e0; }
+  .factions-stat--police i { color: #00dcd2; }
+  .factions-stat--civilian { background: rgba(50, 200, 120, 0.06); border-color: rgba(50, 200, 120, 0.18); color: #80d4a0; }
+  .factions-stat--civilian i { color: #4cd68a; }
+  .factions-stat--crime   { background: rgba(160, 80, 220, 0.07); border-color: rgba(160, 80, 220, 0.2); color: #c090e0; }
+  .factions-stat--crime i { color: #c080e8; }
+
+  /* --- Faction section --- */
+  .faction-section {
+    margin-bottom: 80px;
+  }
+
+  /* --- Section header card --- */
+  .faction-section-header {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 36px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, rgba(0, 174, 255, 0.07) 0%, rgba(0, 174, 255, 0.02) 100%);
+    border: 1px solid rgba(0, 174, 255, 0.16);
+    border-left: 3px solid rgba(0, 174, 255, 0.7);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+
+  .faction-section-header--police {
+    background: linear-gradient(135deg, rgba(0, 210, 200, 0.07) 0%, rgba(0, 174, 255, 0.02) 100%);
+    border-color: rgba(0, 210, 200, 0.18);
+    border-left-color: rgba(0, 220, 210, 0.75);
+  }
+
+  .faction-section-header--civilian {
+    background: linear-gradient(135deg, rgba(50, 200, 120, 0.07) 0%, rgba(50, 200, 120, 0.02) 100%);
+    border-color: rgba(50, 200, 120, 0.18);
+    border-left-color: rgba(50, 200, 120, 0.7);
+  }
+
+  .faction-section-header--crime {
+    background: linear-gradient(135deg, rgba(160, 80, 220, 0.08) 0%, rgba(160, 80, 220, 0.02) 100%);
+    border-color: rgba(160, 80, 220, 0.2);
+    border-left-color: rgba(160, 80, 220, 0.7);
+  }
+
+  .faction-section-watermark {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 6rem;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .faction-section-header--police .faction-section-watermark   { color: rgba(0, 220, 210, 0.065); }
+  .faction-section-header--civilian .faction-section-watermark { color: rgba(50, 200, 120, 0.07); }
+  .faction-section-header--crime .faction-section-watermark    { color: rgba(160, 80, 220, 0.07); }
+
+  .faction-section-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .faction-section-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  .faction-section-icon--police  { background: rgba(0, 220, 210, 0.1); border: 1px solid rgba(0, 220, 210, 0.26); color: #00dcd2; filter: drop-shadow(0 0 8px rgba(0, 220, 210, 0.22)); }
+  .faction-section-icon--civilian{ background: rgba(50, 200, 120, 0.1); border: 1px solid rgba(50, 200, 120, 0.26); color: #4cd68a; filter: drop-shadow(0 0 8px rgba(50, 200, 120, 0.22)); }
+  .faction-section-icon--crime   { background: rgba(160, 80, 220, 0.1); border: 1px solid rgba(160, 80, 220, 0.28); color: #c080e8; filter: drop-shadow(0 0 8px rgba(160, 80, 220, 0.22)); }
+
+  .faction-section-badge {
+    display: inline-block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .faction-section-badge--police   { color: #00dcd2; }
+  .faction-section-badge--civilian { color: #4cd68a; }
+  .faction-section-badge--crime    { color: #c080e8; }
+
+  .faction-section-copy h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+
+  .faction-section-header--police .faction-section-copy h2 {
+    background: linear-gradient(135deg, #f4f8ff 40%, #80f0e8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .faction-section-header--civilian .faction-section-copy h2 {
+    background: linear-gradient(135deg, #f4f8ff 40%, #80e8a8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .faction-section-header--crime .faction-section-copy h2 {
+    background: linear-gradient(135deg, #f4f8ff 40%, #d090ff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .faction-section-copy p {
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.7;
+    max-width: 62ch;
+  }
+
+  /* --- Faction cards grid --- */
+  .faction-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .faction-card {
+    padding: 24px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  }
+
+  .faction-card--police:hover  { background: rgba(0, 220, 210, 0.04); border-color: rgba(0, 220, 210, 0.25); box-shadow: 0 0 24px rgba(0, 220, 210, 0.07); }
+  .faction-card--civilian:hover{ background: rgba(50, 200, 120, 0.04); border-color: rgba(50, 200, 120, 0.25); box-shadow: 0 0 24px rgba(50, 200, 120, 0.07); }
+  .faction-card--crime:hover   { background: rgba(160, 80, 220, 0.04); border-color: rgba(160, 80, 220, 0.25); box-shadow: 0 0 24px rgba(160, 80, 220, 0.07); }
+
+  .faction-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .faction-card-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .faction-card--police .faction-card-icon  { background: rgba(0, 220, 210, 0.1); color: #00dcd2; border: 1px solid rgba(0, 220, 210, 0.2); }
+  .faction-card--civilian .faction-card-icon{ background: rgba(50, 200, 120, 0.1); color: #4cd68a; border: 1px solid rgba(50, 200, 120, 0.2); }
+  .faction-card--crime .faction-card-icon   { background: rgba(160, 80, 220, 0.1); color: #c080e8; border: 1px solid rgba(160, 80, 220, 0.2); }
+
+  .faction-card-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+  }
+
+  .faction-card-tag--police  { color: #00dcd2; background: rgba(0, 220, 210, 0.08); border: 1px solid rgba(0, 220, 210, 0.18); }
+  .faction-card-tag--civilian{ color: #4cd68a; background: rgba(50, 200, 120, 0.08); border: 1px solid rgba(50, 200, 120, 0.18); }
+  .faction-card-tag--crime   { color: #c080e8; background: rgba(160, 80, 220, 0.08); border: 1px solid rgba(160, 80, 220, 0.18); }
+
+  .faction-card h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .faction-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    flex: 1;
+  }
+
+  .faction-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .faction-card-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #6a90aa;
+  }
+
+  .faction-card--police .faction-card-list i  { color: #00dcd2; font-size: 0.7rem; }
+  .faction-card--civilian .faction-card-list i{ color: #4cd68a; font-size: 0.7rem; }
+  .faction-card--crime .faction-card-list i   { color: #c080e8; font-size: 0.7rem; }
+
+  /* --- Join notice --- */
+  .faction-join {
+    display: flex;
+    gap: 14px;
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .faction-join > i { margin-top: 2px; flex-shrink: 0; font-size: 0.9rem; }
+
+  .faction-join--police  { background: rgba(0, 220, 210, 0.05); border: 1px solid rgba(0, 220, 210, 0.15); color: #80d8d4; }
+  .faction-join--police > i    { color: #00dcd2; }
+  .faction-join--police strong { color: #b0f0ec; }
+
+  .faction-join--civilian  { background: rgba(50, 200, 120, 0.05); border: 1px solid rgba(50, 200, 120, 0.15); color: #80c49a; }
+  .faction-join--civilian > i    { color: #4cd68a; }
+  .faction-join--civilian strong { color: #a0e8c0; }
+
+  .faction-join--crime { background: rgba(160, 80, 220, 0.06); border: 1px solid rgba(160, 80, 220, 0.18); border-left: 3px solid rgba(160, 80, 220, 0.5); color: #b090cc; }
+  .faction-join--crime > i    { color: #c080e8; }
+  .faction-join--crime strong { color: #d4aaf0; }
+
+  /* --- Footer CTA --- */
+  .factions-footer-cta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 32px;
+    padding: 28px 32px;
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    background: linear-gradient(135deg, rgba(0, 174, 255, 0.09), rgba(0, 174, 255, 0.03));
+    border: 1px solid rgba(0, 174, 255, 0.2);
+    filter: drop-shadow(0 0 28px rgba(0, 174, 255, 0.07));
+  }
+
+  .factions-footer-cta-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 174, 255, 0.1);
+    border: 1px solid rgba(0, 174, 255, 0.22);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+
+  .factions-footer-cta-text { flex: 1; min-width: 0; }
+
+  .factions-footer-cta strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.08rem;
+    margin-bottom: 5px;
+    color: var(--text);
+  }
+
+  .factions-footer-cta p {
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 960px) {
+    .factions-outer { padding: 0 16px; }
+    .factions-header { padding: 48px 0 36px; }
+    .factions-stats-row { margin-bottom: 32px; }
+    .faction-cards { grid-template-columns: 1fr; }
+    .faction-section-header { padding: 22px 20px; }
+    .faction-section-watermark { font-size: 4rem; }
+    .factions-footer-cta { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .factions-footer-cta-icon { display: none; }
+  }
+
+  @media (min-width: 961px) and (max-width: 1200px) {
+    .faction-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
