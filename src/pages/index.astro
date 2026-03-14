@@ -297,18 +297,6 @@ import MainLayout from "../layouts/MainLayout.astro";
                 </div>
 
                 <div class="field">
-                  <label for="discord-username">Discord Username</label>
-                  <input
-                    id="discord-username"
-                    name="discord-username"
-                    type="text"
-                    value=""
-                    readonly
-                    disabled
-                  />
-                </div>
-
-                <div class="field">
                   <label for="dob">Date of Birth <span class="field-required">*</span></label>
                   <input id="dob" name="dob" type="date" disabled />
                 </div>
@@ -472,9 +460,6 @@ import MainLayout from "../layouts/MainLayout.astro";
       document.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
         '#apply-form input, #apply-form select, #apply-form textarea'
       ).forEach(el => el.removeAttribute('disabled'));
-
-      const usernameInput = document.getElementById('discord-username') as HTMLInputElement | null;
-      if (usernameInput) usernameInput.value = discordUser.username;
 
       const statusText = document.getElementById('form-status-text');
       if (statusText) statusText.textContent = 'Form is unlocked. Fill in your details and submit below.';
