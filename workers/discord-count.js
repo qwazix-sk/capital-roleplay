@@ -1,82 +1,75 @@
 /**
  * Cloudflare Worker — Discord Live Stats
  *
+ * NO BOT TOKEN REQUIRED. Uses Discord's public invite API.
+ *
  * SETUP:
- *  1. Deploy this file to Cloudflare Workers (wrangler deploy or dashboard paste)
- *  2. Add two secrets in your Worker settings:
- *       DISCORD_BOT_TOKEN   — your Discord bot token
- *       DISCORD_GUILD_ID    — your Discord server/guild ID
- *  3. Copy your Worker URL (e.g. https://discord-count.YOUR-NAME.workers.dev)
- *  4. Paste it into PUBLIC_DISCORD_WORKER_URL in your .env file
+ *  1. Paste this file into your Worker in the Cloudflare dashboard (or wrangler deploy)
+ *  2. No secrets needed — the invite code is hardcoded below
+ *     (optionally override via DISCORD_INVITE_CODE env var)
  *
- * HOW TO GET YOUR GUILD ID:
- *  - In Discord, go to Server Settings → right-click the server icon → Copy Server ID
- *  - Developer Mode must be on (User Settings → Advanced → Developer Mode)
- *
- * HOW TO GET A BOT TOKEN:
- *  - Go to https://discord.com/developers/applications → New Application
- *  - Bot tab → Reset Token → copy
- *  - Add the bot to your server with no permissions needed (just "Read Server Members Intent")
- *  - Enable "Server Members Intent" under Bot → Privileged Gateway Intents
+ * Sources (in order of priority):
+ *  1. Discord Invite API  — public, returns both member count + online count
+ *  2. Discord Widget API  — public fallback for online count only
  */
 
 export default {
   async fetch(request, env) {
-    // Allow CORS so your website can call this from the browser
-    const corsHeaders = {
+    const cors = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, OPTIONS",
       "Content-Type": "application/json",
     };
 
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
+      return new Response(null, { headers: cors });
     }
 
-    const GUILD_ID = env.DISCORD_GUILD_ID;
-    const BOT_TOKEN = env.DISCORD_BOT_TOKEN;
+    // Invite code from the Join button on the website
+    const INVITE = env.DISCORD_INVITE_CODE ?? "drpNDbTgBM";
+    // Guild ID as a fallback for the widget API
+    const GUILD  = env.DISCORD_GUILD_ID    ?? "1478455683576893472";
 
-    if (!GUILD_ID || !BOT_TOKEN) {
-      return new Response(
-        JSON.stringify({ error: "Missing DISCORD_GUILD_ID or DISCORD_BOT_TOKEN secrets" }),
-        { status: 500, headers: corsHeaders }
-      );
-    }
+    let members = 0;
+    let online  = 0;
 
+    // ── 1. Invite API — no auth, gives approximate_member_count + approximate_presence_count ──
     try {
       const res = await fetch(
-        `https://discord.com/api/v10/guilds/${GUILD_ID}?with_counts=true`,
-        {
-          headers: {
-            Authorization: `Bot ${BOT_TOKEN}`,
-          },
-        }
+        `https://discord.com/api/v10/invites/${INVITE}?with_counts=true`,
+        { headers: { "User-Agent": "CapitalRoleplay-Stats/1.0" } }
       );
 
-      if (!res.ok) {
-        throw new Error(`Discord API returned ${res.status}`);
+      if (res.ok) {
+        const d = await res.json();
+        if (typeof d.approximate_member_count  === "number" && d.approximate_member_count  > 0) members = d.approximate_member_count;
+        if (typeof d.approximate_presence_count === "number" && d.approximate_presence_count > 0) online  = d.approximate_presence_count;
       }
+    } catch (_) { /* invite API unreachable — fall through */ }
 
-      const data = await res.json();
-
-      return new Response(
-        JSON.stringify({
-          members: data.approximate_member_count ?? null,
-          online: data.approximate_presence_count ?? null,
-        }),
-        {
-          headers: {
-            ...corsHeaders,
-            // Cache for 60 seconds — keeps it live without hammering Discord
-            "Cache-Control": "public, max-age=60",
-          },
+    // ── 2. Widget API fallback — online count only ───────────────────────────
+    if (online === 0) {
+      try {
+        const res = await fetch(`https://discord.com/api/v10/guilds/${GUILD}/widget.json`);
+        if (res.ok) {
+          const d = await res.json();
+          // widget disabled → d.code === 50004
+          if (typeof d.presence_count === "number" && d.presence_count > 0) {
+            online = d.presence_count;
+          }
         }
-      );
-    } catch (err) {
-      return new Response(
-        JSON.stringify({ error: err.message }),
-        { status: 500, headers: corsHeaders }
-      );
+      } catch (_) { /* widget unreachable */ }
     }
+
+    return new Response(
+      JSON.stringify({ members, online }),
+      {
+        headers: {
+          ...cors,
+          // 30-second browser cache — keeps it fresh without hammering Discord
+          "Cache-Control": "public, max-age=30, s-maxage=30",
+        },
+      }
+    );
   },
 };
