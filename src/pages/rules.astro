@@ -3,7 +3,19 @@ import MainLayout from "../layouts/MainLayout.astro";
 ---
 
 <MainLayout title="Rules — Capital Roleplay">
-  <div class="rules-page">
+
+  {/* ── WIP OVERLAY — remove this block when rules are ready ── */}
+  <div class="wip-overlay">
+    <div class="wip-inner">
+      <span class="wip-label">COMING SOON</span>
+      <h1 class="wip-title">WIP</h1>
+      <p class="wip-sub">The rulebook is being finalised. Check back soon.</p>
+      <a href="/" class="button">Back to Home</a>
+    </div>
+  </div>
+  {/* ── END WIP OVERLAY ── */}
+
+  <div class="rules-page" style="display:none">
 
     <!-- Page header -->
     <div class="rules-header">

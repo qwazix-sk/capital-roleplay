@@ -8,7 +8,19 @@ const lastUpdated = new Date().toLocaleDateString("en-GB", {
 ---
 
 <MainLayout title="Wiki — Capital Roleplay">
-  <div class="wiki-page">
+
+  {/* ── WIP OVERLAY — remove this block when wiki is ready ── */}
+  <div class="wip-overlay">
+    <div class="wip-inner">
+      <span class="wip-label">COMING SOON</span>
+      <h1 class="wip-title">WIP</h1>
+      <p class="wip-sub">The wiki is being built. Check back soon.</p>
+      <a href="/" class="button">Back to Home</a>
+    </div>
+  </div>
+  {/* ── END WIP OVERLAY ── */}
+
+  <div class="wiki-page" style="display:none">
 
     <!-- Page header -->
     <div class="wiki-page-header">

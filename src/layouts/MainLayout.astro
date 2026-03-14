@@ -1720,6 +1720,49 @@ const navItems = [
         .dc-outer { padding: 36px 24px 30px; }
         .dc-cards { grid-template-columns: 1fr; }
       }
+
+      /* ── WIP overlay (used on wiki + rules until content is ready) ── */
+      .wip-overlay {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 24px;
+      }
+      .wip-inner {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .wip-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        color: var(--primary);
+        background: rgba(0,174,255,0.08);
+        border: 1px solid rgba(0,174,255,0.2);
+        border-radius: 999px;
+        padding: 5px 14px;
+        text-transform: uppercase;
+      }
+      .wip-title {
+        font-size: clamp(5rem, 18vw, 12rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.3));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+      }
+      .wip-sub {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.45);
+        margin: 0 0 8px;
+      }
     </style>
   </head>
 
