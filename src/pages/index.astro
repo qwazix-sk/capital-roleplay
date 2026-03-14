@@ -404,6 +404,10 @@ import MainLayout from "../layouts/MainLayout.astro";
     const memberEl = document.getElementById("discordMemberCount");
     const onlineEl = document.getElementById("discordOnlineCount");
 
+    // Cache last known good values so a 0 glitch from Discord doesn't wipe the display
+    let lastMembers = 0;
+    let lastOnline = 0;
+
     function fmt(n) {
       return new Intl.NumberFormat("en-GB").format(n);
     }
@@ -414,25 +418,22 @@ import MainLayout from "../layouts/MainLayout.astro";
         if (!res.ok) throw new Error("Worker returned " + res.status);
         const data = await res.json();
 
-        if (memberEl && typeof data.members === "number") {
-          memberEl.textContent = fmt(data.members);
-        } else if (memberEl) {
-          memberEl.textContent = memberEl.dataset.fallback || "—";
+        // Only update if Discord returned a real non-zero value
+        if (typeof data.members === "number" && data.members > 0) {
+          lastMembers = data.members;
+        }
+        if (typeof data.online === "number" && data.online > 0) {
+          lastOnline = data.online;
         }
 
-        if (onlineEl && typeof data.online === "number") {
-          onlineEl.textContent = fmt(data.online);
-        } else if (onlineEl) {
-          onlineEl.textContent = onlineEl.dataset.fallback || "—";
-        }
+        if (memberEl) memberEl.textContent = lastMembers > 0 ? fmt(lastMembers) : (memberEl.dataset.fallback || "—");
+        if (onlineEl) onlineEl.textContent = lastOnline > 0 ? fmt(lastOnline) : (onlineEl.dataset.fallback || "—");
       } catch {
-        if (memberEl) memberEl.textContent = memberEl.dataset.fallback || "—";
-        if (onlineEl) onlineEl.textContent = onlineEl.dataset.fallback || "—";
+        // On error, keep whatever is already displayed
       }
     }
 
     loadDiscordStats();
-    // Refresh every 60 seconds to keep stats live
     setInterval(loadDiscordStats, 60_000);
   </script>
 </MainLayout>
