@@ -309,25 +309,13 @@ import MainLayout from "../layouts/MainLayout.astro";
                 </div>
 
                 <div class="field">
-                  <label for="age">Age <span class="field-required">*</span></label>
-                  <select id="age" name="age" disabled>
-                    <option value="">Select your age range</option>
-                    <option value="16–17">16–17</option>
-                    <option value="18–20">18–20</option>
-                    <option value="21–25">21–25</option>
-                    <option value="26+">26+</option>
-                  </select>
+                  <label for="dob">Date of Birth <span class="field-required">*</span></label>
+                  <input id="dob" name="dob" type="date" disabled />
                 </div>
 
-                <div class="field">
-                  <label for="experience">Roleplay Experience <span class="field-required">*</span></label>
-                  <select id="experience" name="experience" disabled>
-                    <option value="">Select experience level</option>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Experienced">Experienced</option>
-                    <option value="Veteran">Veteran</option>
-                  </select>
+                <div class="field full">
+                  <label for="experience">Roleplay Experience <span class="field-optional">(Optional)</span></label>
+                  <textarea id="experience" name="experience" placeholder="Briefly describe your previous roleplay experience, if any." disabled></textarea>
                 </div>
 
                 <div class="field full">
@@ -530,8 +518,8 @@ import MainLayout from "../layouts/MainLayout.astro";
       if (!submitBtn || submitBtn.disabled) return;
 
       const fullname = (document.getElementById('fullname') as HTMLInputElement).value.trim();
-      const age = (document.getElementById('age') as HTMLSelectElement).value;
-      const experience = (document.getElementById('experience') as HTMLSelectElement).value;
+      const dob = (document.getElementById('dob') as HTMLInputElement).value.trim();
+      const experience = (document.getElementById('experience') as HTMLTextAreaElement).value.trim();
       const character = (document.getElementById('character') as HTMLTextAreaElement).value.trim();
       const whyjoin = (document.getElementById('whyjoin') as HTMLTextAreaElement).value.trim();
 
@@ -552,7 +540,7 @@ import MainLayout from "../layouts/MainLayout.astro";
         const res = await fetch('/api/apply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fullname, age, experience, character, whyjoin }),
+          body: JSON.stringify({ fullname, dob, experience, character, whyjoin }),
         });
 
         const data = await res.json();

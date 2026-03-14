@@ -1,5 +1,5 @@
 export async function onRequestPost({ request, env }) {
-  // Parse cookies from request
+  // Parse cookies
   const cookieHeader = request.headers.get('cookie') ?? '';
   const cookies = Object.fromEntries(
     cookieHeader.split('; ').filter(Boolean).map(c => {
@@ -35,9 +35,9 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Invalid request body' }, 400);
   }
 
-  const { fullname, age, experience, character, whyjoin } = body;
+  const { fullname, dob, experience, character, whyjoin } = body;
 
-  if (!fullname?.trim() || !age || !experience || !whyjoin?.trim()) {
+  if (!fullname?.trim() || !dob?.trim() || !whyjoin?.trim()) {
     return json({ error: 'Please fill in all required fields' }, 400);
   }
 
@@ -56,13 +56,13 @@ export async function onRequestPost({ request, env }) {
     thumbnail: { url: avatarUrl },
     fields: [
       { name: 'Discord', value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Full Name', value: fullname, inline: true },
+      { name: 'Full Name', value: fullname.trim(), inline: true },
       { name: '\u200B', value: '\u200B', inline: false },
-      { name: 'Age', value: age, inline: true },
-      { name: 'RP Experience', value: experience, inline: true },
+      { name: 'Date of Birth', value: dob.trim(), inline: true },
+      { name: 'RP Experience', value: experience?.trim() || '*Not provided*', inline: true },
       { name: '\u200B', value: '\u200B', inline: false },
       { name: 'Character Concept', value: character?.trim() || '*Not provided*' },
-      { name: 'Why do you want to join?', value: whyjoin },
+      { name: 'Why do you want to join?', value: whyjoin.trim() },
     ],
     timestamp: new Date().toISOString(),
     footer: { text: `Application from ${user.username}` },
@@ -71,26 +71,30 @@ export async function onRequestPost({ request, env }) {
   const components = [{
     type: 1,
     components: [
-      { type: 2, style: 3, label: 'Accept', custom_id: `wl_accept_${user.id}` },
-      { type: 2, style: 4, label: 'Reject', custom_id: `wl_reject_${user.id}` },
+      { type: 2, style: 3, label: '✅  Accept', custom_id: `wl_accept_${user.id}` },
+      { type: 2, style: 4, label: '❌  Reject', custom_id: `wl_reject_${user.id}` },
     ],
   }];
 
-  // Optional: register with bot API for duplicate prevention
-  const botApiUrl = env.BOT_API_URL;
+  // Optional: duplicate check via bot API — only block on explicit 409, skip all other errors
+  const botApiUrl = (env.BOT_API_URL || '').trim();
   if (botApiUrl) {
-    const dbRes = await fetch(`${botApiUrl}/submit-application`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-secret': env.BOT_API_SECRET ?? '',
-      },
-      body: JSON.stringify({ discordId: user.id, discordUsername: user.username }),
-    }).catch(() => null);
-
-    if (dbRes && !dbRes.ok) {
-      const dbErr = await dbRes.json().catch(() => ({}));
-      return json({ error: dbErr.error ?? 'Submission rejected' }, dbRes.status);
+    try {
+      const dbRes = await fetch(`${botApiUrl}/submit-application`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-secret': env.BOT_API_SECRET ?? '',
+        },
+        body: JSON.stringify({ discordId: user.id, discordUsername: user.username }),
+        signal: AbortSignal.timeout(3000),
+      });
+      if (!dbRes.ok && dbRes.status === 409) {
+        const dbErr = await dbRes.json().catch(() => ({}));
+        return json({ error: dbErr.error ?? 'You already have a pending application' }, 409);
+      }
+    } catch {
+      // Bot API unreachable — continue without duplicate check
     }
   }
 
@@ -100,7 +104,7 @@ export async function onRequestPost({ request, env }) {
     {
       method: 'POST',
       headers: {
-        Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
+        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ embeds: [embed], components }),
