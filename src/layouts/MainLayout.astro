@@ -713,15 +713,7 @@ const navItems = [
       }
 
       .login-card::before {
-        content: "";
-        position: absolute;
-        inset: 50% auto auto 50%;
-        width: 360px;
-        height: 360px;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle, rgba(0,174,255,0.24), transparent 70%);
-        filter: blur(18px);
-        pointer-events: none;
+        display: none;
       }
 
       .login-card > * {
@@ -1053,7 +1045,22 @@ const navItems = [
       }
 
       .application-form {
-        opacity: 0.72;
+        opacity: 1;
+        transition: border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+      }
+
+      .application-form:not(.application-form--locked) {
+        border-color: rgba(74, 222, 128, 0.3);
+        box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.07), var(--shadow);
+      }
+
+      .application-form:not(.application-form--locked) h3 {
+        color: #4ade80;
+      }
+
+      .application-form:not(.application-form--locked) #form-status-text {
+        color: #4ade80;
+        opacity: 0.75;
       }
 
       .form-locked {
@@ -1135,6 +1142,18 @@ const navItems = [
         padding: 14px 14px;
         outline: none;
         font: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .field input:focus,
+      .field textarea:focus {
+        border-color: rgba(74, 222, 128, 0.45);
+        background: rgba(255,255,255,0.065);
+        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.08);
+      }
+
+      .field input[type="date"] {
+        color-scheme: dark;
       }
 
       .field textarea {
@@ -1145,6 +1164,12 @@ const navItems = [
       .field input::placeholder,
       .field textarea::placeholder {
         color: #7e95ad;
+      }
+
+      .field-hint {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
       }
 
       .form-footer {
@@ -1175,7 +1200,12 @@ const navItems = [
       }
 
       .login-card--authed::before {
-        background: radial-gradient(circle, rgba(34, 197, 94, 0.18), transparent 70%);
+        display: none;
+      }
+
+      .login-card--authed {
+        border-color: rgba(74, 222, 128, 0.35);
+        box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.08), var(--shadow);
       }
 
       .dc-user-row {
@@ -1193,7 +1223,7 @@ const navItems = [
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        border: 2px solid rgba(0,174,255,0.3);
+        border: 2px solid rgba(74, 222, 128, 0.5);
         flex-shrink: 0;
       }
 
@@ -1212,9 +1242,21 @@ const navItems = [
       }
 
       .application-form--locked {
-        opacity: 0.6;
+        opacity: 0.55;
         pointer-events: none;
         user-select: none;
+      }
+
+      .button.logout {
+        background: rgba(248, 113, 113, 0.12);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        color: #fca5a5;
+      }
+
+      .button.logout:hover {
+        background: rgba(248, 113, 113, 0.22);
+        border-color: rgba(248, 113, 113, 0.5);
+        color: #fecaca;
       }
 
       .apply-error {

@@ -265,7 +265,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
             <ul class="login-points" style="margin-top: 22px;">
               <li>Discord account required before applying</li>
-              <li>Your username will be pre-filled automatically</li>
+              <li>Verifies your identity and links it to your application</li>
               <li>Applications are forwarded to our staff review channel</li>
             </ul>
           </div>
@@ -292,13 +292,14 @@ import MainLayout from "../layouts/MainLayout.astro";
             <form id="apply-form">
               <div class="form-grid">
                 <div class="field">
-                  <label for="fullname">Full Name <span class="field-required">*</span></label>
-                  <input id="fullname" name="fullname" type="text" placeholder="John Smith" disabled />
+                  <label for="fullname">Intended Character Name <span class="field-required">*</span></label>
+                  <input id="fullname" name="fullname" type="text" placeholder="e.g. James Calloway" disabled />
                 </div>
 
                 <div class="field">
                   <label for="dob">Date of Birth <span class="field-required">*</span></label>
                   <input id="dob" name="dob" type="date" disabled />
+                  <small class="field-hint">mm/dd/yyyy</small>
                 </div>
 
                 <div class="field full">
@@ -431,7 +432,7 @@ import MainLayout from "../layouts/MainLayout.astro";
         authCard.className = 'login-card login-card--authed';
         authCard.innerHTML = `
           <div class="login-badge login-badge--ok">Step 1 &middot; Authenticated</div>
-          <h3>Signed in as Discord</h3>
+          <h3>Signed in with Discord</h3>
           <div class="dc-user-row">
             <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
             <div>
@@ -441,11 +442,11 @@ import MainLayout from "../layouts/MainLayout.astro";
           </div>
           <ul class="login-points" style="margin-top:22px">
             <li>Identity verified via Discord OAuth</li>
-            <li>Your Discord username is pre-filled in the form</li>
-            <li>Application is submitted directly to our staff channel</li>
+            <li>Application submitted directly to our staff channel</li>
+            <li>You will receive a DM with the decision</li>
           </ul>
           <div style="margin-top:24px">
-            <a class="button ghost small" href="/api/auth/logout">Sign out</a>
+            <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
           </div>
         `;
       }
