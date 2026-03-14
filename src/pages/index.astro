@@ -1,5 +1,18 @@
 ---
+export const prerender = false;
+
 import MainLayout from "../layouts/MainLayout.astro";
+
+// Read Discord session from cookie
+const userCookie = Astro.cookies.get('dc_user');
+let discordUser: { id: string; username: string; avatar: string | null } | null = null;
+if (userCookie) {
+  try {
+    discordUser = JSON.parse(userCookie.value);
+  } catch { /* invalid cookie */ }
+}
+
+const oauthError = Astro.url.searchParams.get('error') === 'oauth';
 ---
 
 <MainLayout title="Capital Roleplay — Serious UK FiveM Roleplay">
@@ -238,106 +251,167 @@ import MainLayout from "../layouts/MainLayout.astro";
         <div class="eyebrow">Whitelist application</div>
         <h2>Apply to join Capital Roleplay.</h2>
         <p>
-          This is the visual front-end for the whitelist system. The Discord login and submission flow
-          are intentionally presented as locked until backend integration is added later.
+          Sign in with Discord to verify your identity, then fill in the form below.
+          Submitted applications are reviewed by staff directly in our Discord server.
         </p>
       </div>
 
+      {oauthError && (
+        <div class="apply-error">
+          Discord login failed — please try again.
+        </div>
+      )}
+
       <div class="apply-shell">
         <div class="apply-grid">
-          <div class="login-card">
-            <div class="login-badge">Step 1 · Discord login required</div>
-            <h3>Authenticate with Discord first</h3>
-            <p>
-              Before an application can be submitted, users must be signed in with Discord.
-              This is currently a visual placeholder for the future OAuth flow.
-            </p>
 
-            <div style="margin-top: 22px;">
-              <a class="button discord" href="#" aria-disabled="true">Continue with Discord</a>
-            </div>
+          {/* LEFT: Auth card */}
+          {discordUser ? (
+            <div class="login-card login-card--authed">
+              <div class="login-badge login-badge--ok">Step 1 · Authenticated</div>
+              <h3>Signed in as Discord</h3>
 
-            <div class="login-mock">
-              <strong>Future behaviour</strong>
-              <span>
-                Once connected, this button should trigger Discord OAuth, verify the user, and unlock the form state below.
-              </span>
-            </div>
-
-            <ul class="login-points" style="margin-top: 22px;">
-              <li>Discord account required before applying</li>
-              <li>User data can later prefill Discord username automatically</li>
-              <li>Submission can later be forwarded to Discord staff review channels</li>
-            </ul>
-          </div>
-
-          <div class="application-form">
-            <h3>Whitelist form</h3>
-            <p>
-              The form is visible for clarity, but visually locked until Discord authentication is completed.
-            </p>
-
-            <div class="form-locked">
-              <div>
-                <strong>Form locked</strong>
-                <span>Sign in with Discord to unlock and submit this application.</span>
+              <div class="dc-user-row">
+                <img
+                  class="dc-user-avatar"
+                  src={discordUser.avatar
+                    ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=64`
+                    : `https://cdn.discordapp.com/embed/avatars/0.png`}
+                  alt="Discord avatar"
+                />
+                <div>
+                  <strong class="dc-user-name">{discordUser.username}</strong>
+                  <span class="dc-user-id">ID {discordUser.id}</span>
+                </div>
               </div>
-              <a class="button small ghost" href="#" aria-disabled="true">Locked</a>
+
+              <ul class="login-points" style="margin-top: 22px;">
+                <li>Identity verified via Discord OAuth</li>
+                <li>Your Discord username is pre-filled in the form</li>
+                <li>Application is submitted directly to our staff channel</li>
+              </ul>
+
+              <div style="margin-top: 24px;">
+                <a class="button ghost small" href="/api/auth/logout">Sign out</a>
+              </div>
+            </div>
+          ) : (
+            <div class="login-card">
+              <div class="login-badge">Step 1 · Discord login required</div>
+              <h3>Authenticate with Discord first</h3>
+              <p>
+                You must sign in with Discord before submitting an application.
+                This verifies your identity and links your application to your account.
+              </p>
+
+              <div style="margin-top: 22px;">
+                <a class="button discord" href="/api/auth/discord">Continue with Discord</a>
+              </div>
+
+              <ul class="login-points" style="margin-top: 22px;">
+                <li>Discord account required before applying</li>
+                <li>Your username will be pre-filled automatically</li>
+                <li>Applications are forwarded to our staff review channel</li>
+              </ul>
+            </div>
+          )}
+
+          {/* RIGHT: Form */}
+          <div class={`application-form${discordUser ? '' : ' application-form--locked'}`}>
+            <h3>Whitelist form</h3>
+            {discordUser ? (
+              <p>Form is unlocked. Fill in your details and submit below.</p>
+            ) : (
+              <p>Sign in with Discord on the left to unlock and submit this application.</p>
+            )}
+
+            {!discordUser && (
+              <div class="form-locked">
+                <div>
+                  <strong>Form locked</strong>
+                  <span>Sign in with Discord to unlock.</span>
+                </div>
+              </div>
+            )}
+
+            <div id="apply-success" class="apply-success" style="display:none">
+              <strong>Application submitted!</strong>
+              <span>Our staff team will review it shortly. Keep an eye on your Discord DMs.</span>
             </div>
 
-            <form>
+            <div id="apply-error-msg" class="apply-error-inline" style="display:none"></div>
+
+            <form id="apply-form">
               <div class="form-grid">
                 <div class="field">
-                  <label for="fullname">Full Name</label>
-                  <input id="fullname" type="text" placeholder="John Smith" />
+                  <label for="fullname">Full Name <span class="field-required">*</span></label>
+                  <input id="fullname" name="fullname" type="text" placeholder="John Smith" disabled={!discordUser} />
                 </div>
 
                 <div class="field">
-                  <label for="discord">Discord Username</label>
-                  <input id="discord" type="text" placeholder="username" />
+                  <label for="discord-username">Discord Username</label>
+                  <input
+                    id="discord-username"
+                    name="discord-username"
+                    type="text"
+                    value={discordUser?.username ?? ''}
+                    readonly
+                    disabled={!discordUser}
+                  />
                 </div>
 
                 <div class="field">
-                  <label for="age">Age</label>
-                  <select id="age">
-                    <option>Select your age range</option>
-                    <option>16–17</option>
-                    <option>18–20</option>
-                    <option>21–25</option>
-                    <option>26+</option>
+                  <label for="age">Age <span class="field-required">*</span></label>
+                  <select id="age" name="age" disabled={!discordUser}>
+                    <option value="">Select your age range</option>
+                    <option value="16–17">16–17</option>
+                    <option value="18–20">18–20</option>
+                    <option value="21–25">21–25</option>
+                    <option value="26+">26+</option>
                   </select>
                 </div>
 
                 <div class="field">
-                  <label for="experience">Roleplay Experience</label>
-                  <select id="experience">
-                    <option>Select experience level</option>
-                    <option>Beginner</option>
-                    <option>Intermediate</option>
-                    <option>Experienced</option>
-                    <option>Veteran</option>
+                  <label for="experience">Roleplay Experience <span class="field-required">*</span></label>
+                  <select id="experience" name="experience" disabled={!discordUser}>
+                    <option value="">Select experience level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Experienced">Experienced</option>
+                    <option value="Veteran">Veteran</option>
                   </select>
                 </div>
 
                 <div class="field full">
-                  <label for="character">Character Concept</label>
-                  <textarea id="character" placeholder="Describe the type of character you plan to play and how they would fit into the city."></textarea>
+                  <label for="character">Character Concept <span class="field-optional">(Optional)</span></label>
+                  <textarea id="character" name="character" placeholder="Describe the type of character you plan to play and how they would fit into the city." disabled={!discordUser}></textarea>
                 </div>
 
                 <div class="field full">
-                  <label for="whyjoin">Why do you want to join Capital Roleplay?</label>
-                  <textarea id="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for."></textarea>
+                  <label for="whyjoin">Why do you want to join Capital Roleplay? <span class="field-required">*</span></label>
+                  <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for. Minimum 100 words required." disabled={!discordUser}></textarea>
+                  <div class="field-wordcount">
+                    <span id="whyjoin-count">0</span> / 100 words minimum
+                  </div>
                 </div>
               </div>
 
               <div class="form-footer">
                 <div class="form-note">
-                  This form is visual only for now. Submission, Discord verification, and staff review flow can be connected later.
+                  {discordUser
+                    ? 'Your application will be sent directly to our staff review channel.'
+                    : 'Sign in with Discord to enable submission.'}
                 </div>
-                <button type="button" class="button submit-disabled">Submit Application</button>
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class={`button${discordUser ? '' : ' submit-disabled'}`}
+                  disabled={!discordUser}
+                >Submit Application</button>
               </div>
             </form>
           </div>
+
         </div>
       </div>
     </div>
@@ -397,6 +471,85 @@ import MainLayout from "../layouts/MainLayout.astro";
       </div>
     </div>
   </section>
+
+  <script>
+    // Word counter
+    const whyjoinEl = document.getElementById("whyjoin") as HTMLTextAreaElement | null;
+    const whyjoinCount = document.getElementById("whyjoin-count");
+
+    function countWords(str: string) {
+      return str.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    if (whyjoinEl && whyjoinCount) {
+      whyjoinEl.addEventListener("input", () => {
+        const words = countWords(whyjoinEl.value);
+        whyjoinCount.textContent = String(words);
+        const valid = words >= 100;
+        whyjoinCount.parentElement!.classList.toggle("valid", valid);
+        whyjoinCount.parentElement!.classList.toggle("invalid", !valid && words > 0);
+      });
+    }
+
+    // Application form submit
+    const form = document.getElementById("apply-form") as HTMLFormElement | null;
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement | null;
+    const successEl = document.getElementById("apply-success");
+    const errorEl = document.getElementById("apply-error-msg");
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!submitBtn || submitBtn.disabled) return;
+
+      const fullname = (document.getElementById("fullname") as HTMLInputElement).value.trim();
+      const age = (document.getElementById("age") as HTMLSelectElement).value;
+      const experience = (document.getElementById("experience") as HTMLSelectElement).value;
+      const character = (document.getElementById("character") as HTMLTextAreaElement).value.trim();
+      const whyjoin = (document.getElementById("whyjoin") as HTMLTextAreaElement).value.trim();
+
+      const words = countWords(whyjoin);
+      if (words < 100) {
+        if (errorEl) {
+          errorEl.textContent = `"Why do you want to join" needs at least 100 words (you have ${words}).`;
+          errorEl.style.display = "block";
+        }
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
+      if (errorEl) errorEl.style.display = "none";
+
+      try {
+        const res = await fetch("/api/apply", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fullname, age, experience, character, whyjoin }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          form.style.display = "none";
+          if (successEl) successEl.style.display = "block";
+        } else {
+          if (errorEl) {
+            errorEl.textContent = data.error ?? "Submission failed — please try again.";
+            errorEl.style.display = "block";
+          }
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Application";
+        }
+      } catch {
+        if (errorEl) {
+          errorEl.textContent = "Network error — please check your connection and try again.";
+          errorEl.style.display = "block";
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Application";
+      }
+    });
+  </script>
 
   <script>
     const WORKER_URL = "https://royal-truth-48c4-capital-roleplay-discordcounter.skagebakk.workers.dev";

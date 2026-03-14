@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# Discord bot config (contains secrets)
+.CapitalRPDiscordBot/config.json
+
 # macOS-specific files
 .DS_Store
 
