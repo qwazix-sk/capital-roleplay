@@ -14,7 +14,7 @@ export async function onRequestGet({ request, env }) {
       client_secret: env.DISCORD_CLIENT_SECRET,
       grant_type: 'authorization_code',
       code,
-      redirect_uri: env.DISCORD_REDIRECT_URI,
+      redirect_uri: (env.DISCORD_REDIRECT_URI || '').trim(),
     }),
   });
 
