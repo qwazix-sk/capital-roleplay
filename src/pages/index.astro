@@ -599,9 +599,11 @@ import MainLayout from "../layouts/MainLayout.astro";
         const d = await res.json();
         if (d.code === 50004) return false; // widget disabled
         if (typeof d.presence_count === "number" && d.presence_count > 0) {
-          lastOnline = d.presence_count;
-          localStorage.setItem(CACHE_O, String(lastOnline));
-          render();
+          if (lastOnline === 0 || Math.abs(d.presence_count - lastOnline) > 1) {
+            lastOnline = d.presence_count;
+            localStorage.setItem(CACHE_O, String(lastOnline));
+            render();
+          }
           return true;
         }
       } catch { /* widget unreachable */ }
@@ -617,8 +619,15 @@ import MainLayout from "../layouts/MainLayout.astro";
         const gotMembers = typeof data.members === "number" && data.members > 0;
         const gotOnline  = typeof data.online  === "number" && data.online  > 0;
 
-        if (gotMembers) { lastMembers = data.members; localStorage.setItem(CACHE_M, String(lastMembers)); }
-        if (gotOnline)  { lastOnline  = data.online;  localStorage.setItem(CACHE_O, String(lastOnline)); }
+        // ±1 guard — only update if the change is meaningful (filters Discord's approximate noise)
+        if (gotMembers && (lastMembers === 0 || Math.abs(data.members - lastMembers) > 1)) {
+          lastMembers = data.members;
+          localStorage.setItem(CACHE_M, String(lastMembers));
+        }
+        if (gotOnline && (lastOnline === 0 || Math.abs(data.online - lastOnline) > 1)) {
+          lastOnline = data.online;
+          localStorage.setItem(CACHE_O, String(lastOnline));
+        }
 
         render();
 
