@@ -404,36 +404,50 @@ import MainLayout from "../layouts/MainLayout.astro";
     const memberEl = document.getElementById("discordMemberCount");
     const onlineEl = document.getElementById("discordOnlineCount");
 
-    // Cache last known good values so a 0 glitch from Discord doesn't wipe the display
     let lastMembers = 0;
     let lastOnline = 0;
+    let retryTimeout = null;
 
     function fmt(n) {
       return new Intl.NumberFormat("en-GB").format(n);
     }
 
-    async function loadDiscordStats() {
+    function render() {
+      if (memberEl) memberEl.textContent = lastMembers > 0 ? fmt(lastMembers) : "—";
+      if (onlineEl) onlineEl.textContent = lastOnline > 0 ? fmt(lastOnline) : "—";
+    }
+
+    async function loadDiscordStats(retryCount = 0) {
       try {
         const res = await fetch(WORKER_URL);
-        if (!res.ok) throw new Error("Worker returned " + res.status);
+        if (!res.ok) throw new Error("status " + res.status);
         const data = await res.json();
 
-        // Only update if Discord returned a real non-zero value
-        if (typeof data.members === "number" && data.members > 0) {
-          lastMembers = data.members;
-        }
-        if (typeof data.online === "number" && data.online > 0) {
-          lastOnline = data.online;
-        }
+        const gotMembers = typeof data.members === "number" && data.members > 0;
+        const gotOnline  = typeof data.online  === "number" && data.online  > 0;
 
-        if (memberEl) memberEl.textContent = lastMembers > 0 ? fmt(lastMembers) : (memberEl.dataset.fallback || "—");
-        if (onlineEl) onlineEl.textContent = lastOnline > 0 ? fmt(lastOnline) : (onlineEl.dataset.fallback || "—");
+        if (gotMembers) lastMembers = data.members;
+        if (gotOnline)  lastOnline  = data.online;
+
+        render();
+
+        // If Discord returned 0s (cold-start glitch), retry quickly up to 5 times
+        if (!gotMembers && !gotOnline && retryCount < 5) {
+          clearTimeout(retryTimeout);
+          retryTimeout = setTimeout(() => loadDiscordStats(retryCount + 1), 2_000);
+          return;
+        }
       } catch {
-        // On error, keep whatever is already displayed
+        // Network error — keep whatever is displayed, retry shortly if still on first load
+        if (retryCount < 3) {
+          clearTimeout(retryTimeout);
+          retryTimeout = setTimeout(() => loadDiscordStats(retryCount + 1), 3_000);
+          return;
+        }
       }
     }
 
     loadDiscordStats();
-    setInterval(loadDiscordStats, 60_000);
+    setInterval(() => loadDiscordStats(), 60_000);
   </script>
 </MainLayout>
