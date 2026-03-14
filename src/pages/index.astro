@@ -435,7 +435,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
     })();
 
-    // ── DOB masked input (always shows mm/dd/yyyy with _ placeholders) ───────
+    // ── DOB masked input (mm/dd/yyyy with _ placeholders, keydown-driven) ────
     const dobEl = document.getElementById('dob') as HTMLInputElement | null;
     if (dobEl) {
       let dobDigits = '';
@@ -447,26 +447,41 @@ import MainLayout from "../layouts/MainLayout.astro";
         return `${mm}/${dd}/${yyyy}`;
       }
 
-      dobEl.addEventListener('focus', () => {
-        if (!dobDigits) dobEl.value = applyDobMask('');
+      // Cursor sits right after the last typed digit (skipping slashes)
+      function cursorPos(d: string): number {
+        const len = d.length;
+        if (len <= 2) return len;
+        if (len <= 4) return len + 1;
+        return len + 2;
+      }
+
+      function commit(d: string) {
+        dobDigits = d;
+        dobEl.value = d ? applyDobMask(d) : '';
+        if (d) {
+          const pos = cursorPos(d);
+          dobEl.setSelectionRange(pos, pos);
+        }
+      }
+
+      dobEl.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          commit(dobDigits.slice(0, -1));
+        } else if (/^\d$/.test(e.key) && dobDigits.length < 8) {
+          e.preventDefault();
+          commit(dobDigits + e.key);
+        }
+      });
+
+      // Handle paste / autofill
+      dobEl.addEventListener('input', () => {
+        const raw = dobEl.value.replace(/\D/g, '').slice(0, 8);
+        commit(raw);
       });
 
       dobEl.addEventListener('blur', () => {
         if (!dobDigits) dobEl.value = '';
-      });
-
-      dobEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace') {
-          e.preventDefault();
-          dobDigits = dobDigits.slice(0, -1);
-          dobEl.value = dobDigits ? applyDobMask(dobDigits) : applyDobMask('');
-        }
-      });
-
-      dobEl.addEventListener('input', () => {
-        const raw = dobEl.value.replace(/\D/g, '').slice(0, 8);
-        dobDigits = raw;
-        dobEl.value = applyDobMask(dobDigits);
       });
     }
 
