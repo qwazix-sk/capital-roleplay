@@ -150,12 +150,11 @@ import MainLayout from "../layouts/MainLayout.astro";
     z-index: 0;
   }
 
-  /* Police: deep navy with blue scatter */
+  /* Police: photo background */
   .faction-police .faction-card-bg {
-    background:
-      radial-gradient(circle at 30% 20%, rgba(0, 174, 255, 0.28) 0%, transparent 55%),
-      radial-gradient(circle at 75% 65%, rgba(0, 90, 180, 0.22) 0%, transparent 45%),
-      linear-gradient(160deg, #050d1a 0%, #071425 40%, #061933 75%, #040e1f 100%);
+    background-image: url('https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/police-placeholder.png');
+    background-size: cover;
+    background-position: center top;
   }
 
   .faction-police:hover {
