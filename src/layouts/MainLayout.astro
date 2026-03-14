@@ -1050,17 +1050,19 @@ const navItems = [
       }
 
       .application-form:not(.application-form--locked) {
-        border-color: rgba(74, 222, 128, 0.3);
-        box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.07), var(--shadow);
+        border-color: var(--primary-border);
+        box-shadow: 0 0 0 1px rgba(0, 174, 255, 0.08), 0 0 40px rgba(0, 174, 255, 0.05), var(--shadow);
       }
 
       .application-form:not(.application-form--locked) h3 {
-        color: #4ade80;
+        color: var(--primary);
+        letter-spacing: -0.02em;
       }
 
       .application-form:not(.application-form--locked) #form-status-text {
-        color: #4ade80;
-        opacity: 0.75;
+        color: var(--primary);
+        opacity: 0.8;
+        font-size: 0.88rem;
       }
 
       .form-locked {
@@ -1102,9 +1104,10 @@ const navItems = [
       }
 
       .field label {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         font-weight: 600;
         color: var(--muted-2);
+        letter-spacing: 0.01em;
       }
 
       .field-optional {
@@ -1135,25 +1138,22 @@ const navItems = [
       .field select,
       .field textarea {
         width: 100%;
-        border: 1px solid rgba(255,255,255,0.1);
-        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(255,255,255,0.04);
         color: var(--text);
-        border-radius: 14px;
-        padding: 14px 14px;
+        border-radius: 12px;
+        padding: 12px 14px;
         outline: none;
         font: inherit;
+        font-size: 0.95rem;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       }
 
       .field input:focus,
       .field textarea:focus {
-        border-color: rgba(74, 222, 128, 0.45);
-        background: rgba(255,255,255,0.065);
-        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.08);
-      }
-
-      .field input[type="date"] {
-        color-scheme: dark;
+        border-color: var(--primary-border);
+        background: rgba(0, 174, 255, 0.04);
+        box-shadow: 0 0 0 3px rgba(0, 174, 255, 0.08);
       }
 
       .field textarea {
@@ -1168,7 +1168,7 @@ const navItems = [
 
       .field-hint {
         font-size: 0.78rem;
-        color: var(--muted);
+        color: rgba(0, 174, 255, 0.6);
         margin-top: 2px;
       }
 
@@ -1179,7 +1179,7 @@ const navItems = [
         gap: 16px;
         margin-top: 10px;
         padding-top: 18px;
-        border-top: 1px solid rgba(255,255,255,0.08);
+        border-top: 1px solid rgba(0, 174, 255, 0.1);
       }
 
       .form-note {

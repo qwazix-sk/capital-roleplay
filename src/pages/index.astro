@@ -298,8 +298,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                 <div class="field">
                   <label for="dob">Date of Birth <span class="field-required">*</span></label>
-                  <input id="dob" name="dob" type="date" disabled />
-                  <small class="field-hint">mm/dd/yyyy</small>
+                  <input id="dob" name="dob" type="text" placeholder="mm/dd/yyyy" maxlength="10" disabled />
                 </div>
 
                 <div class="field full">
@@ -474,6 +473,18 @@ import MainLayout from "../layouts/MainLayout.astro";
         submitBtn.className = 'button';
       }
     })();
+
+    // ── DOB auto-format (mm/dd/yyyy as user types) ──────────────────────────
+    const dobEl = document.getElementById('dob') as HTMLInputElement | null;
+    if (dobEl) {
+      dobEl.addEventListener('input', (e) => {
+        const input = e.target as HTMLInputElement;
+        let v = input.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+        if (v.length >= 6) v = v.slice(0,5) + '/' + v.slice(5);
+        input.value = v;
+      });
+    }
 
     // ── Word counter ────────────────────────────────────────────────────────
     const whyjoinEl = document.getElementById('whyjoin') as HTMLTextAreaElement | null;
