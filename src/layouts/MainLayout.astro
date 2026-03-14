@@ -1536,6 +1536,11 @@ const navItems = [
         padding: 28px 30px;
       }
 
+      .dc-stats-card {
+        display: flex;
+        flex-direction: column;
+      }
+
       /* — Left: stats — */
 
       .dc-live-row {
@@ -1573,17 +1578,20 @@ const navItems = [
         display: flex;
         align-items: center;
         gap: 28px;
-        margin-bottom: 22px;
+        flex: 1;
+        margin-bottom: 0;
+        padding: 16px 0;
       }
 
       .dc-num-block strong {
         display: block;
         font-family: "Space Grotesk", sans-serif;
-        font-size: clamp(2.8rem, 5vw, 4rem);
+        font-size: clamp(3.4rem, 6vw, 5.2rem);
         font-weight: 700;
         letter-spacing: -0.05em;
         color: var(--primary);
         line-height: 1;
+        text-shadow: 0 0 28px rgba(0, 174, 255, 0.3);
       }
 
       .dc-num-block span {
@@ -1593,19 +1601,22 @@ const navItems = [
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--muted);
-        margin-top: 8px;
+        margin-top: 10px;
       }
 
       .dc-num-sep {
         width: 1px;
-        height: 64px;
+        align-self: stretch;
         background: rgba(255, 255, 255, 0.1);
         flex-shrink: 0;
+        margin: 8px 0;
       }
 
       .dc-source {
         font-size: 0.84rem;
         color: var(--muted);
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       .dc-source a {

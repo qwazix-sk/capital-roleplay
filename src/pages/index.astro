@@ -566,52 +566,79 @@ import MainLayout from "../layouts/MainLayout.astro";
 
   <script>
     const WORKER_URL = "https://royal-truth-48c4-capital-roleplay-discordcounter.skagebakk.workers.dev";
+    // Discord widget API — CORS-enabled, gives online count as a direct fallback
+    const WIDGET_URL = "https://discord.com/api/guilds/1478455683576893472/widget.json";
+    const CACHE_M    = "dc_members";
+    const CACHE_O    = "dc_online";
 
     const memberEl = document.getElementById("discordMemberCount");
     const onlineEl = document.getElementById("discordOnlineCount");
 
-    let lastMembers = 0;
-    let lastOnline = 0;
-    let retryTimeout = null;
+    // Seed from localStorage so returning visitors see real numbers instantly
+    let lastMembers = parseInt(localStorage.getItem(CACHE_M) ?? "0", 10);
+    let lastOnline  = parseInt(localStorage.getItem(CACHE_O) ?? "0", 10);
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
-    function fmt(n) {
+    function fmt(n: number) {
       return new Intl.NumberFormat("en-GB").format(n);
     }
 
     function render() {
       if (memberEl) memberEl.textContent = lastMembers > 0 ? fmt(lastMembers) : "—";
-      if (onlineEl) onlineEl.textContent = lastOnline > 0 ? fmt(lastOnline) : "—";
+      if (onlineEl) onlineEl.textContent  = lastOnline  > 0 ? fmt(lastOnline)  : "—";
     }
 
-    async function loadDiscordStats(retryCount = 0) {
+    // Show cached values immediately — no blank state on repeat visits
+    render();
+
+    // Fallback: hit Discord widget directly for online count (no bot token needed)
+    async function tryWidget() {
       try {
-        const res = await fetch(WORKER_URL);
-        if (!res.ok) throw new Error("status " + res.status);
+        const res = await fetch(WIDGET_URL, { cache: "no-store" });
+        if (!res.ok) return false;
+        const d = await res.json();
+        if (d.code === 50004) return false; // widget disabled
+        if (typeof d.presence_count === "number" && d.presence_count > 0) {
+          lastOnline = d.presence_count;
+          localStorage.setItem(CACHE_O, String(lastOnline));
+          render();
+          return true;
+        }
+      } catch { /* widget unreachable */ }
+      return false;
+    }
+
+    async function loadDiscordStats(retryCount = 0): Promise<void> {
+      try {
+        const res = await fetch(WORKER_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
 
         const gotMembers = typeof data.members === "number" && data.members > 0;
         const gotOnline  = typeof data.online  === "number" && data.online  > 0;
 
-        if (gotMembers) lastMembers = data.members;
-        if (gotOnline)  lastOnline  = data.online;
+        if (gotMembers) { lastMembers = data.members; localStorage.setItem(CACHE_M, String(lastMembers)); }
+        if (gotOnline)  { lastOnline  = data.online;  localStorage.setItem(CACHE_O, String(lastOnline)); }
 
         render();
 
-        if (!gotMembers && !gotOnline && retryCount < 5) {
-          clearTimeout(retryTimeout);
-          retryTimeout = setTimeout(() => loadDiscordStats(retryCount + 1), 2_000);
-          return;
+        // Worker gave zeros — try widget for online count, then schedule retry
+        if (!gotOnline)  await tryWidget();
+        if ((!gotMembers || !gotOnline) && retryCount < 8) {
+          clearTimeout(retryTimer!);
+          retryTimer = setTimeout(() => loadDiscordStats(retryCount + 1), Math.min(2500 * (retryCount + 1), 15_000));
         }
       } catch {
-        if (retryCount < 3) {
-          clearTimeout(retryTimeout);
-          retryTimeout = setTimeout(() => loadDiscordStats(retryCount + 1), 3_000);
-          return;
+        // Worker completely unreachable — try widget, then retry
+        await tryWidget();
+        if (retryCount < 6) {
+          clearTimeout(retryTimer!);
+          retryTimer = setTimeout(() => loadDiscordStats(retryCount + 1), Math.min(3000 * (retryCount + 1), 15_000));
         }
       }
     }
 
     loadDiscordStats();
-    setInterval(() => loadDiscordStats(), 60_000);
+    setInterval(() => loadDiscordStats(), 30_000); // poll every 30s (was 60s)
   </script>
 </MainLayout>
