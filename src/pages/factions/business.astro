@@ -24,58 +24,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
     </div>
   </section>
 
-  <section class="section">
+  <section class="section wip-section">
     <div class="container">
-      <div class="subfaction-grid">
-
-        <div class="subfaction-panel">
-          <div class="subfaction-icon subfaction-icon--gold">⬡</div>
-          <h3>Overview</h3>
-          <p>
-            Business &amp; Civilian Groups cover the legal and social layer of Capital Roleplay.
-            From running a restaurant to operating a media company or managing a garage — civilian
-            roleplay is what ties the city together.
-          </p>
-          <p style="margin-top: 14px;">
-            Approved businesses, their owners, and their current openings will be listed here
-            once the server is active.
-          </p>
-        </div>
-
-        <div class="subfaction-panel">
-          <div class="subfaction-icon subfaction-icon--gold">◉</div>
-          <h3>Starting a Business</h3>
-          <p>
-            Players looking to run civilian organisations or businesses will need to go through
-            an approval process managed by server staff. Details will be finalised closer to launch.
-          </p>
-          <ul class="subfaction-list subfaction-list--gold">
-            <li>Business concept must be submitted through Discord</li>
-            <li>Staff review for lore-fit and server direction</li>
-            <li>Approved businesses listed on this page publicly</li>
-          </ul>
-        </div>
-
-        <div class="subfaction-panel subfaction-panel--wide">
-          <div class="subfaction-icon subfaction-icon--gold">✦</div>
-          <h3>Business Categories</h3>
-          <p>This section will expand with active businesses. Placeholder categories below.</p>
-          <div class="dept-grid">
-            <div class="dept-card dept-card--gold">
-              <strong>Retail &amp; Hospitality</strong>
-              <span>Restaurants, bars, clothing stores, and service businesses.</span>
-            </div>
-            <div class="dept-card dept-card--gold">
-              <strong>Media &amp; Press</strong>
-              <span>News outlets, radio stations, and content production groups.</span>
-            </div>
-            <div class="dept-card dept-card--gold">
-              <strong>Transport &amp; Trade</strong>
-              <span>Logistics companies, garages, and trade-related civilian roleplay.</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="wip-block wip-block--gold">
+        <div class="wip-label">Work in progress</div>
+        <div class="wip-text">WIP</div>
+        <p class="wip-sub">This faction page is being built. Business listings, civilian roles, and how to apply will all be published here before launch.</p>
       </div>
     </div>
   </section>
@@ -210,6 +164,42 @@ import MainLayout from "../../layouts/MainLayout.astro";
   .subfaction-badge--gold::before {
     background: #f5a623;
     box-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
+  }
+
+  /* ── WIP block ────────────────────────────────────────── */
+  .wip-section { padding-bottom: 0; }
+  .wip-block {
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    padding: 80px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .wip-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+  .wip-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(6rem, 18vw, 14rem);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1;
+  }
+  .wip-block--gold .wip-text { color: #f5a623; opacity: 0.18; }
+  .wip-sub {
+    color: #9db0c6;
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 52ch;
+    margin-top: -8px;
   }
 
   .subfaction-grid {

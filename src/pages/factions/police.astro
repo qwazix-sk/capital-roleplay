@@ -24,58 +24,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
     </div>
   </section>
 
-  <section class="section">
+  <section class="section wip-section">
     <div class="container">
-      <div class="subfaction-grid">
-
-        <div class="subfaction-panel">
-          <div class="subfaction-icon subfaction-icon--blue">⬡</div>
-          <h3>Overview</h3>
-          <p>
-            The Police &amp; Emergency Services faction covers all law enforcement, medical, and
-            fire response roleplay on the server. This faction is reserved for players who want
-            to serve the city in a structured, serious capacity.
-          </p>
-          <p style="margin-top: 14px;">
-            Information about specific departments, hierarchy, uniforms, and vehicles will be
-            populated here as the server develops.
-          </p>
-        </div>
-
-        <div class="subfaction-panel">
-          <div class="subfaction-icon subfaction-icon--blue">◉</div>
-          <h3>Recruitment</h3>
-          <p>
-            Recruitment for emergency services will open through the Discord. Details around
-            applications, interview processes, and training structure will be listed here.
-          </p>
-          <ul class="subfaction-list subfaction-list--blue">
-            <li>Whitelist required before applying to any department</li>
-            <li>Applications reviewed by faction leadership</li>
-            <li>Structured training period before full deployment</li>
-          </ul>
-        </div>
-
-        <div class="subfaction-panel subfaction-panel--wide">
-          <div class="subfaction-icon subfaction-icon--blue">✦</div>
-          <h3>Departments</h3>
-          <p>This section will outline the active departments within the emergency services faction once the server is live. Placeholder structure below.</p>
-          <div class="dept-grid">
-            <div class="dept-card dept-card--blue">
-              <strong>Metropolitan Police</strong>
-              <span>Patrol, response, and detective operations within the city.</span>
-            </div>
-            <div class="dept-card dept-card--blue">
-              <strong>Emergency Medical Services</strong>
-              <span>Medical response, trauma care, and hospital roleplay.</span>
-            </div>
-            <div class="dept-card dept-card--blue">
-              <strong>Fire &amp; Rescue</strong>
-              <span>Structural fire response and rescue operations.</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="wip-block wip-block--blue">
+        <div class="wip-label">Work in progress</div>
+        <div class="wip-text">WIP</div>
+        <p class="wip-sub">This faction page is being built. Full details — departments, recruitment, and structure — will be published here before launch.</p>
       </div>
     </div>
   </section>
@@ -214,6 +168,52 @@ import MainLayout from "../../layouts/MainLayout.astro";
   .subfaction-badge--blue::before {
     background: #00aeff;
     box-shadow: 0 0 12px rgba(0, 174, 255, 0.5);
+  }
+
+  /* ── WIP block ────────────────────────────────────────── */
+  .wip-section {
+    padding-bottom: 0;
+  }
+
+  .wip-block {
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    padding: 80px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .wip-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .wip-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(6rem, 18vw, 14rem);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    opacity: 0.12;
+  }
+
+  .wip-block--blue  .wip-text { color: #00aeff; opacity: 0.18; }
+  .wip-block--gold  .wip-text { color: #f5a623; opacity: 0.18; }
+  .wip-block--red   .wip-text { color: #dc2644; opacity: 0.18; }
+
+  .wip-sub {
+    color: #9db0c6;
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 52ch;
+    margin-top: -8px;
   }
 
   /* ── Content grid ─────────────────────────────────────── */
