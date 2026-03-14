@@ -5,16 +5,20 @@
  *
  * SETUP:
  *  1. Paste this file into your Worker in the Cloudflare dashboard (or wrangler deploy)
- *  2. No secrets needed — the invite code is hardcoded below
- *     (optionally override via DISCORD_INVITE_CODE env var)
+ *  2. No secrets needed — invite code + guild ID are hardcoded below
  *
- * Sources (in order of priority):
- *  1. Discord Invite API  — public, returns both member count + online count
+ * Stability: Discord's API returns "approximate" counts that fluctuate ±1 per
+ * request. This Worker caches its outgoing Discord fetches at the Cloudflare
+ * edge for 60 seconds (cf.cacheTtl), so every visitor within that window sees
+ * the exact same numbers — no more jumping.
+ *
+ * Sources (in order):
+ *  1. Discord Invite API  — public, gives member count + online count
  *  2. Discord Widget API  — public fallback for online count only
  */
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const cors = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -25,19 +29,27 @@ export default {
       return new Response(null, { headers: cors });
     }
 
-    // Invite code from the Join button on the website
     const INVITE = env.DISCORD_INVITE_CODE ?? "drpNDbTgBM";
-    // Guild ID as a fallback for the widget API
     const GUILD  = env.DISCORD_GUILD_ID    ?? "1478455683576893472";
+    const TTL    = 60; // seconds — how long Cloudflare's edge caches Discord's response
 
     let members = 0;
     let online  = 0;
 
-    // ── 1. Invite API — no auth, gives approximate_member_count + approximate_presence_count ──
+    // ── 1. Invite API — cached at Cloudflare edge for TTL seconds ───────────
+    //    The `cf` option tells Cloudflare's CDN to cache this outgoing fetch.
+    //    All Worker invocations within the TTL window share the same cached
+    //    Discord response, so the returned numbers never jump between requests.
     try {
       const res = await fetch(
         `https://discord.com/api/v10/invites/${INVITE}?with_counts=true`,
-        { headers: { "User-Agent": "CapitalRoleplay-Stats/1.0" } }
+        {
+          headers: { "User-Agent": "CapitalRoleplay-Stats/1.0" },
+          cf: {
+            cacheTtl: TTL,
+            cacheEverything: true,
+          },
+        }
       );
 
       if (res.ok) {
@@ -47,13 +59,15 @@ export default {
       }
     } catch (_) { /* invite API unreachable — fall through */ }
 
-    // ── 2. Widget API fallback — online count only ───────────────────────────
+    // ── 2. Widget API fallback — online count only, also edge-cached ─────────
     if (online === 0) {
       try {
-        const res = await fetch(`https://discord.com/api/v10/guilds/${GUILD}/widget.json`);
+        const res = await fetch(
+          `https://discord.com/api/v10/guilds/${GUILD}/widget.json`,
+          { cf: { cacheTtl: TTL, cacheEverything: true } }
+        );
         if (res.ok) {
           const d = await res.json();
-          // widget disabled → d.code === 50004
           if (typeof d.presence_count === "number" && d.presence_count > 0) {
             online = d.presence_count;
           }
@@ -66,8 +80,8 @@ export default {
       {
         headers: {
           ...cors,
-          // 30-second browser cache — keeps it fresh without hammering Discord
-          "Cache-Control": "public, max-age=30, s-maxage=30",
+          // Also tell browsers/CDN to cache the Worker response itself
+          "Cache-Control": `public, max-age=${TTL}, s-maxage=${TTL}`,
         },
       }
     );
