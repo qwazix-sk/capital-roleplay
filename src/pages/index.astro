@@ -180,35 +180,53 @@ import MainLayout from "../layouts/MainLayout.astro";
 
   <section class="section" id="discord">
     <div class="container">
-      <div class="discord-grid">
-        <div class="discord-card glow">
-          <div class="discord-live">Community entry point</div>
-          <h3 style="font-family: Space Grotesk, sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.02; margin-bottom: 14px;">
-            Join the Discord before you enter the city.
-          </h3>
-          <p>
-            Discord is where applications, announcements, updates, and community onboarding will live.
-            The live member counter can be connected later through a Cloudflare Worker or Astro endpoint.
-          </p>
+      <div class="dc-outer">
 
-          <div class="discord-count-box">
-            <strong id="discordCount" data-fallback="500+">500+</strong>
-            <span>Discord community members</span>
+        <div class="dc-top">
+          <div class="dc-eyebrow">
+            <span class="dc-dot"></span>
+            <span>Our Community</span>
           </div>
-
-          <div style="margin-top: 24px;">
-            <a class="button" href="https://discord.gg/drpNDbTgBM" target="_blank" rel="noreferrer">
-              Join Capital Roleplay
-            </a>
-          </div>
+          <h2 class="dc-heading">
+            Built for those who<br />
+            <span class="dc-heading-accent">demand the city.</span>
+          </h2>
+          <p class="dc-sub">Join hundreds of members in our Discord — applications, announcements, and community onboarding all start here.</p>
         </div>
 
-        <div class="discord-card">
-          <ul class="discord-points">
-            <li>The application flow is designed to begin through Discord.</li>
-            <li>Authentication can later be wired to Discord OAuth.</li>
-            <li>The member counter can later be fetched from a backend endpoint without changing this UI.</li>
-          </ul>
+        <div class="dc-cards">
+
+          <div class="dc-stats-card">
+            <div class="dc-live-row">
+              <span class="dc-live-dot"></span>
+              <span class="dc-live-text">Live Stats</span>
+            </div>
+            <div class="dc-numbers-row">
+              <div class="dc-num-block">
+                <strong id="discordMemberCount" data-fallback="—">—</strong>
+                <span>Members</span>
+              </div>
+              <div class="dc-num-sep"></div>
+              <div class="dc-num-block">
+                <strong id="discordOnlineCount" data-fallback="—">—</strong>
+                <span>Online</span>
+              </div>
+            </div>
+            <p class="dc-source">Data provided by <a href="https://discord.com" target="_blank" rel="noreferrer">Discord</a></p>
+          </div>
+
+          <div class="dc-join-card">
+            <div class="dc-online-pill">
+              <span class="dc-online-dot"></span>
+              <span>Online</span>
+            </div>
+            <h3 class="dc-join-title">Capital Roleplay</h3>
+            <p class="dc-join-body">Discord is where the community lives. Join to apply for whitelist, follow updates, and connect before you enter the city.</p>
+            <a class="dc-join-btn" href="https://discord.gg/drpNDbTgBM" target="_blank" rel="noreferrer">
+              Join Capital Roleplay &rarr;
+            </a>
+          </div>
+
         </div>
       </div>
     </div>
@@ -381,23 +399,40 @@ import MainLayout from "../layouts/MainLayout.astro";
   </section>
 
   <script>
-    const countEl = document.getElementById("discordCount");
+    const WORKER_URL = "https://royal-truth-48c4-capital-roleplay-discordcounter.skagebakk.workers.dev";
 
-    async function loadDiscordCount() {
-      if (!countEl) return;
+    const memberEl = document.getElementById("discordMemberCount");
+    const onlineEl = document.getElementById("discordOnlineCount");
 
+    function fmt(n) {
+      return new Intl.NumberFormat("en-GB").format(n);
+    }
+
+    async function loadDiscordStats() {
       try {
-        const response = await fetch("/api/discord-count");
-        if (!response.ok) throw new Error("Failed to fetch count");
-        const data = await response.json();
-        if (typeof data.count === "number") {
-          countEl.textContent = new Intl.NumberFormat("en-GB").format(data.count);
+        const res = await fetch(WORKER_URL);
+        if (!res.ok) throw new Error("Worker returned " + res.status);
+        const data = await res.json();
+
+        if (memberEl && typeof data.members === "number") {
+          memberEl.textContent = fmt(data.members);
+        } else if (memberEl) {
+          memberEl.textContent = memberEl.dataset.fallback || "—";
+        }
+
+        if (onlineEl && typeof data.online === "number") {
+          onlineEl.textContent = fmt(data.online);
+        } else if (onlineEl) {
+          onlineEl.textContent = onlineEl.dataset.fallback || "—";
         }
       } catch {
-        countEl.textContent = countEl.dataset.fallback || "500+";
+        if (memberEl) memberEl.textContent = memberEl.dataset.fallback || "—";
+        if (onlineEl) onlineEl.textContent = onlineEl.dataset.fallback || "—";
       }
     }
 
-    loadDiscordCount();
+    loadDiscordStats();
+    // Refresh every 60 seconds to keep stats live
+    setInterval(loadDiscordStats, 60_000);
   </script>
 </MainLayout>

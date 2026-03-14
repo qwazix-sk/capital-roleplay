@@ -706,14 +706,12 @@ const navItems = [
         margin-top: 4px;
       }
 
-      .discord-card,
       .login-card,
       .application-form {
         position: relative;
         overflow: hidden;
       }
 
-      .discord-card.glow::before,
       .login-card::before {
         content: "";
         position: absolute;
@@ -726,76 +724,222 @@ const navItems = [
         pointer-events: none;
       }
 
-      .discord-card > *,
       .login-card > * {
         position: relative;
         z-index: 1;
       }
 
-      .discord-live {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        color: #9fe6ff;
-        font-size: 0.82rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 18px;
+      /* ── Community / Discord section ── */
+
+      .community-wrap {
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+        box-shadow: var(--shadow);
+        padding: 52px 52px 40px;
+        overflow: hidden;
+        position: relative;
       }
 
-      .discord-live::before {
+      .community-wrap::before {
         content: "";
+        position: absolute;
+        top: -80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(0,174,255,0.12), transparent 70%);
+        pointer-events: none;
+      }
+
+      .community-header {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 680px;
+        margin: 0 auto 40px;
+      }
+
+      .community-header h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        margin: 18px 0 14px;
+      }
+
+      .community-highlight {
+        color: var(--primary);
+        text-shadow: 0 0 26px rgba(0,174,255,0.2);
+      }
+
+      .community-header p {
+        color: var(--muted);
+        font-size: 1.04rem;
+        line-height: 1.8;
+      }
+
+      .community-cards {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .community-stats-card,
+      .community-join-card {
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(6, 14, 22, 0.72);
+        backdrop-filter: blur(12px);
+        padding: 28px;
+      }
+
+      .community-live-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: #9fe6ff;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      .live-pulse {
         width: 9px;
         height: 9px;
         border-radius: 50%;
         background: var(--primary);
-        box-shadow: 0 0 16px rgba(0,174,255,0.36);
+        box-shadow: 0 0 0 3px rgba(0,174,255,0.2);
+        animation: pulse 2s ease-in-out infinite;
+        flex-shrink: 0;
       }
 
-      .discord-count-box {
-        margin-top: 24px;
-        display: inline-flex;
-        flex-direction: column;
-        gap: 6px;
-        padding: 18px 20px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.04);
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(0,174,255,0.2); }
+        50%       { box-shadow: 0 0 0 6px rgba(0,174,255,0.06), 0 0 16px rgba(0,174,255,0.3); }
       }
 
-      .discord-count-box strong {
+      .community-numbers {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin-bottom: 24px;
+      }
+
+      .community-stat strong {
+        display: block;
         font-family: "Space Grotesk", sans-serif;
-        font-size: 2rem;
-        letter-spacing: -0.04em;
+        font-size: clamp(2.4rem, 4vw, 3.4rem);
+        letter-spacing: -0.05em;
+        color: var(--primary);
+        line-height: 1;
+        min-width: 3ch;
       }
 
-      .discord-count-box span {
+      .community-stat span {
+        display: block;
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-top: 8px;
       }
 
-      .discord-points li {
-        padding: 18px 18px 18px 52px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.03);
-        color: var(--muted-2);
-        line-height: 1.65;
+      .community-divider {
+        width: 1px;
+        height: 60px;
+        background: rgba(255,255,255,0.1);
+        flex-shrink: 0;
+      }
+
+      .community-source {
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .community-source a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .community-join-card {
+        display: flex;
+        flex-direction: column;
         position: relative;
+        overflow: hidden;
       }
 
-      .discord-points li::before {
+      .community-join-card::before {
         content: "";
         position: absolute;
-        left: 18px;
-        top: 22px;
-        width: 18px;
-        height: 18px;
+        bottom: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,174,255,0.18), transparent 70%);
+        filter: blur(20px);
+        pointer-events: none;
+      }
+
+      .community-join-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .community-online-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 30px;
+        padding: 0 12px;
         border-radius: 999px;
-        border: 1px solid rgba(0,174,255,0.3);
-        background: rgba(0,174,255,0.12);
-        box-shadow: 0 0 18px rgba(0,174,255,0.12);
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #4ade80;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+        width: fit-content;
+      }
+
+      .online-pulse {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+        animation: pulse-green 2s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes pulse-green {
+        0%, 100% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+        50%       { box-shadow: 0 0 14px rgba(74, 222, 128, 0.8); }
+      }
+
+      .community-join-card h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.5rem;
+        line-height: 1.1;
+        margin-bottom: 12px;
+      }
+
+      .community-join-card p {
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.75;
+        margin-bottom: 24px;
+        flex: 1;
       }
 
       .showcase-banner {
@@ -1141,6 +1285,278 @@ const navItems = [
         .hero-actions .button {
           width: 100%;
         }
+      }
+
+      /* ─── Discord / Community section ─── */
+
+      .dc-outer {
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 56px 52px 44px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dc-outer::before {
+        content: "";
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(0, 174, 255, 0.1), transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .dc-top {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 44px;
+      }
+
+      .dc-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9fe6ff;
+        margin-bottom: 20px;
+      }
+
+      .dc-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 10px rgba(0, 174, 255, 0.6);
+        flex-shrink: 0;
+      }
+
+      .dc-heading {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        margin-bottom: 18px;
+        color: #f4f8ff;
+      }
+
+      .dc-heading-accent {
+        color: var(--primary);
+        text-shadow: 0 0 30px rgba(0, 174, 255, 0.25);
+      }
+
+      .dc-sub {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.8;
+      }
+
+      .dc-cards {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .dc-stats-card,
+      .dc-join-card {
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(4, 10, 18, 0.8);
+        padding: 28px 30px;
+      }
+
+      /* — Left: stats — */
+
+      .dc-live-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+
+      .dc-live-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 10px rgba(0, 174, 255, 0.5);
+        animation: dc-pulse 2s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes dc-pulse {
+        0%, 100% { box-shadow: 0 0 6px rgba(0, 174, 255, 0.4); }
+        50%       { box-shadow: 0 0 16px rgba(0, 174, 255, 0.75); }
+      }
+
+      .dc-live-text {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #9fe6ff;
+      }
+
+      .dc-numbers-row {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin-bottom: 22px;
+      }
+
+      .dc-num-block strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.8rem, 5vw, 4rem);
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .dc-num-block span {
+        display: block;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      .dc-num-sep {
+        width: 1px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+
+      .dc-source {
+        font-size: 0.84rem;
+        color: var(--muted);
+      }
+
+      .dc-source a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* — Right: join — */
+
+      .dc-join-card {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dc-join-card::after {
+        content: "";
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 174, 255, 0.15), transparent 70%);
+        filter: blur(16px);
+        pointer-events: none;
+      }
+
+      .dc-join-card > * { position: relative; z-index: 1; }
+
+      .dc-online-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.14);
+        border: 1px solid rgba(34, 197, 94, 0.32);
+        width: fit-content;
+        margin-bottom: 18px;
+      }
+
+      .dc-online-pill span:last-child {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #4ade80;
+      }
+
+      .dc-online-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+        animation: dc-pulse-green 2s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes dc-pulse-green {
+        0%, 100% { box-shadow: 0 0 6px rgba(74, 222, 128, 0.5); }
+        50%       { box-shadow: 0 0 14px rgba(74, 222, 128, 0.9); }
+      }
+
+      .dc-join-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 12px;
+        color: #f4f8ff;
+      }
+
+      .dc-join-body {
+        color: var(--muted);
+        font-size: 0.97rem;
+        line-height: 1.75;
+        flex: 1;
+        margin-bottom: 26px;
+      }
+
+      .dc-join-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 12px;
+        background: #f4f8ff;
+        color: #061019;
+        font-size: 0.95rem;
+        font-weight: 700;
+        width: fit-content;
+        transition: transform 280ms cubic-bezier(.2,.8,.2,1), box-shadow 280ms cubic-bezier(.2,.8,.2,1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      }
+
+      .dc-join-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.32);
+      }
+
+      @media (max-width: 860px) {
+        .dc-outer { padding: 36px 24px 30px; }
+        .dc-cards { grid-template-columns: 1fr; }
       }
     </style>
   </head>
