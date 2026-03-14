@@ -162,12 +162,11 @@ import MainLayout from "../layouts/MainLayout.astro";
     box-shadow: 0 36px 80px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(0, 174, 255, 0.18);
   }
 
-  /* Business: warm amber / gold */
+  /* Business: photo background */
   .faction-business .faction-card-bg {
-    background:
-      radial-gradient(circle at 70% 25%, rgba(245, 166, 35, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 25% 70%, rgba(200, 120, 0, 0.16) 0%, transparent 45%),
-      linear-gradient(160deg, #130f04 0%, #1e1505 40%, #261a06 75%, #110d03 100%);
+    background-image: url('https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/business-placeholder.png');
+    background-size: cover;
+    background-position: center top;
   }
 
   .faction-business:hover {
@@ -175,12 +174,11 @@ import MainLayout from "../layouts/MainLayout.astro";
     box-shadow: 0 36px 80px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(245, 166, 35, 0.16);
   }
 
-  /* Crime: deep crimson / smoke */
+  /* Crime: photo background */
   .faction-crime .faction-card-bg {
-    background:
-      radial-gradient(circle at 60% 30%, rgba(220, 38, 68, 0.22) 0%, transparent 50%),
-      radial-gradient(circle at 20% 72%, rgba(160, 20, 40, 0.18) 0%, transparent 45%),
-      linear-gradient(160deg, #130408 0%, #1e060c 40%, #28080f 75%, #110305 100%);
+    background-image: url('https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/gang-placeholder.png');
+    background-size: cover;
+    background-position: center top;
   }
 
   .faction-crime:hover {
