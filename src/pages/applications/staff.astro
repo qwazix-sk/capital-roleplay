@@ -372,11 +372,13 @@ import MainLayout from "../../layouts/MainLayout.astro";
   /* ── Hero ─────────────────────────────────────────────── */
   .staff-hero {
     position: relative;
-    min-height: 520px;
+    min-height: 580px;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    margin-top: -16px; /* pull up flush under sticky nav padding */
+    /* pull up behind nav: 16px wrapper padding + 74px nav min-height */
+    margin-top: -90px;
+    z-index: 0;
   }
 
   .staff-hero-bg {
@@ -391,15 +393,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
     position: absolute;
     inset: 0;
     z-index: 1;
-    /* dark vignette: heavy on edges, lighter in centre so image breathes */
     background:
-      radial-gradient(ellipse at 50% 0%, transparent 30%, rgba(4,8,16,0.55) 100%),
       linear-gradient(to bottom,
-        rgba(4,8,16,0.15) 0%,
-        rgba(4,8,16,0.0)  30%,
-        rgba(4,8,16,0.0)  55%,
-        rgba(4,8,16,0.85) 85%,
-        rgba(4,8,16,1.0)  100%
+        rgba(4,10,17,0.42) 0%,
+        rgba(4,10,17,0.10) 18%,
+        rgba(4,10,17,0.0)  40%,
+        rgba(4,10,17,0.0)  55%,
+        rgba(4,10,17,0.88) 84%,
+        rgba(6,10,17,1.0)  100%
       );
   }
 
@@ -407,16 +408,17 @@ import MainLayout from "../../layouts/MainLayout.astro";
     position: absolute;
     inset: 0;
     z-index: 2;
-    /* gold colour wash — ties hero to page accent */
+    /* gold tint — ties to page accent */
     background:
-      radial-gradient(ellipse at 15% 80%, rgba(245,166,35,0.13) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 20%, rgba(180,100,0,0.10) 0%, transparent 50%);
+      radial-gradient(ellipse at 15% 85%, rgba(245,166,35,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 15%, rgba(180,100,0,0.08) 0%, transparent 45%);
   }
 
   .staff-hero-inner {
     position: relative;
     z-index: 3;
-    padding-top: 120px;
+    /* padding-top = nav height (90px) + breathing room */
+    padding-top: 160px;
     padding-bottom: 80px;
     display: flex;
     flex-direction: column;
