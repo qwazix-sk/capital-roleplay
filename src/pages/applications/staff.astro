@@ -111,7 +111,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
                   <div class="field-wordcount" id="charcount-wrap">
                     <span id="why-choose-count">0</span> / 50 words minimum
                     <span class="charcount-sep">·</span>
-                    <span id="charcount-used">0</span> / 4096 characters
+                    <span id="charcount-used">0</span> / 10,000 characters
                   </div>
                 </div>
 
@@ -279,7 +279,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
     const whyStaffEl    = document.getElementById('why_staff')  as HTMLTextAreaElement | null;
     const whyChooseEl   = document.getElementById('why_choose') as HTMLTextAreaElement | null;
     const charcountUsed = document.getElementById('charcount-used');
-    const CHAR_LIMIT    = 4096;
+    const CHAR_LIMIT    = 10000;
 
     function updateCharCount() {
       const total = (prevExpEl?.value.length   ?? 0)

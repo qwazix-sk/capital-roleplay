@@ -1,4 +1,5 @@
 const WHITELIST_CHANNEL = '1482373975316365472';
+const DIV = '━'.repeat(49);
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -45,29 +46,54 @@ export async function onRequestPost({ request, env }) {
     return json({ error: `"Why do you want to join" must be at least 100 words (currently ${wordCount})` }, 400);
   }
 
-  // Hard cap at 1000 chars per long field to stay within Discord's embed limits
-  const cap = (str, max = 1000) => str && str.length > max ? str.slice(0, max) + '…' : str;
-
   const avatarUrl = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
+  const submittedAt = new Date().toUTCString().replace(' GMT', ' UTC');
+
+  // ── Build the .txt file ──────────────────────────────────────────────────
+  const fileContent = [
+    DIV,
+    '  WHITELIST APPLICATION — Capital Roleplay',
+    DIV,
+    '',
+    `  Discord      : ${user.username} (${user.id})`,
+    `  Full Name    : ${fullname.trim()}`,
+    `  Date of Birth: ${dob.trim()}`,
+    `  RP Experience: ${experience?.trim() || 'Not provided'}`,
+    '',
+    DIV,
+    '  CHARACTER CONCEPT',
+    DIV,
+    '',
+    character?.trim() || 'Not provided',
+    '',
+    DIV,
+    '  WHY DO YOU WANT TO JOIN CAPITAL ROLEPLAY?',
+    DIV,
+    '',
+    whyjoin.trim(),
+    '',
+    DIV,
+    `  Submitted: ${submittedAt}`,
+    DIV,
+  ].join('\n');
+
+  // ── Embed (short info only) ───────────────────────────────────────────────
   const embed = {
     title: 'New Whitelist Application',
     color: 0x00aeff,
     thumbnail: { url: avatarUrl },
     fields: [
-      { name: 'Discord',       value: `<@${user.id}> (${user.username})`,          inline: true },
-      { name: 'Full Name',     value: fullname.trim(),                              inline: true },
-      { name: '\u200B',        value: '\u200B',                                     inline: false },
-      { name: 'Date of Birth', value: dob.trim(),                                   inline: true },
-      { name: 'RP Experience', value: cap(experience?.trim()) || '*Not provided*',  inline: true },
-      { name: '\u200B',        value: '\u200B',                                     inline: false },
-      { name: 'Character Concept',           value: cap(character?.trim()) || '*Not provided*' },
-      { name: 'Why do you want to join?',    value: cap(whyjoin.trim()) },
+      { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
+      { name: 'Full Name',     value: fullname.trim(),                    inline: true },
+      { name: '\u200B',        value: '\u200B',                           inline: false },
+      { name: 'Date of Birth', value: dob.trim(),                        inline: true },
+      { name: 'RP Experience', value: (experience?.trim() || '*Not provided*').slice(0, 200), inline: true },
     ],
     timestamp: new Date().toISOString(),
-    footer: { text: `Application from ${user.username}` },
+    footer: { text: `Application from ${user.username} · Full answers in attached file` },
   };
 
   const components = [{
@@ -95,15 +121,21 @@ export async function onRequestPost({ request, env }) {
     } catch { /* unreachable — continue */ }
   }
 
+  // ── Send via multipart/form-data with file attachment ────────────────────
+  const formData = new FormData();
+  formData.append('payload_json', JSON.stringify({ embeds: [embed], components }));
+  formData.append(
+    'files[0]',
+    new Blob([fileContent], { type: 'text/plain' }),
+    `whitelist-${user.username}.txt`
+  );
+
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ embeds: [embed], components }),
+      headers: { Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}` },
+      body: formData,
     }
   );
 

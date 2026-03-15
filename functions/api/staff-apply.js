@@ -1,5 +1,6 @@
 const WHITELIST_ROLE = '1478489840260747275';
 const STAFF_CHANNEL  = '1482709760695599124';
+const DIV = '━'.repeat(49);
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -66,29 +67,54 @@ export async function onRequestPost({ request, env }) {
     return json({ error: `"Why should we choose you" must be at least 50 words (currently ${whyChooseWords})` }, 400);
   }
 
-  // Hard cap at 1000 chars per long field to stay within Discord's embed limits
-  const cap = (str, max = 1000) => str && str.length > max ? str.slice(0, max) + '…' : str;
-
   const avatarUrl = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
+  const submittedAt = new Date().toUTCString().replace(' GMT', ' UTC');
+
+  // ── Build the .txt file ──────────────────────────────────────────────────
+  const fileContent = [
+    DIV,
+    '  STAFF APPLICATION — Capital Roleplay',
+    DIV,
+    '',
+    `  Discord           : ${user.username} (${user.id})`,
+    `  Age               : ${age.trim()}`,
+    `  Timezone          : ${timezone.trim()}`,
+    `  Availability      : ${availability.trim()}`,
+    `  Previous Experience: ${previous_experience?.trim() || 'Not provided'}`,
+    '',
+    DIV,
+    '  WHY DO YOU WANT TO BE STAFF?',
+    DIV,
+    '',
+    why_staff.trim(),
+    '',
+    DIV,
+    '  WHY SHOULD WE CHOOSE YOU OVER OTHERS?',
+    DIV,
+    '',
+    why_choose.trim(),
+    '',
+    DIV,
+    `  Submitted: ${submittedAt}`,
+    DIV,
+  ].join('\n');
+
+  // ── Embed (short info only) ───────────────────────────────────────────────
   const embed = {
     title: '📋 New Staff Application',
     color: 0xf5a623,
     thumbnail: { url: avatarUrl },
     fields: [
-      { name: 'Discord',             value: `<@${user.id}> (${user.username})`,             inline: true },
-      { name: 'Age',                 value: age.trim(),                                      inline: true },
-      { name: 'Timezone',            value: timezone.trim(),                                  inline: true },
-      { name: 'Availability',        value: availability.trim(),                              inline: true },
-      { name: '\u200B',              value: '\u200B',                                         inline: false },
-      { name: 'Previous Experience', value: cap(previous_experience?.trim()) || '*Not provided*' },
-      { name: 'Why do you want to be staff?',         value: cap(why_staff.trim()) },
-      { name: 'Why should we choose you over others?', value: cap(why_choose.trim()) },
+      { name: 'Discord',      value: `<@${user.id}> (${user.username})`, inline: true },
+      { name: 'Age',          value: age.trim(),                          inline: true },
+      { name: 'Timezone',     value: timezone.trim(),                     inline: true },
+      { name: 'Availability', value: availability.trim(),                 inline: true },
     ],
     timestamp: new Date().toISOString(),
-    footer: { text: `Staff application from ${user.username}` },
+    footer: { text: `Staff application from ${user.username} · Full answers in attached file` },
   };
 
   const components = [{
@@ -99,15 +125,21 @@ export async function onRequestPost({ request, env }) {
     ],
   }];
 
+  // ── Send via multipart/form-data with file attachment ────────────────────
+  const formData = new FormData();
+  formData.append('payload_json', JSON.stringify({ embeds: [embed], components }));
+  formData.append(
+    'files[0]',
+    new Blob([fileContent], { type: 'text/plain' }),
+    `staff-${user.username}.txt`
+  );
+
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ embeds: [embed], components }),
+      headers: { Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}` },
+      body: formData,
     }
   );
 
