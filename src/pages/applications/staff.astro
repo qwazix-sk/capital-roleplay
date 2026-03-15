@@ -182,7 +182,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
                   <li>You will receive a DM with the outcome</li>
                 </ul>
                 <div style="margin-top:24px">
-                  <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+                  <a class="button ghost small logout" href="/api/auth/logout?from=/applications/staff">Sign out</a>
                 </div>
               `;
             }
@@ -230,7 +230,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
                   </p>
                 </div>
                 <div style="margin-top:18px">
-                  <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+                  <a class="button ghost small logout" href="/api/auth/logout?from=/applications/staff">Sign out</a>
                 </div>
               `;
             }
@@ -261,7 +261,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
               </div>
               <p style="color:#9db0c6;font-size:0.88rem;margin-top:16px;">Could not verify whitelist status — please try refreshing.</p>
               <div style="margin-top:18px">
-                <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+                <a class="button ghost small logout" href="/api/auth/logout?from=/applications/staff">Sign out</a>
               </div>
             `;
           }
