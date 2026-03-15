@@ -319,6 +319,39 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
     prevExpEl?.addEventListener('input', updateCharCount);
 
+    // ── Draft persistence ────────────────────────────────────────────────────
+    const STAFF_DRAFT_KEY = 'staff_form_draft';
+
+    function saveDraft() {
+      localStorage.setItem(STAFF_DRAFT_KEY, JSON.stringify({
+        age:                 (document.getElementById('age')          as HTMLInputElement)?.value  ?? '',
+        timezone:            (document.getElementById('timezone')     as HTMLInputElement)?.value  ?? '',
+        availability:        (document.getElementById('availability') as HTMLInputElement)?.value  ?? '',
+        previous_experience: prevExpEl?.value   ?? '',
+        why_staff:           whyStaffEl?.value  ?? '',
+        why_choose:          whyChooseEl?.value ?? '',
+      }));
+    }
+
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      '#apply-form input, #apply-form textarea'
+    ).forEach(el => el.addEventListener('input', saveDraft));
+
+    (function restoreDraft() {
+      let draft: Record<string, string> | null = null;
+      try { draft = JSON.parse(localStorage.getItem(STAFF_DRAFT_KEY) ?? 'null'); } catch { return; }
+      if (!draft) return;
+      const ageEl  = document.getElementById('age')          as HTMLInputElement | null;
+      const tzEl   = document.getElementById('timezone')     as HTMLInputElement | null;
+      const availEl = document.getElementById('availability') as HTMLInputElement | null;
+      if (ageEl   && draft.age)          ageEl.value   = draft.age;
+      if (tzEl    && draft.timezone)     tzEl.value    = draft.timezone;
+      if (availEl && draft.availability) availEl.value = draft.availability;
+      if (prevExpEl  && draft.previous_experience) { prevExpEl.value   = draft.previous_experience; prevExpEl.dispatchEvent(new Event('input'));   }
+      if (whyStaffEl && draft.why_staff)           { whyStaffEl.value  = draft.why_staff;           whyStaffEl.dispatchEvent(new Event('input'));  }
+      if (whyChooseEl && draft.why_choose)         { whyChooseEl.value = draft.why_choose;          whyChooseEl.dispatchEvent(new Event('input')); }
+    })();
+
     // Form submit
     const form = document.getElementById('apply-form') as HTMLFormElement | null;
     const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
@@ -375,6 +408,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
         const data = await res.json();
 
         if (res.ok) {
+          localStorage.removeItem(STAFF_DRAFT_KEY);
           if (form) form.style.display = 'none';
           if (successEl) successEl.style.display = 'block';
         } else {

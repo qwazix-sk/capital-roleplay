@@ -523,6 +523,36 @@ import MainLayout from "../layouts/MainLayout.astro";
     experienceEl?.addEventListener('input', updateCharCount);
     characterEl?.addEventListener('input', updateCharCount);
 
+    // ── Draft persistence ────────────────────────────────────────────────────
+    const WL_DRAFT_KEY = 'wl_form_draft';
+
+    function saveDraft() {
+      localStorage.setItem(WL_DRAFT_KEY, JSON.stringify({
+        fullname:   (document.getElementById('fullname')   as HTMLInputElement)?.value  ?? '',
+        dob:        (document.getElementById('dob')        as HTMLInputElement)?.value  ?? '',
+        experience: experienceEl?.value ?? '',
+        character:  characterEl?.value  ?? '',
+        whyjoin:    whyjoinEl?.value    ?? '',
+      }));
+    }
+
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      '#apply-form input, #apply-form textarea'
+    ).forEach(el => el.addEventListener('input', saveDraft));
+
+    (function restoreDraft() {
+      let draft: Record<string, string> | null = null;
+      try { draft = JSON.parse(localStorage.getItem(WL_DRAFT_KEY) ?? 'null'); } catch { return; }
+      if (!draft) return;
+      const fullnameInput = document.getElementById('fullname') as HTMLInputElement | null;
+      const dobInput      = document.getElementById('dob')      as HTMLInputElement | null;
+      if (fullnameInput && draft.fullname) fullnameInput.value = draft.fullname;
+      if (dobInput && draft.dob) { dobInput.value = draft.dob; dobInput.dispatchEvent(new Event('input')); }
+      if (experienceEl && draft.experience) { experienceEl.value = draft.experience; experienceEl.dispatchEvent(new Event('input')); }
+      if (characterEl  && draft.character)  { characterEl.value  = draft.character;  characterEl.dispatchEvent(new Event('input'));  }
+      if (whyjoinEl    && draft.whyjoin)    { whyjoinEl.value    = draft.whyjoin;    whyjoinEl.dispatchEvent(new Event('input'));    }
+    })();
+
     // ── Form submit ─────────────────────────────────────────────────────────
     const form = document.getElementById('apply-form') as HTMLFormElement | null;
     const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
@@ -571,6 +601,7 @@ import MainLayout from "../layouts/MainLayout.astro";
         const data = await res.json();
 
         if (res.ok) {
+          localStorage.removeItem(WL_DRAFT_KEY);
           if (form) form.style.display = 'none';
           if (successEl) successEl.style.display = 'block';
         } else {
