@@ -1,0 +1,395 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Staff Application — Capital Roleplay">
+
+  <section class="staff-hero">
+    <div class="staff-hero-bg"></div>
+    <div class="staff-hero-noise"></div>
+    <div class="staff-hero-overlay"></div>
+    <div class="container staff-hero-inner">
+      <a href="/applications" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        All Applications
+      </a>
+      <div class="staff-badge">
+        <span class="staff-badge-dot"></span>
+        Staff Team · Now Open
+      </div>
+      <h1>Staff Application</h1>
+      <p>
+        We're looking for dedicated players to help run Capital Roleplay. Staff members keep the
+        server running, the community healthy, and the standard high.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="apply">
+    <div class="container">
+
+      <div id="oauth-error-msg" class="apply-error" style="display:none">
+        Discord login failed — please try again.
+      </div>
+
+      <div class="apply-shell">
+        <div class="apply-grid">
+
+          <!-- Auth card -->
+          <div id="auth-card" class="login-card">
+            <div class="login-badge">Step 1 · Discord login required</div>
+            <h3>Authenticate with Discord first</h3>
+            <p>
+              You must sign in with Discord before submitting a staff application.
+              This verifies your identity and links your application to your account.
+            </p>
+            <div style="margin-top: 22px;">
+              <a class="button discord" href="/api/auth/discord">Continue with Discord</a>
+            </div>
+            <ul class="login-points" style="margin-top: 22px;">
+              <li>Discord account required before applying</li>
+              <li>Identity verified via OAuth2</li>
+              <li>Application forwarded to the staff review channel</li>
+            </ul>
+          </div>
+
+          <!-- Form -->
+          <div id="apply-form-wrapper" class="application-form application-form--locked">
+            <h3>Staff application form</h3>
+            <p id="form-status-text">Sign in with Discord on the left to unlock and submit this application.</p>
+
+            <div id="form-locked-overlay" class="form-locked">
+              <div>
+                <strong>Form locked</strong>
+                <span>Sign in with Discord to unlock.</span>
+              </div>
+            </div>
+
+            <div id="apply-success" class="apply-success" style="display:none">
+              <strong>Application submitted!</strong>
+              <span>Our staff team will review it shortly. Keep an eye on your Discord DMs.</span>
+            </div>
+
+            <div id="apply-error-msg" class="apply-error-inline" style="display:none"></div>
+
+            <form id="apply-form">
+              <div class="form-grid">
+
+                <div class="field">
+                  <label for="age">Your Age <span class="field-required">*</span></label>
+                  <input id="age" name="age" type="text" placeholder="e.g. 19" disabled />
+                </div>
+
+                <div class="field">
+                  <label for="timezone">Timezone <span class="field-required">*</span></label>
+                  <input id="timezone" name="timezone" type="text" placeholder="e.g. GMT+1 / BST" disabled />
+                </div>
+
+                <div class="field full">
+                  <label for="applying_for">Role Applying For <span class="field-required">*</span></label>
+                  <select id="applying_for" name="applying_for" disabled>
+                    <option value="" disabled selected>Select a role…</option>
+                    <option value="Support">Support</option>
+                    <option value="Moderator">Moderator</option>
+                    <option value="Administrator">Administrator</option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label for="availability">Availability <span class="field-required">*</span></label>
+                  <input id="availability" name="availability" type="text" placeholder="e.g. Evenings and weekends, ~15 hrs/week" disabled />
+                </div>
+
+                <div class="field full">
+                  <label for="previous_experience">Previous Staff Experience <span class="field-optional">(Optional)</span></label>
+                  <textarea id="previous_experience" name="previous_experience" placeholder="Describe any previous moderation, admin, or community management experience." disabled></textarea>
+                </div>
+
+                <div class="field full">
+                  <label for="why_staff">Why do you want to be staff? <span class="field-required">*</span></label>
+                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 50 words required." disabled></textarea>
+                  <div class="field-wordcount">
+                    <span id="why-staff-count">0</span> / 50 words minimum
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-footer">
+                <div id="form-note-text" class="form-note">Sign in with Discord to enable submission.</div>
+                <button type="submit" id="submit-btn" class="button submit-disabled" disabled>
+                  Submit Application
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      function esc(str: string) {
+        return String(str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      let discordUser: { id: string; username: string; avatar: string | null } | null = null;
+      const match = document.cookie.split('; ').find(r => r.startsWith('dc_user='));
+      if (match) {
+        try { discordUser = JSON.parse(decodeURIComponent(match.split('=').slice(1).join('='))); }
+        catch { /* invalid */ }
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error') === 'oauth') {
+        const errEl = document.getElementById('oauth-error-msg');
+        if (errEl) errEl.style.display = 'block';
+      }
+
+      if (!discordUser) return;
+
+      const authCard = document.getElementById('auth-card');
+      if (authCard) {
+        const avatarUrl = discordUser.avatar
+          ? `https://cdn.discordapp.com/avatars/${esc(discordUser.id)}/${esc(discordUser.avatar)}.png?size=64`
+          : `https://cdn.discordapp.com/embed/avatars/0.png`;
+        authCard.className = 'login-card login-card--authed';
+        authCard.innerHTML = `
+          <div class="login-badge login-badge--ok">Step 1 &middot; Authenticated</div>
+          <h3>Signed in with Discord</h3>
+          <div class="dc-user-row">
+            <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+            <div>
+              <strong class="dc-user-name">${esc(discordUser.username)}</strong>
+              <span class="dc-user-id">ID ${esc(discordUser.id)}</span>
+            </div>
+          </div>
+          <ul class="login-points" style="margin-top:22px">
+            <li>Identity verified via Discord OAuth</li>
+            <li>Application sent to the staff review channel</li>
+            <li>You will receive a DM with the outcome</li>
+          </ul>
+          <div style="margin-top:24px">
+            <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+          </div>
+        `;
+      }
+
+      const wrapper = document.getElementById('apply-form-wrapper');
+      if (wrapper) wrapper.classList.remove('application-form--locked');
+
+      const overlay = document.getElementById('form-locked-overlay');
+      if (overlay) overlay.remove();
+
+      document.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        '#apply-form input, #apply-form select, #apply-form textarea'
+      ).forEach(el => el.removeAttribute('disabled'));
+
+      const statusText = document.getElementById('form-status-text');
+      if (statusText) statusText.textContent = 'Form is unlocked. Fill in your details and submit below.';
+
+      const noteText = document.getElementById('form-note-text');
+      if (noteText) noteText.textContent = 'Your application will be sent directly to our staff review channel.';
+
+      const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled');
+        submitBtn.className = 'button';
+      }
+    })();
+
+    // Word counter
+    const whyStaffEl = document.getElementById('why_staff') as HTMLTextAreaElement | null;
+    const whyStaffCount = document.getElementById('why-staff-count');
+
+    function countWords(str: string) {
+      return str.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    if (whyStaffEl && whyStaffCount) {
+      whyStaffEl.addEventListener('input', () => {
+        const words = countWords(whyStaffEl.value);
+        whyStaffCount.textContent = String(words);
+        const valid = words >= 50;
+        whyStaffCount.parentElement!.classList.toggle('valid', valid);
+        whyStaffCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
+      });
+    }
+
+    // Form submit
+    const form = document.getElementById('apply-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+    const successEl = document.getElementById('apply-success');
+    const errorEl = document.getElementById('apply-error-msg');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!submitBtn || submitBtn.disabled) return;
+
+      const age            = (document.getElementById('age') as HTMLInputElement).value.trim();
+      const timezone       = (document.getElementById('timezone') as HTMLInputElement).value.trim();
+      const applying_for   = (document.getElementById('applying_for') as HTMLSelectElement).value.trim();
+      const availability   = (document.getElementById('availability') as HTMLInputElement).value.trim();
+      const previous_experience = (document.getElementById('previous_experience') as HTMLTextAreaElement).value.trim();
+      const why_staff      = (document.getElementById('why_staff') as HTMLTextAreaElement).value.trim();
+
+      const words = countWords(why_staff);
+      if (words < 50) {
+        if (errorEl) {
+          errorEl.textContent = `"Why do you want to be staff" needs at least 50 words (you have ${words}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      if (errorEl) errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/staff-apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ age, timezone, applying_for, availability, previous_experience, why_staff }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          if (form) form.style.display = 'none';
+          if (successEl) successEl.style.display = 'block';
+        } else {
+          if (errorEl) {
+            errorEl.textContent = data.error ?? 'Submission failed — please try again.';
+            errorEl.style.display = 'block';
+          }
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Application';
+        }
+      } catch {
+        if (errorEl) {
+          errorEl.textContent = 'Network error — please check your connection and try again.';
+          errorEl.style.display = 'block';
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+      }
+    });
+  </script>
+
+</MainLayout>
+
+<style>
+  /* ── Hero ─────────────────────────────────────────────── */
+  .staff-hero {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .staff-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(245, 166, 35, 0.22) 0%, transparent 52%),
+      radial-gradient(circle at 80% 70%, rgba(180, 100, 0, 0.16) 0%, transparent 44%),
+      linear-gradient(160deg, #0f0a01 0%, #1a1304 40%, #221802 75%, #100900 100%);
+  }
+
+  .staff-hero-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
+    opacity: 0.4;
+  }
+
+  .staff-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to bottom, transparent 0%, rgba(4,10,18,0.3) 60%, rgba(4,10,18,0.9) 100%);
+  }
+
+  .staff-hero-inner {
+    position: relative;
+    z-index: 3;
+    padding-top: 100px;
+    padding-bottom: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .staff-hero-inner h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    max-width: 18ch;
+  }
+
+  .staff-hero-inner p {
+    color: #9db0c6;
+    font-size: 1.05rem;
+    line-height: 1.78;
+    max-width: 56ch;
+  }
+
+  /* ── Back link ────────────────────────────────────────── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #9db0c6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+  .back-link:hover { color: #f4f8ff; }
+
+  /* ── Staff badge ──────────────────────────────────────── */
+  .staff-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(245,166,35,0.12);
+    border: 1px solid rgba(245,166,35,0.28);
+    color: #fcd47a;
+  }
+
+  .staff-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f5a623;
+    box-shadow: 0 0 12px rgba(245,166,35,0.6);
+    animation: pulse-staff 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-staff {
+    0%, 100% { box-shadow: 0 0 6px rgba(245,166,35,0.6); }
+    50%       { box-shadow: 0 0 16px rgba(245,166,35,1); }
+  }
+</style>

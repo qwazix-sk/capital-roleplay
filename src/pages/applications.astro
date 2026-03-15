@@ -1,0 +1,409 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Applications — Capital Roleplay">
+
+  <section class="apps-hero">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Open Positions</div>
+        <h1>Join the team.<br />Shape the city.</h1>
+        <p class="lead">
+          Capital Roleplay runs on the people behind it. Whether you want to serve the city in uniform,
+          run a business, or help build the community as staff — every role matters.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="apps-section">
+    <div class="container">
+      <div class="apps-list">
+
+        <!-- Staff Application -->
+        <a href="/applications/staff" class="app-card app-card--staff">
+          <div class="app-card-bg"></div>
+          <div class="app-card-overlay"></div>
+          <div class="app-card-inner">
+            <div class="app-card-left">
+              <div class="app-badge app-badge--gold">
+                <span class="app-badge-dot"></span>
+                Staff Team
+              </div>
+              <h2>Staff Application</h2>
+              <p>Join the team that keeps Capital Roleplay running. Moderators, admins, and support staff who shape the community from the inside.</p>
+            </div>
+            <div class="app-card-right">
+              <div class="app-status app-status--open">
+                <span class="app-status-dot"></span>
+                Open
+              </div>
+              <div class="app-cta">
+                <span>Apply Now</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Police -->
+        <a href="/applications/police" class="app-card app-card--police">
+          <div class="app-card-bg"></div>
+          <div class="app-card-overlay"></div>
+          <div class="app-card-inner">
+            <div class="app-card-left">
+              <div class="app-badge app-badge--blue">
+                <span class="app-badge-dot"></span>
+                Law &amp; Order
+              </div>
+              <h2>Capital Police Department</h2>
+              <p>Enforce the law, respond to emergencies, and uphold civil order across the city. Structured ranks, real procedures, serious roleplay.</p>
+            </div>
+            <div class="app-card-right">
+              <div class="app-status app-status--wip">
+                <span class="app-status-dot"></span>
+                Coming Soon
+              </div>
+              <div class="app-cta app-cta--muted">
+                <span>View Details</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Health -->
+        <a href="/applications/health" class="app-card app-card--health">
+          <div class="app-card-bg"></div>
+          <div class="app-card-overlay"></div>
+          <div class="app-card-inner">
+            <div class="app-card-left">
+              <div class="app-badge app-badge--green">
+                <span class="app-badge-dot"></span>
+                Medical Service
+              </div>
+              <h2>Capital Health Service</h2>
+              <p>Emergency medical response, hospital roleplay, and frontline healthcare. The lifeline of the city's civilian infrastructure.</p>
+            </div>
+            <div class="app-card-right">
+              <div class="app-status app-status--wip">
+                <span class="app-status-dot"></span>
+                Coming Soon
+              </div>
+              <div class="app-cta app-cta--muted">
+                <span>View Details</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Fire -->
+        <a href="/applications/fire" class="app-card app-card--fire">
+          <div class="app-card-bg"></div>
+          <div class="app-card-overlay"></div>
+          <div class="app-card-inner">
+            <div class="app-card-left">
+              <div class="app-badge app-badge--orange">
+                <span class="app-badge-dot"></span>
+                Fire &amp; Rescue
+              </div>
+              <h2>Capital Fire Service</h2>
+              <p>Fire response, rescue operations, and hazardous incident management. High-pressure roleplay with structure and purpose.</p>
+            </div>
+            <div class="app-card-right">
+              <div class="app-status app-status--wip">
+                <span class="app-status-dot"></span>
+                Coming Soon
+              </div>
+              <div class="app-cta app-cta--muted">
+                <span>View Details</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h3>Not sure where to start?</h3>
+          <p>All positions require an active whitelist. Apply for the server first, then come back here.</p>
+        </div>
+        <a class="button" href="/#apply">Apply for Whitelist</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>
+
+<style>
+  .apps-hero {
+    padding: 90px 0 0;
+  }
+
+  .apps-hero h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.05em;
+  }
+
+  .apps-section {
+    padding: 48px 0 110px;
+  }
+
+  /* ── Card list ─────────────────────────────────────────── */
+  .apps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Base card ─────────────────────────────────────────── */
+  .app-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 32px 72px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Background layers ─────────────────────────────────── */
+  .app-card-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%);
+  }
+
+  /* Staff */
+  .app-card--staff .app-card-bg {
+    background:
+      radial-gradient(ellipse at 100% 50%, rgba(245, 166, 35, 0.14) 0%, transparent 55%),
+      linear-gradient(135deg, #100e04 0%, #1a1508 60%, #0e0c03 100%);
+  }
+  .app-card--staff:hover {
+    border-color: rgba(245, 166, 35, 0.32);
+    box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,166,35,0.14);
+  }
+
+  /* Police */
+  .app-card--police .app-card-bg {
+    background:
+      radial-gradient(ellipse at 100% 50%, rgba(0, 174, 255, 0.14) 0%, transparent 55%),
+      linear-gradient(135deg, #040d18 0%, #071425 60%, #030b14 100%);
+  }
+  .app-card--police:hover {
+    border-color: rgba(0, 174, 255, 0.32);
+    box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,174,255,0.14);
+  }
+
+  /* Health */
+  .app-card--health .app-card-bg {
+    background:
+      radial-gradient(ellipse at 100% 50%, rgba(34, 197, 94, 0.13) 0%, transparent 55%),
+      linear-gradient(135deg, #030f08 0%, #061a0e 60%, #021009 100%);
+  }
+  .app-card--health:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.12);
+  }
+
+  /* Fire */
+  .app-card--fire .app-card-bg {
+    background:
+      radial-gradient(ellipse at 100% 50%, rgba(249, 115, 22, 0.14) 0%, transparent 55%),
+      linear-gradient(135deg, #100602 0%, #1e0e04 60%, #0e0502 100%);
+  }
+  .app-card--fire:hover {
+    border-color: rgba(249, 115, 22, 0.32);
+    box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.14);
+  }
+
+  .app-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .app-card-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 40px 48px;
+  }
+
+  .app-card-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 640px;
+  }
+
+  .app-card-left h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .app-card-left p {
+    color: #9db0c6;
+    font-size: 0.97rem;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .app-card-right {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  /* ── Badges ────────────────────────────────────────────── */
+  .app-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .app-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .app-badge--gold  { background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.26); color: #fcd47a; }
+  .app-badge--gold .app-badge-dot  { background: #f5a623; box-shadow: 0 0 10px rgba(245,166,35,0.5); }
+
+  .app-badge--blue  { background: rgba(0,174,255,0.12); border: 1px solid rgba(0,174,255,0.26); color: #79d6ff; }
+  .app-badge--blue .app-badge-dot  { background: #00aeff; box-shadow: 0 0 10px rgba(0,174,255,0.5); }
+
+  .app-badge--green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.24); color: #86efac; }
+  .app-badge--green .app-badge-dot { background: #22c55e; box-shadow: 0 0 10px rgba(34,197,94,0.5); }
+
+  .app-badge--orange{ background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.24); color: #fdba74; }
+  .app-badge--orange .app-badge-dot{ background: #f97316; box-shadow: 0 0 10px rgba(249,115,22,0.5); }
+
+  /* ── Status pill ───────────────────────────────────────── */
+  .app-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .app-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .app-status--open {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.28);
+    color: #86efac;
+  }
+  .app-status--open .app-status-dot {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,0.7);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .app-status--wip {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #9db0c6;
+  }
+  .app-status--wip .app-status-dot {
+    background: #9db0c6;
+    opacity: 0.5;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 6px rgba(34,197,94,0.7); }
+    50%       { box-shadow: 0 0 14px rgba(34,197,94,1); }
+  }
+
+  /* ── CTA ───────────────────────────────────────────────── */
+  .app-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: #f4f8ff;
+    transition: gap 240ms ease;
+  }
+
+  .app-card:hover .app-cta:not(.app-cta--muted) {
+    gap: 14px;
+  }
+
+  .app-cta--muted {
+    color: #9db0c6;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 720px) {
+    .app-card-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 28px 24px;
+      gap: 24px;
+    }
+
+    .app-card-right {
+      align-items: flex-start;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Capital Fire Service — Capital Roleplay">
+
+  <section class="app-sub-hero app-sub-hero--fire">
+    <div class="app-sub-hero-bg"></div>
+    <div class="app-sub-hero-noise"></div>
+    <div class="app-sub-hero-overlay"></div>
+    <div class="container app-sub-hero-inner">
+      <a href="/applications" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        All Applications
+      </a>
+      <div class="app-sub-badge app-sub-badge--orange">
+        <span></span>
+        Fire &amp; Rescue
+      </div>
+      <h1>Capital Fire Service</h1>
+      <p>Fire response, rescue operations, and hazardous incident management. High-pressure roleplay with structure and purpose.</p>
+    </div>
+  </section>
+
+  <section class="section wip-section">
+    <div class="container">
+      <div class="wip-block wip-block--orange">
+        <div class="wip-label">Work in progress</div>
+        <div class="wip-text">WIP</div>
+        <p class="wip-sub">The Capital Fire Service application is being built. Full details on crew roles, station structure, and callout procedures will be published here before recruitment opens.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h3>Get whitelisted first.</h3>
+          <p>All department applications require an active whitelist. Apply for the server first, then return when recruitment opens.</p>
+        </div>
+        <a class="button" href="/#apply">Apply for Whitelist</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>
+
+<style>
+  .app-sub-hero {
+    position: relative; min-height: 400px;
+    display: flex; align-items: flex-end; overflow: hidden;
+  }
+  .app-sub-hero-bg { position: absolute; inset: 0; z-index: 0; }
+  .app-sub-hero--fire .app-sub-hero-bg {
+    background:
+      radial-gradient(circle at 20% 30%, rgba(249, 115, 22, 0.24) 0%, transparent 52%),
+      radial-gradient(circle at 80% 70%, rgba(180, 60, 0, 0.18) 0%, transparent 44%),
+      linear-gradient(160deg, #100602 0%, #1e0e04 40%, #180a02 75%, #0e0502 100%);
+  }
+  .app-sub-hero-noise {
+    position: absolute; inset: 0; z-index: 1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
+    opacity: 0.4;
+  }
+  .app-sub-hero-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(to bottom, transparent 0%, rgba(4,10,18,0.3) 60%, rgba(4,10,18,0.9) 100%);
+  }
+  .app-sub-hero-inner {
+    position: relative; z-index: 3;
+    padding-top: 100px; padding-bottom: 72px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .app-sub-hero-inner h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: -0.05em; max-width: 20ch;
+  }
+  .app-sub-hero-inner p { color: #9db0c6; font-size: 1.05rem; line-height: 1.78; max-width: 56ch; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: #9db0c6; font-size: 0.9rem; font-weight: 600;
+    text-decoration: none; transition: color 220ms ease;
+  }
+  .back-link:hover { color: #f4f8ff; }
+
+  .app-sub-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    align-self: flex-start; padding: 5px 14px; border-radius: 999px;
+    font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .app-sub-badge span { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .app-sub-badge--orange { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.24); color: #fdba74; }
+  .app-sub-badge--orange span { background: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.5); }
+
+  .wip-section { padding-bottom: 0; }
+  .wip-block {
+    border-radius: 28px; border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    padding: 80px 40px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .wip-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; }
+  .wip-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(6rem, 18vw, 14rem);
+    font-weight: 700; letter-spacing: -0.06em; line-height: 1; opacity: 0.18;
+  }
+  .wip-block--orange .wip-text { color: #f97316; }
+  .wip-sub { color: #9db0c6; font-size: 1rem; line-height: 1.75; max-width: 52ch; margin-top: -8px; }
+</style>
