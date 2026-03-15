@@ -35,10 +35,17 @@ export async function onRequestGet({ request, env }) {
     avatar: user.avatar ?? null,
   }));
 
+  // Read return path from cookie set by discord.js, default to /#apply
+  const cookieHeader = request.headers.get('cookie') ?? '';
+  const fromMatch = cookieHeader.split('; ').find(c => c.startsWith('dc_from='));
+  const returnTo = fromMatch ? decodeURIComponent(fromMatch.split('=').slice(1).join('=')) : '/#apply';
+
   const maxAge = 60 * 60 * 24; // 24 hours
-  const headers = new Headers({ Location: `${base}/#apply` });
+  const headers = new Headers({ Location: `${base}${returnTo}` });
   headers.append('Set-Cookie', `dc_user=${userPayload}; Path=/; Max-Age=${maxAge}; SameSite=Lax`);
   headers.append('Set-Cookie', `dc_token=${tokenData.access_token}; Path=/; Max-Age=${maxAge}; HttpOnly; SameSite=Lax`);
+  // Clear the return-path cookie
+  headers.append('Set-Cookie', `dc_from=; Path=/; Max-Age=0; SameSite=Lax`);
 
   return new Response(null, { status: 302, headers });
 }
