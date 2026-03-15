@@ -94,12 +94,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="previous_experience">Previous Staff Experience <span class="field-optional">(Optional)</span></label>
-                  <textarea id="previous_experience" name="previous_experience" placeholder="Describe any previous moderation, admin, or community management experience." disabled></textarea>
+                  <textarea id="previous_experience" name="previous_experience" placeholder="Describe any previous moderation, admin, or community management experience." maxlength="1000" disabled></textarea>
                 </div>
 
                 <div class="field full">
                   <label for="why_staff">Why do you want to be staff? <span class="field-required">*</span></label>
-                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 100 words required." disabled></textarea>
+                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 100 words required." maxlength="1000" disabled></textarea>
                   <div class="field-wordcount">
                     <span id="why-staff-count">0</span> / 100 words minimum
                   </div>
@@ -107,7 +107,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="why_choose">Why should we choose you over others? <span class="field-required">*</span></label>
-                  <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." disabled></textarea>
+                  <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." maxlength="1000" disabled></textarea>
                   <div class="field-wordcount">
                     <span id="why-choose-count">0</span> / 50 words minimum
                   </div>

@@ -1,6 +1,5 @@
-const WHITELIST_ROLE  = '1478489840260747275';
-const STAFF_CHANNEL   = '1482709760695599124';
-const TRANSPARENT_IMG = 'https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/transparent-embed.png';
+const WHITELIST_ROLE = '1478489840260747275';
+const STAFF_CHANNEL  = '1482709760695599124';
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -29,7 +28,6 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Session expired — please sign in again' }, 401);
   }
 
-  // Check the applicant has the Whitelist role in the guild
   const guildId = (env.DISCORD_GUILD_ID || '1478455683576893472').trim();
   const memberRes = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/members/${user.id}`,
@@ -68,46 +66,30 @@ export async function onRequestPost({ request, env }) {
     return json({ error: `"Why should we choose you" must be at least 50 words (currently ${whyChooseWords})` }, 400);
   }
 
+  // Hard cap at 1000 chars per long field to stay within Discord's embed limits
+  const cap = (str, max = 1000) => str && str.length > max ? str.slice(0, max) + '…' : str;
+
   const avatarUrl = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  const botToken = (env.DISCORD_BOT_TOKEN || '').trim();
-
-  // Helper: post one message to the channel
-  async function postMessage(payload) {
-    const res = await fetch(
-      `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
-      {
-        method: 'POST',
-        headers: { Authorization: `Bot ${botToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      }
-    );
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('Discord API error:', err);
-      throw new Error(err);
-    }
-    return res.json();
-  }
-
-  // Helper: split text into ≤4096-char chunks at word boundaries
-  function splitText(text) {
-    const LIMIT = 4096;
-    const chunks = [];
-    let remaining = text.trim();
-    while (remaining.length > 0) {
-      let slice = remaining.slice(0, LIMIT);
-      if (remaining.length > LIMIT) {
-        const lastSpace = slice.lastIndexOf(' ');
-        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
-      }
-      chunks.push(slice.trim());
-      remaining = remaining.slice(slice.length).trim();
-    }
-    return chunks;
-  }
+  const embed = {
+    title: '📋 New Staff Application',
+    color: 0xf5a623,
+    thumbnail: { url: avatarUrl },
+    fields: [
+      { name: 'Discord',             value: `<@${user.id}> (${user.username})`,             inline: true },
+      { name: 'Age',                 value: age.trim(),                                      inline: true },
+      { name: 'Timezone',            value: timezone.trim(),                                  inline: true },
+      { name: 'Availability',        value: availability.trim(),                              inline: true },
+      { name: '\u200B',              value: '\u200B',                                         inline: false },
+      { name: 'Previous Experience', value: cap(previous_experience?.trim()) || '*Not provided*' },
+      { name: 'Why do you want to be staff?',         value: cap(why_staff.trim()) },
+      { name: 'Why should we choose you over others?', value: cap(why_choose.trim()) },
+    ],
+    timestamp: new Date().toISOString(),
+    footer: { text: `Staff application from ${user.username}` },
+  };
 
   const components = [{
     type: 1,
@@ -117,53 +99,21 @@ export async function onRequestPost({ request, env }) {
     ],
   }];
 
-  try {
-    // ── Message 1: Header info + buttons ────────────────────────────────────
-    await postMessage({
-      embeds: [{
-        title: '📋 New Staff Application',
-        color: 0xf5a623,
-        thumbnail: { url: avatarUrl },
-        image: { url: TRANSPARENT_IMG },
-        timestamp: new Date().toISOString(),
-        footer: { text: `Staff application from ${user.username}` },
-        fields: [
-          { name: 'Discord',             value: `<@${user.id}> (${user.username})`,     inline: true },
-          { name: 'Age',                 value: age.trim(),                              inline: true },
-          { name: 'Timezone',            value: timezone.trim(),                         inline: true },
-          { name: 'Availability',        value: availability.trim(),                     inline: true },
-          { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
-        ],
-      }],
-      components,
-    });
-
-    // ── Message 2: Why do you want to be staff ───────────────────────────────
-    const whyStaffChunks = splitText(why_staff.trim());
-    for (let i = 0; i < whyStaffChunks.length; i++) {
-      await postMessage({
-        embeds: [{
-          color: 0xf5a623,
-          title: i === 0 ? 'Why do you want to be staff?' : 'Why do you want to be staff? (continued)',
-          description: whyStaffChunks[i],
-          image: { url: TRANSPARENT_IMG },
-        }],
-      });
+  const discordRes = await fetch(
+    `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ embeds: [embed], components }),
     }
+  );
 
-    // ── Message 3: Why should we choose you ──────────────────────────────────
-    const whyChooseChunks = splitText(why_choose.trim());
-    for (let i = 0; i < whyChooseChunks.length; i++) {
-      await postMessage({
-        embeds: [{
-          color: 0xf5a623,
-          title: i === 0 ? 'Why should we choose you over others?' : 'Why should we choose you? (continued)',
-          description: whyChooseChunks[i],
-          image: { url: TRANSPARENT_IMG },
-        }],
-      });
-    }
-  } catch {
+  if (!discordRes.ok) {
+    const err = await discordRes.text();
+    console.error('Discord API error:', err);
     return json({ error: 'Failed to submit application — please try again' }, 500);
   }
 
