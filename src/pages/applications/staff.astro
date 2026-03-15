@@ -88,16 +88,6 @@ import MainLayout from "../../layouts/MainLayout.astro";
                 </div>
 
                 <div class="field full">
-                  <label for="applying_for">Role Applying For <span class="field-required">*</span></label>
-                  <select id="applying_for" name="applying_for" disabled>
-                    <option value="" disabled selected>Select a role…</option>
-                    <option value="Support">Support</option>
-                    <option value="Moderator">Moderator</option>
-                    <option value="Administrator">Administrator</option>
-                  </select>
-                </div>
-
-                <div class="field full">
                   <label for="availability">Availability <span class="field-required">*</span></label>
                   <input id="availability" name="availability" type="text" placeholder="e.g. Evenings and weekends, ~15 hrs/week" disabled />
                 </div>
@@ -109,9 +99,17 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="why_staff">Why do you want to be staff? <span class="field-required">*</span></label>
-                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 50 words required." disabled></textarea>
+                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 100 words required." disabled></textarea>
                   <div class="field-wordcount">
-                    <span id="why-staff-count">0</span> / 50 words minimum
+                    <span id="why-staff-count">0</span> / 100 words minimum
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label for="why_choose">Why should we choose you over others? <span class="field-required">*</span></label>
+                  <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." disabled></textarea>
+                  <div class="field-wordcount">
+                    <span id="why-choose-count">0</span> / 50 words minimum
                   </div>
                 </div>
 
@@ -204,21 +202,33 @@ import MainLayout from "../../layouts/MainLayout.astro";
       }
     })();
 
-    // Word counter
-    const whyStaffEl = document.getElementById('why_staff') as HTMLTextAreaElement | null;
-    const whyStaffCount = document.getElementById('why-staff-count');
-
     function countWords(str: string) {
       return str.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
 
+    // Word counter — why_staff
+    const whyStaffEl = document.getElementById('why_staff') as HTMLTextAreaElement | null;
+    const whyStaffCount = document.getElementById('why-staff-count');
     if (whyStaffEl && whyStaffCount) {
       whyStaffEl.addEventListener('input', () => {
         const words = countWords(whyStaffEl.value);
         whyStaffCount.textContent = String(words);
-        const valid = words >= 50;
+        const valid = words >= 100;
         whyStaffCount.parentElement!.classList.toggle('valid', valid);
         whyStaffCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
+      });
+    }
+
+    // Word counter — why_choose
+    const whyChooseEl = document.getElementById('why_choose') as HTMLTextAreaElement | null;
+    const whyChooseCount = document.getElementById('why-choose-count');
+    if (whyChooseEl && whyChooseCount) {
+      whyChooseEl.addEventListener('input', () => {
+        const words = countWords(whyChooseEl.value);
+        whyChooseCount.textContent = String(words);
+        const valid = words >= 50;
+        whyChooseCount.parentElement!.classList.toggle('valid', valid);
+        whyChooseCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
       });
     }
 
@@ -234,15 +244,22 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
       const age            = (document.getElementById('age') as HTMLInputElement).value.trim();
       const timezone       = (document.getElementById('timezone') as HTMLInputElement).value.trim();
-      const applying_for   = (document.getElementById('applying_for') as HTMLSelectElement).value.trim();
       const availability   = (document.getElementById('availability') as HTMLInputElement).value.trim();
       const previous_experience = (document.getElementById('previous_experience') as HTMLTextAreaElement).value.trim();
       const why_staff      = (document.getElementById('why_staff') as HTMLTextAreaElement).value.trim();
+      const why_choose     = (document.getElementById('why_choose') as HTMLTextAreaElement).value.trim();
 
-      const words = countWords(why_staff);
-      if (words < 50) {
+      if (countWords(why_staff) < 100) {
         if (errorEl) {
-          errorEl.textContent = `"Why do you want to be staff" needs at least 50 words (you have ${words}).`;
+          errorEl.textContent = `"Why do you want to be staff" needs at least 100 words (you have ${countWords(why_staff)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (countWords(why_choose) < 50) {
+        if (errorEl) {
+          errorEl.textContent = `"Why should we choose you" needs at least 50 words (you have ${countWords(why_choose)}).`;
           errorEl.style.display = 'block';
         }
         return;
@@ -256,7 +273,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
         const res = await fetch('/api/staff-apply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ age, timezone, applying_for, availability, previous_experience, why_staff }),
+          body: JSON.stringify({ age, timezone, availability, previous_experience, why_staff, why_choose }),
         });
 
         const data = await res.json();

@@ -1,3 +1,6 @@
+const WHITELIST_ROLE = '1478489840260747275';
+const STAFF_CHANNEL  = '1482709760695599124';
+
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
   const cookies = Object.fromEntries(
@@ -25,6 +28,23 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Session expired — please sign in again' }, 401);
   }
 
+  // Check the applicant has the Whitelist role in the guild
+  const guildId = (env.DISCORD_GUILD_ID || '1478455683576893472').trim();
+  const memberRes = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/members/${user.id}`,
+    { headers: { Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}` } }
+  );
+
+  if (!memberRes.ok) {
+    // If we can't reach Discord, block the submission to be safe
+    return json({ error: 'Could not verify your server membership. Make sure you are in the Capital Roleplay Discord.' }, 403);
+  }
+
+  const member = await memberRes.json();
+  if (!member.roles || !member.roles.includes(WHITELIST_ROLE)) {
+    return json({ error: 'You must be a whitelisted member of Capital Roleplay before applying for staff.' }, 403);
+  }
+
   let body;
   try {
     body = await request.json();
@@ -32,15 +52,20 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Invalid request body' }, 400);
   }
 
-  const { age, timezone, applying_for, previous_experience, why_staff, availability } = body;
+  const { age, timezone, previous_experience, why_staff, why_choose, availability } = body;
 
-  if (!age?.trim() || !timezone?.trim() || !applying_for?.trim() || !why_staff?.trim() || !availability?.trim()) {
+  if (!age?.trim() || !timezone?.trim() || !why_staff?.trim() || !why_choose?.trim() || !availability?.trim()) {
     return json({ error: 'Please fill in all required fields' }, 400);
   }
 
-  const wordCount = why_staff.trim().split(/\s+/).filter(w => w.length > 0).length;
-  if (wordCount < 50) {
-    return json({ error: `"Why do you want to be staff" must be at least 50 words (currently ${wordCount})` }, 400);
+  const whyStaffWords = why_staff.trim().split(/\s+/).filter(w => w.length > 0).length;
+  if (whyStaffWords < 100) {
+    return json({ error: `"Why do you want to be staff" must be at least 100 words (currently ${whyStaffWords})` }, 400);
+  }
+
+  const whyChooseWords = why_choose.trim().split(/\s+/).filter(w => w.length > 0).length;
+  if (whyChooseWords < 50) {
+    return json({ error: `"Why should we choose you" must be at least 50 words (currently ${whyChooseWords})` }, 400);
   }
 
   const avatarUrl = user.avatar
@@ -55,11 +80,11 @@ export async function onRequestPost({ request, env }) {
       { name: 'Discord', value: `<@${user.id}> (${user.username})`, inline: true },
       { name: 'Age', value: age.trim(), inline: true },
       { name: 'Timezone', value: timezone.trim(), inline: true },
-      { name: 'Applying For', value: applying_for.trim(), inline: true },
       { name: 'Availability', value: availability.trim(), inline: true },
       { name: '\u200B', value: '\u200B', inline: false },
       { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
       { name: 'Why do you want to be staff?', value: why_staff.trim() },
+      { name: 'Why should we choose you over others?', value: why_choose.trim() },
     ],
     timestamp: new Date().toISOString(),
     footer: { text: `Staff application from ${user.username}` },
@@ -72,8 +97,6 @@ export async function onRequestPost({ request, env }) {
       { type: 2, style: 4, label: '❌  Reject', custom_id: `staff_reject_${user.id}` },
     ],
   }];
-
-  const STAFF_CHANNEL = '1482709760695599124';
 
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
