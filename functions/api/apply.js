@@ -1,3 +1,5 @@
+const WHITELIST_CHANNEL = '1482373975316365472';
+
 export async function onRequestPost({ request, env }) {
   // Parse cookies
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -121,7 +123,7 @@ export async function onRequestPost({ request, env }) {
 
   // Post embed to Discord staff channel
   const discordRes = await fetch(
-    `https://discord.com/api/v10/channels/${env.DISCORD_WHITELIST_CHANNEL}/messages`,
+    `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
     {
       method: 'POST',
       headers: {
