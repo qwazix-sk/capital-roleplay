@@ -1,7 +1,12 @@
 ---
-const { title = "Capital Roleplay" } = Astro.props;
+const {
+  title = "Capital Roleplay",
+  description = "A whitelisted FiveM server built for players who want a cleaner, more immersive, and more deliberate roleplay environment. Custom vehicles, clothing, weapons, and scripts — 18+.",
+  ogImage = "https://capital-roleplay.com/og-image.png",
+} = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const storeUrl = "https://your-tebex-store-link.tebex.io";
+const siteUrl = "https://capital-roleplay.com";
 
 const navItems = [
   { label: "About Us", href: "/" },
@@ -18,10 +23,23 @@ const navItems = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta
-      name="description"
-      content="Capital Roleplay is a serious UK FiveM roleplay server built around custom content, whitelist quality, and immersive storytelling."
-    />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph / Discord embed -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Capital Roleplay" />
+    <meta property="og:url" content={`${siteUrl}${currentPath}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / fallback -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
