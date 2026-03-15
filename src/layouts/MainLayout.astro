@@ -1783,7 +1783,7 @@ const navItems = [
 
           <ul class="nav-links">
             {navItems.map((item) => {
-              const isActive = currentPath === item.href;
+              const isActive = item.href === "/" ? currentPath === "/" : currentPath.startsWith(item.href);
               return (
                 <li>
                   <a href={item.href} class={isActive ? "active" : ""}>
