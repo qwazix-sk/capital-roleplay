@@ -152,54 +152,120 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
       if (!discordUser) return;
 
+      // Always update the auth card to show authenticated state
       const authCard = document.getElementById('auth-card');
-      if (authCard) {
-        const avatarUrl = discordUser.avatar
-          ? `https://cdn.discordapp.com/avatars/${esc(discordUser.id)}/${esc(discordUser.avatar)}.png?size=64`
-          : `https://cdn.discordapp.com/embed/avatars/0.png`;
-        authCard.className = 'login-card login-card--authed';
-        authCard.innerHTML = `
-          <div class="login-badge login-badge--ok">Step 1 &middot; Authenticated</div>
-          <h3>Signed in with Discord</h3>
-          <div class="dc-user-row">
-            <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
-            <div>
-              <strong class="dc-user-name">${esc(discordUser.username)}</strong>
-              <span class="dc-user-id">ID ${esc(discordUser.id)}</span>
-            </div>
-          </div>
-          <ul class="login-points" style="margin-top:22px">
-            <li>Identity verified via Discord OAuth</li>
-            <li>Application sent to the staff review channel</li>
-            <li>You will receive a DM with the outcome</li>
-          </ul>
-          <div style="margin-top:24px">
-            <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
-          </div>
-        `;
-      }
+      const avatarUrl = discordUser.avatar
+        ? `https://cdn.discordapp.com/avatars/${esc(discordUser.id)}/${esc(discordUser.avatar)}.png?size=64`
+        : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-      const wrapper = document.getElementById('apply-form-wrapper');
-      if (wrapper) wrapper.classList.remove('application-form--locked');
+      // Check whitelist role server-side before unlocking the form
+      fetch('/api/check-whitelist')
+        .then(r => r.json())
+        .then((data: { whitelisted: boolean; reason: string }) => {
+          if (data.whitelisted) {
+            // ── Whitelisted: unlock everything ──────────────────────────
+            if (authCard) {
+              authCard.className = 'login-card login-card--authed';
+              authCard.innerHTML = `
+                <div class="login-badge login-badge--ok">Step 1 &middot; Authenticated</div>
+                <h3>Signed in with Discord</h3>
+                <div class="dc-user-row">
+                  <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                  <div>
+                    <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                    <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                  </div>
+                </div>
+                <ul class="login-points" style="margin-top:22px">
+                  <li>Identity verified via Discord OAuth</li>
+                  <li>Whitelist role confirmed</li>
+                  <li>You will receive a DM with the outcome</li>
+                </ul>
+                <div style="margin-top:24px">
+                  <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+                </div>
+              `;
+            }
 
-      const overlay = document.getElementById('form-locked-overlay');
-      if (overlay) overlay.remove();
+            const wrapper = document.getElementById('apply-form-wrapper');
+            if (wrapper) wrapper.classList.remove('application-form--locked');
 
-      document.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-        '#apply-form input, #apply-form select, #apply-form textarea'
-      ).forEach(el => el.removeAttribute('disabled'));
+            const overlay = document.getElementById('form-locked-overlay');
+            if (overlay) overlay.remove();
 
-      const statusText = document.getElementById('form-status-text');
-      if (statusText) statusText.textContent = 'Form is unlocked. Fill in your details and submit below.';
+            document.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+              '#apply-form input, #apply-form select, #apply-form textarea'
+            ).forEach(el => el.removeAttribute('disabled'));
 
-      const noteText = document.getElementById('form-note-text');
-      if (noteText) noteText.textContent = 'Your application will be sent directly to our staff review channel.';
+            const statusText = document.getElementById('form-status-text');
+            if (statusText) statusText.textContent = 'Form is unlocked. Fill in your details and submit below.';
 
-      const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
-      if (submitBtn) {
-        submitBtn.removeAttribute('disabled');
-        submitBtn.className = 'button';
-      }
+            const noteText = document.getElementById('form-note-text');
+            if (noteText) noteText.textContent = 'Your application will be sent directly to our staff review channel.';
+
+            const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+              submitBtn.className = 'button';
+            }
+          } else {
+            // ── Not whitelisted: show authenticated card but keep form locked ──
+            if (authCard) {
+              authCard.className = 'login-card login-card--authed';
+              authCard.innerHTML = `
+                <div class="login-badge login-badge--ok">Authenticated</div>
+                <h3>Signed in with Discord</h3>
+                <div class="dc-user-row">
+                  <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                  <div>
+                    <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                    <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                  </div>
+                </div>
+                <div style="margin-top:20px;padding:14px 16px;border-radius:12px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.22);">
+                  <strong style="color:#fca5a5;font-size:0.9rem;">Whitelist required</strong>
+                  <p style="color:#9db0c6;font-size:0.86rem;margin-top:6px;line-height:1.65;">
+                    You must be a whitelisted member of Capital Roleplay before applying for staff.
+                    <a href="/#apply" style="color:#00aeff;">Apply for whitelist first.</a>
+                  </p>
+                </div>
+                <div style="margin-top:18px">
+                  <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+                </div>
+              `;
+            }
+
+            // Update form overlay text to reflect the real reason
+            const overlay = document.getElementById('form-locked-overlay');
+            if (overlay) {
+              overlay.innerHTML = `<div><strong>Whitelist required</strong><span>You must be whitelisted to apply for staff.</span></div>`;
+            }
+
+            const statusText = document.getElementById('form-status-text');
+            if (statusText) statusText.textContent = 'You need the whitelist role to access this form.';
+          }
+        })
+        .catch(() => {
+          // On network error fall back to showing authenticated but locked
+          if (authCard) {
+            authCard.className = 'login-card login-card--authed';
+            authCard.innerHTML = `
+              <div class="login-badge login-badge--ok">Authenticated</div>
+              <h3>Signed in with Discord</h3>
+              <div class="dc-user-row">
+                <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                <div>
+                  <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                  <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                </div>
+              </div>
+              <p style="color:#9db0c6;font-size:0.88rem;margin-top:16px;">Could not verify whitelist status — please try refreshing.</p>
+              <div style="margin-top:18px">
+                <a class="button ghost small logout" href="/api/auth/logout">Sign out</a>
+              </div>
+            `;
+          }
+        });
     })();
 
     function countWords(str: string) {
