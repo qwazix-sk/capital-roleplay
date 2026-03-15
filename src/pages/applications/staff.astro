@@ -94,12 +94,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="previous_experience">Previous Staff Experience <span class="field-optional">(Optional)</span></label>
-                  <textarea id="previous_experience" name="previous_experience" placeholder="Describe any previous moderation, admin, or community management experience." maxlength="1000" disabled></textarea>
+                  <textarea id="previous_experience" name="previous_experience" placeholder="Describe any previous moderation, admin, or community management experience." disabled></textarea>
                 </div>
 
                 <div class="field full">
                   <label for="why_staff">Why do you want to be staff? <span class="field-required">*</span></label>
-                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 100 words required." maxlength="1000" disabled></textarea>
+                  <textarea id="why_staff" name="why_staff" placeholder="Explain why you want to join the staff team and what you would bring to the role. Minimum 100 words required." disabled></textarea>
                   <div class="field-wordcount">
                     <span id="why-staff-count">0</span> / 100 words minimum
                   </div>
@@ -107,10 +107,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="why_choose">Why should we choose you over others? <span class="field-required">*</span></label>
-                  <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." maxlength="1000" disabled></textarea>
+                  <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." disabled></textarea>
                   <div class="field-wordcount">
                     <span id="why-choose-count">0</span> / 50 words minimum
                   </div>
+                </div>
+
+                <div class="field-charcount" id="charcount-wrap">
+                  <span id="charcount-used">0</span> / 4096 characters used across text fields
                 </div>
 
               </div>
@@ -272,8 +276,24 @@ import MainLayout from "../../layouts/MainLayout.astro";
       return str.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
 
+    // Shared char counter
+    const prevExpEl     = document.getElementById('previous_experience') as HTMLTextAreaElement | null;
+    const whyStaffEl    = document.getElementById('why_staff')  as HTMLTextAreaElement | null;
+    const whyChooseEl   = document.getElementById('why_choose') as HTMLTextAreaElement | null;
+    const charcountUsed = document.getElementById('charcount-used');
+    const CHAR_LIMIT    = 4096;
+
+    function updateCharCount() {
+      const total = (prevExpEl?.value.length   ?? 0)
+                  + (whyStaffEl?.value.length  ?? 0)
+                  + (whyChooseEl?.value.length ?? 0);
+      if (charcountUsed) {
+        charcountUsed.textContent = String(total);
+        document.getElementById('charcount-wrap')?.classList.toggle('over', total > CHAR_LIMIT);
+      }
+    }
+
     // Word counter — why_staff
-    const whyStaffEl = document.getElementById('why_staff') as HTMLTextAreaElement | null;
     const whyStaffCount = document.getElementById('why-staff-count');
     if (whyStaffEl && whyStaffCount) {
       whyStaffEl.addEventListener('input', () => {
@@ -282,11 +302,11 @@ import MainLayout from "../../layouts/MainLayout.astro";
         const valid = words >= 100;
         whyStaffCount.parentElement!.classList.toggle('valid', valid);
         whyStaffCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
+        updateCharCount();
       });
     }
 
     // Word counter — why_choose
-    const whyChooseEl = document.getElementById('why_choose') as HTMLTextAreaElement | null;
     const whyChooseCount = document.getElementById('why-choose-count');
     if (whyChooseEl && whyChooseCount) {
       whyChooseEl.addEventListener('input', () => {
@@ -295,8 +315,11 @@ import MainLayout from "../../layouts/MainLayout.astro";
         const valid = words >= 50;
         whyChooseCount.parentElement!.classList.toggle('valid', valid);
         whyChooseCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
+        updateCharCount();
       });
     }
+
+    prevExpEl?.addEventListener('input', updateCharCount);
 
     // Form submit
     const form = document.getElementById('apply-form') as HTMLFormElement | null;
@@ -326,6 +349,15 @@ import MainLayout from "../../layouts/MainLayout.astro";
       if (countWords(why_choose) < 50) {
         if (errorEl) {
           errorEl.textContent = `"Why should we choose you" needs at least 50 words (you have ${countWords(why_choose)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const totalChars = previous_experience.length + why_staff.length + why_choose.length;
+      if (totalChars > CHAR_LIMIT) {
+        if (errorEl) {
+          errorEl.textContent = `Your answers are too long (${totalChars} / ${CHAR_LIMIT} characters). Please shorten your responses.`;
           errorEl.style.display = 'block';
         }
         return;

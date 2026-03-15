@@ -264,20 +264,24 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="experience">Roleplay Experience <span class="field-optional">(Optional)</span></label>
-                  <textarea id="experience" name="experience" placeholder="Briefly describe your previous roleplay experience, if any." maxlength="1000" disabled></textarea>
+                  <textarea id="experience" name="experience" placeholder="Briefly describe your previous roleplay experience, if any." disabled></textarea>
                 </div>
 
                 <div class="field full">
                   <label for="character">Character Concept <span class="field-optional">(Optional)</span></label>
-                  <textarea id="character" name="character" placeholder="Describe the type of character you plan to play and how they would fit into the city." maxlength="1000" disabled></textarea>
+                  <textarea id="character" name="character" placeholder="Describe the type of character you plan to play and how they would fit into the city." disabled></textarea>
                 </div>
 
                 <div class="field full">
                   <label for="whyjoin">Why do you want to join Capital Roleplay? <span class="field-required">*</span></label>
-                  <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for. Minimum 100 words required." maxlength="1000" disabled></textarea>
+                  <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for. Minimum 100 words required." disabled></textarea>
                   <div class="field-wordcount">
                     <span id="whyjoin-count">0</span> / 100 words minimum
                   </div>
+                </div>
+
+                <div class="field-charcount" id="charcount-wrap">
+                  <span id="charcount-used">0</span> / 4096 characters used across text fields
                 </div>
               </div>
 
@@ -485,12 +489,27 @@ import MainLayout from "../layouts/MainLayout.astro";
       });
     }
 
-    // ── Word counter ────────────────────────────────────────────────────────
-    const whyjoinEl = document.getElementById('whyjoin') as HTMLTextAreaElement | null;
+    // ── Word counter + shared char counter ──────────────────────────────────
+    const whyjoinEl    = document.getElementById('whyjoin')    as HTMLTextAreaElement | null;
+    const experienceEl = document.getElementById('experience') as HTMLTextAreaElement | null;
+    const characterEl  = document.getElementById('character')  as HTMLTextAreaElement | null;
     const whyjoinCount = document.getElementById('whyjoin-count');
+    const charcountUsed = document.getElementById('charcount-used');
+    const CHAR_LIMIT = 4096;
 
     function countWords(str: string) {
       return str.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    function updateCharCount() {
+      const total = (experienceEl?.value.length ?? 0)
+                  + (characterEl?.value.length  ?? 0)
+                  + (whyjoinEl?.value.length    ?? 0);
+      if (charcountUsed) {
+        charcountUsed.textContent = String(total);
+        const wrap = document.getElementById('charcount-wrap');
+        wrap?.classList.toggle('over', total > CHAR_LIMIT);
+      }
     }
 
     if (whyjoinEl && whyjoinCount) {
@@ -500,8 +519,11 @@ import MainLayout from "../layouts/MainLayout.astro";
         const valid = words >= 100;
         whyjoinCount.parentElement!.classList.toggle('valid', valid);
         whyjoinCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
+        updateCharCount();
       });
     }
+    experienceEl?.addEventListener('input', updateCharCount);
+    characterEl?.addEventListener('input', updateCharCount);
 
     // ── Form submit ─────────────────────────────────────────────────────────
     const form = document.getElementById('apply-form') as HTMLFormElement | null;
@@ -523,6 +545,15 @@ import MainLayout from "../layouts/MainLayout.astro";
       if (words < 100) {
         if (errorEl) {
           errorEl.textContent = `"Why do you want to join" needs at least 100 words (you have ${words}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const totalChars = experience.length + character.length + whyjoin.length;
+      if (totalChars > CHAR_LIMIT) {
+        if (errorEl) {
+          errorEl.textContent = `Your answers are too long (${totalChars} / ${CHAR_LIMIT} characters). Please shorten your responses.`;
           errorEl.style.display = 'block';
         }
         return;
