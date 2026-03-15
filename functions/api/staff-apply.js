@@ -1,6 +1,5 @@
 const WHITELIST_ROLE = '1478489840260747275';
 const STAFF_CHANNEL  = '1482709760695599124';
-const DIV = '━'.repeat(49);
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -71,51 +70,46 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  const submittedAt = new Date().toUTCString().replace(' GMT', ' UTC');
+  // Split text into ≤4096-char chunks for embed descriptions
+  function descChunks(label, text, color) {
+    const LIMIT = 4096;
+    const embeds = [];
+    let remaining = text.trim();
+    let first = true;
+    while (remaining.length > 0) {
+      let slice = remaining.slice(0, LIMIT);
+      if (remaining.length > LIMIT) {
+        const lastSpace = slice.lastIndexOf(' ');
+        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
+      }
+      embeds.push({ color, title: first ? label : `${label} (continued)`, description: slice.trim() });
+      remaining = remaining.slice(slice.length).trim();
+      first = false;
+    }
+    return embeds;
+  }
 
-  // ── Build the .txt file ──────────────────────────────────────────────────
-  const fileContent = [
-    DIV,
-    '  STAFF APPLICATION — Capital Roleplay',
-    DIV,
-    '',
-    `  Discord           : ${user.username} (${user.id})`,
-    `  Age               : ${age.trim()}`,
-    `  Timezone          : ${timezone.trim()}`,
-    `  Availability      : ${availability.trim()}`,
-    `  Previous Experience: ${previous_experience?.trim() || 'Not provided'}`,
-    '',
-    DIV,
-    '  WHY DO YOU WANT TO BE STAFF?',
-    DIV,
-    '',
-    why_staff.trim(),
-    '',
-    DIV,
-    '  WHY SHOULD WE CHOOSE YOU OVER OTHERS?',
-    DIV,
-    '',
-    why_choose.trim(),
-    '',
-    DIV,
-    `  Submitted: ${submittedAt}`,
-    DIV,
-  ].join('\n');
-
-  // ── Embed (short info only) ───────────────────────────────────────────────
-  const embed = {
-    title: '📋 New Staff Application',
-    color: 0xf5a623,
-    thumbnail: { url: avatarUrl },
-    fields: [
-      { name: 'Discord',      value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Age',          value: age.trim(),                          inline: true },
-      { name: 'Timezone',     value: timezone.trim(),                     inline: true },
-      { name: 'Availability', value: availability.trim(),                 inline: true },
-    ],
-    timestamp: new Date().toISOString(),
-    footer: { text: `Staff application from ${user.username} · Full answers in attached file` },
-  };
+  const embeds = [
+    // Embed 1: header info
+    {
+      title: '📋 New Staff Application',
+      color: 0xf5a623,
+      thumbnail: { url: avatarUrl },
+      timestamp: new Date().toISOString(),
+      footer: { text: `Staff application from ${user.username}` },
+      fields: [
+        { name: 'Discord',             value: `<@${user.id}> (${user.username})`,              inline: true },
+        { name: 'Age',                 value: age.trim(),                                      inline: true },
+        { name: 'Timezone',            value: timezone.trim(),                                  inline: true },
+        { name: 'Availability',        value: availability.trim(),                              inline: true },
+        { name: 'Previous Experience', value: (previous_experience?.trim() || '*Not provided*').slice(0, 500) },
+      ],
+    },
+    // Embed 2+: Why staff in description
+    ...descChunks('Why do you want to be staff?', why_staff.trim(), 0xf5a623),
+    // Embed 3+: Why choose in description
+    ...descChunks('Why should we choose you over others?', why_choose.trim(), 0xf5a623),
+  ];
 
   const components = [{
     type: 1,
@@ -125,21 +119,15 @@ export async function onRequestPost({ request, env }) {
     ],
   }];
 
-  // ── Send via multipart/form-data with file attachment ────────────────────
-  const formData = new FormData();
-  formData.append('payload_json', JSON.stringify({ embeds: [embed], components }));
-  formData.append(
-    'files[0]',
-    new Blob([fileContent], { type: 'text/plain' }),
-    `staff-${user.username}.txt`
-  );
-
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
     {
       method: 'POST',
-      headers: { Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}` },
-      body: formData,
+      headers: {
+        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ embeds, components }),
     }
   );
 

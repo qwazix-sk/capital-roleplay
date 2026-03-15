@@ -1,5 +1,4 @@
 const WHITELIST_CHANNEL = '1482373975316365472';
-const DIV = '━'.repeat(49);
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -50,51 +49,46 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  const submittedAt = new Date().toUTCString().replace(' GMT', ' UTC');
+  // Split text into ≤4096-char chunks for embed descriptions
+  function descChunks(label, text, color) {
+    const LIMIT = 4096;
+    const embeds = [];
+    let remaining = text.trim();
+    let first = true;
+    while (remaining.length > 0) {
+      let slice = remaining.slice(0, LIMIT);
+      if (remaining.length > LIMIT) {
+        const lastSpace = slice.lastIndexOf(' ');
+        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
+      }
+      embeds.push({ color, title: first ? label : `${label} (continued)`, description: slice.trim() });
+      remaining = remaining.slice(slice.length).trim();
+      first = false;
+    }
+    return embeds;
+  }
 
-  // ── Build the .txt file ──────────────────────────────────────────────────
-  const fileContent = [
-    DIV,
-    '  WHITELIST APPLICATION — Capital Roleplay',
-    DIV,
-    '',
-    `  Discord      : ${user.username} (${user.id})`,
-    `  Full Name    : ${fullname.trim()}`,
-    `  Date of Birth: ${dob.trim()}`,
-    `  RP Experience: ${experience?.trim() || 'Not provided'}`,
-    '',
-    DIV,
-    '  CHARACTER CONCEPT',
-    DIV,
-    '',
-    character?.trim() || 'Not provided',
-    '',
-    DIV,
-    '  WHY DO YOU WANT TO JOIN CAPITAL ROLEPLAY?',
-    DIV,
-    '',
-    whyjoin.trim(),
-    '',
-    DIV,
-    `  Submitted: ${submittedAt}`,
-    DIV,
-  ].join('\n');
-
-  // ── Embed (short info only) ───────────────────────────────────────────────
-  const embed = {
-    title: 'New Whitelist Application',
-    color: 0x00aeff,
-    thumbnail: { url: avatarUrl },
-    fields: [
-      { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Full Name',     value: fullname.trim(),                    inline: true },
-      { name: '\u200B',        value: '\u200B',                           inline: false },
-      { name: 'Date of Birth', value: dob.trim(),                        inline: true },
-      { name: 'RP Experience', value: (experience?.trim() || '*Not provided*').slice(0, 200), inline: true },
-    ],
-    timestamp: new Date().toISOString(),
-    footer: { text: `Application from ${user.username} · Full answers in attached file` },
-  };
+  const embeds = [
+    // Embed 1: header info
+    {
+      title: 'New Whitelist Application',
+      color: 0x00aeff,
+      thumbnail: { url: avatarUrl },
+      timestamp: new Date().toISOString(),
+      footer: { text: `Application from ${user.username}` },
+      fields: [
+        { name: 'Discord',       value: `<@${user.id}> (${user.username})`,                      inline: true },
+        { name: 'Full Name',     value: fullname.trim(),                                          inline: true },
+        { name: '\u200B',        value: '\u200B',                                                 inline: false },
+        { name: 'Date of Birth', value: dob.trim(),                                               inline: true },
+        { name: 'RP Experience', value: (experience?.trim() || '*Not provided*').slice(0, 500),   inline: true },
+      ],
+    },
+    // Embed 2+: Character Concept in description (up to 4096 chars each)
+    ...descChunks('Character Concept', character?.trim() || '*Not provided*', 0x00aeff),
+    // Embed 3+: Why do you want to join in description
+    ...descChunks('Why do you want to join Capital Roleplay?', whyjoin.trim(), 0x00aeff),
+  ];
 
   const components = [{
     type: 1,
@@ -121,21 +115,15 @@ export async function onRequestPost({ request, env }) {
     } catch { /* unreachable — continue */ }
   }
 
-  // ── Send via multipart/form-data with file attachment ────────────────────
-  const formData = new FormData();
-  formData.append('payload_json', JSON.stringify({ embeds: [embed], components }));
-  formData.append(
-    'files[0]',
-    new Blob([fileContent], { type: 'text/plain' }),
-    `whitelist-${user.username}.txt`
-  );
-
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
     {
       method: 'POST',
-      headers: { Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}` },
-      body: formData,
+      headers: {
+        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ embeds, components }),
     }
   );
 
