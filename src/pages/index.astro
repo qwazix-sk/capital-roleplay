@@ -275,13 +275,11 @@ import MainLayout from "../layouts/MainLayout.astro";
                 <div class="field full">
                   <label for="whyjoin">Why do you want to join Capital Roleplay? <span class="field-required">*</span></label>
                   <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for. Minimum 100 words required." disabled></textarea>
-                  <div class="field-wordcount">
+                  <div class="field-wordcount" id="charcount-wrap">
                     <span id="whyjoin-count">0</span> / 100 words minimum
+                    <span class="charcount-sep">·</span>
+                    <span id="charcount-used">0</span> / 4096 characters
                   </div>
-                </div>
-
-                <div class="field-charcount" id="charcount-wrap">
-                  <span id="charcount-used">0</span> / 4096 characters used across text fields
                 </div>
               </div>
 

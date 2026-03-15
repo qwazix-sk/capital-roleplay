@@ -108,13 +108,11 @@ import MainLayout from "../../layouts/MainLayout.astro";
                 <div class="field full">
                   <label for="why_choose">Why should we choose you over others? <span class="field-required">*</span></label>
                   <textarea id="why_choose" name="why_choose" placeholder="What sets you apart from other applicants? Minimum 50 words required." disabled></textarea>
-                  <div class="field-wordcount">
+                  <div class="field-wordcount" id="charcount-wrap">
                     <span id="why-choose-count">0</span> / 50 words minimum
+                    <span class="charcount-sep">·</span>
+                    <span id="charcount-used">0</span> / 4096 characters
                   </div>
-                </div>
-
-                <div class="field-charcount" id="charcount-wrap">
-                  <span id="charcount-used">0</span> / 4096 characters used across text fields
                 </div>
 
               </div>
