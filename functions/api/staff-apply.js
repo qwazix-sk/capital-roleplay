@@ -1,5 +1,6 @@
-const WHITELIST_ROLE = '1478489840260747275';
-const STAFF_CHANNEL  = '1482709760695599124';
+const WHITELIST_ROLE  = '1478489840260747275';
+const STAFF_CHANNEL   = '1482709760695599124';
+const TRANSPARENT_IMG = 'https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/transparent-embed.png';
 
 export async function onRequestPost({ request, env }) {
   const cookieHeader = request.headers.get('cookie') ?? '';
@@ -71,52 +72,42 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  // Split long text into ≤4096-char description embeds, breaking at word boundaries
-  function descriptionEmbeds(label, text, color) {
+  const botToken = (env.DISCORD_BOT_TOKEN || '').trim();
+
+  // Helper: post one message to the channel
+  async function postMessage(payload) {
+    const res = await fetch(
+      `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bot ${botToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Discord API error:', err);
+      throw new Error(err);
+    }
+    return res.json();
+  }
+
+  // Helper: split text into ≤4096-char chunks at word boundaries
+  function splitText(text) {
     const LIMIT = 4096;
-    const embeds = [];
+    const chunks = [];
     let remaining = text.trim();
-    let first = true;
     while (remaining.length > 0) {
       let slice = remaining.slice(0, LIMIT);
       if (remaining.length > LIMIT) {
         const lastSpace = slice.lastIndexOf(' ');
         if (lastSpace > 0) slice = slice.slice(0, lastSpace);
       }
-      embeds.push({
-        color,
-        title: first ? label : `${label} (continued)`,
-        description: slice.trim(),
-      });
+      chunks.push(slice.trim());
       remaining = remaining.slice(slice.length).trim();
-      first = false;
     }
-    return embeds;
+    return chunks;
   }
-
-  // Embed 1: header info as fields
-  const headerEmbed = {
-    title: '📋 New Staff Application',
-    color: 0xf5a623,
-    thumbnail: { url: avatarUrl },
-    timestamp: new Date().toISOString(),
-    footer: { text: `Staff application from ${user.username}` },
-    fields: [
-      { name: 'Discord',      value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Age',          value: age.trim(),                          inline: true },
-      { name: 'Timezone',     value: timezone.trim(),                     inline: true },
-      { name: 'Availability', value: availability.trim(),                 inline: true },
-      { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
-    ],
-  };
-
-  // Long-answer embeds using description (4096 char limit each)
-  const longEmbeds = [
-    ...descriptionEmbeds('Why do you want to be staff?', why_staff.trim(), 0xf5a623),
-    ...descriptionEmbeds('Why should we choose you over others?', why_choose.trim(), 0xf5a623),
-  ];
-
-  const embeds = [headerEmbed, ...longEmbeds];
 
   const components = [{
     type: 1,
@@ -126,21 +117,53 @@ export async function onRequestPost({ request, env }) {
     ],
   }];
 
-  const discordRes = await fetch(
-    `https://discord.com/api/v10/channels/${STAFF_CHANNEL}/messages`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ embeds, components }),
-    }
-  );
+  try {
+    // ── Message 1: Header info + buttons ────────────────────────────────────
+    await postMessage({
+      embeds: [{
+        title: '📋 New Staff Application',
+        color: 0xf5a623,
+        thumbnail: { url: avatarUrl },
+        image: { url: TRANSPARENT_IMG },
+        timestamp: new Date().toISOString(),
+        footer: { text: `Staff application from ${user.username}` },
+        fields: [
+          { name: 'Discord',             value: `<@${user.id}> (${user.username})`,     inline: true },
+          { name: 'Age',                 value: age.trim(),                              inline: true },
+          { name: 'Timezone',            value: timezone.trim(),                         inline: true },
+          { name: 'Availability',        value: availability.trim(),                     inline: true },
+          { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
+        ],
+      }],
+      components,
+    });
 
-  if (!discordRes.ok) {
-    const err = await discordRes.text();
-    console.error('Discord API error:', err);
+    // ── Message 2: Why do you want to be staff ───────────────────────────────
+    const whyStaffChunks = splitText(why_staff.trim());
+    for (let i = 0; i < whyStaffChunks.length; i++) {
+      await postMessage({
+        embeds: [{
+          color: 0xf5a623,
+          title: i === 0 ? 'Why do you want to be staff?' : 'Why do you want to be staff? (continued)',
+          description: whyStaffChunks[i],
+          image: { url: TRANSPARENT_IMG },
+        }],
+      });
+    }
+
+    // ── Message 3: Why should we choose you ──────────────────────────────────
+    const whyChooseChunks = splitText(why_choose.trim());
+    for (let i = 0; i < whyChooseChunks.length; i++) {
+      await postMessage({
+        embeds: [{
+          color: 0xf5a623,
+          title: i === 0 ? 'Why should we choose you over others?' : 'Why should we choose you? (continued)',
+          description: whyChooseChunks[i],
+          image: { url: TRANSPARENT_IMG },
+        }],
+      });
+    }
+  } catch {
     return json({ error: 'Failed to submit application — please try again' }, 500);
   }
 

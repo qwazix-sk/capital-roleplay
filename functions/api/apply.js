@@ -1,4 +1,5 @@
 const WHITELIST_CHANNEL = '1482373975316365472';
+const TRANSPARENT_IMG  = 'https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/transparent-embed.png';
 
 export async function onRequestPost({ request, env }) {
   // Parse cookies
@@ -52,52 +53,42 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  // Split long text into ≤4096-char description embeds, breaking at word boundaries
-  function descriptionEmbeds(label, text) {
+  const botToken = (env.DISCORD_BOT_TOKEN || '').trim();
+
+  // Helper: post one message to the channel
+  async function postMessage(payload) {
+    const res = await fetch(
+      `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bot ${botToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Discord API error:', err);
+      throw new Error(err);
+    }
+    return res.json();
+  }
+
+  // Helper: split text into ≤4096-char chunks at word boundaries
+  function splitText(text) {
     const LIMIT = 4096;
-    const embeds = [];
+    const chunks = [];
     let remaining = text.trim();
-    let first = true;
     while (remaining.length > 0) {
       let slice = remaining.slice(0, LIMIT);
       if (remaining.length > LIMIT) {
         const lastSpace = slice.lastIndexOf(' ');
         if (lastSpace > 0) slice = slice.slice(0, lastSpace);
       }
-      embeds.push({
-        color: 0x00aeff,
-        title: first ? label : `${label} (continued)`,
-        description: slice.trim(),
-      });
+      chunks.push(slice.trim());
       remaining = remaining.slice(slice.length).trim();
-      first = false;
     }
-    return embeds;
+    return chunks;
   }
-
-  // Embed 1: header info as fields
-  const headerEmbed = {
-    title: 'New Whitelist Application',
-    color: 0x00aeff,
-    thumbnail: { url: avatarUrl },
-    timestamp: new Date().toISOString(),
-    footer: { text: `Application from ${user.username}` },
-    fields: [
-      { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Full Name',     value: fullname.trim(),                     inline: true },
-      { name: '\u200B',        value: '\u200B',                            inline: false },
-      { name: 'Date of Birth', value: dob.trim(),                         inline: true },
-      { name: 'RP Experience', value: experience?.trim() || '*Not provided*', inline: true },
-    ],
-  };
-
-  // Long-answer embeds using description (4096 char limit)
-  const longEmbeds = [
-    ...( character?.trim() ? descriptionEmbeds('Character Concept', character.trim()) : [{ color: 0x00aeff, title: 'Character Concept', description: '*Not provided*' }] ),
-    ...descriptionEmbeds('Why do you want to join Capital Roleplay?', whyjoin.trim()),
-  ];
-
-  const embeds = [headerEmbed, ...longEmbeds];
 
   const components = [{
     type: 1,
@@ -107,7 +98,58 @@ export async function onRequestPost({ request, env }) {
     ],
   }];
 
-  // Optional: duplicate check via bot API — only block on explicit 409, skip all other errors
+  try {
+    // ── Message 1: Header info + buttons ────────────────────────────────────
+    await postMessage({
+      embeds: [{
+        title: 'New Whitelist Application',
+        color: 0x00aeff,
+        thumbnail: { url: avatarUrl },
+        image: { url: TRANSPARENT_IMG },
+        timestamp: new Date().toISOString(),
+        footer: { text: `Application from ${user.username}` },
+        fields: [
+          { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
+          { name: 'Full Name',     value: fullname.trim(),                     inline: true },
+          { name: '\u200B',        value: '\u200B',                            inline: false },
+          { name: 'Date of Birth', value: dob.trim(),                         inline: true },
+          { name: 'RP Experience', value: experience?.trim() || '*Not provided*', inline: true },
+        ],
+      }],
+      components,
+    });
+
+    // ── Message 2: Character Concept ─────────────────────────────────────────
+    const characterText = character?.trim() || '*Not provided*';
+    const characterChunks = splitText(characterText);
+    for (let i = 0; i < characterChunks.length; i++) {
+      await postMessage({
+        embeds: [{
+          color: 0x00aeff,
+          title: i === 0 ? 'Character Concept' : 'Character Concept (continued)',
+          description: characterChunks[i],
+          image: { url: TRANSPARENT_IMG },
+        }],
+      });
+    }
+
+    // ── Message 3: Why do you want to join ───────────────────────────────────
+    const whyjoinChunks = splitText(whyjoin.trim());
+    for (let i = 0; i < whyjoinChunks.length; i++) {
+      await postMessage({
+        embeds: [{
+          color: 0x00aeff,
+          title: i === 0 ? 'Why do you want to join Capital Roleplay?' : 'Why do you want to join? (continued)',
+          description: whyjoinChunks[i],
+          image: { url: TRANSPARENT_IMG },
+        }],
+      });
+    }
+  } catch {
+    return json({ error: 'Failed to submit application — please try again' }, 500);
+  }
+
+  // Optional: duplicate check via bot API
   const botApiUrl = (env.BOT_API_URL || '').trim();
   if (botApiUrl) {
     try {
@@ -125,27 +167,8 @@ export async function onRequestPost({ request, env }) {
         return json({ error: dbErr.error ?? 'You already have a pending application' }, 409);
       }
     } catch {
-      // Bot API unreachable — continue without duplicate check
+      // Bot API unreachable — continue
     }
-  }
-
-  // Post embeds to Discord whitelist channel
-  const discordRes = await fetch(
-    `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ embeds, components }),
-    }
-  );
-
-  if (!discordRes.ok) {
-    const err = await discordRes.text();
-    console.error('Discord API error:', err);
-    return json({ error: 'Failed to submit application — please try again' }, 500);
   }
 
   return json({ success: true }, 200);
