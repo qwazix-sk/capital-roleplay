@@ -82,14 +82,39 @@ export async function onRequestPost({ request, env }) {
     ...fieldChunks('Why do you want to join?', whyjoin.trim()),
   ];
 
-  const embed = {
-    title: 'New Whitelist Application',
-    color: 0x00aeff,
-    thumbnail: { url: avatarUrl },
-    fields,
-    timestamp: new Date().toISOString(),
-    footer: { text: `Application from ${user.username}` },
-  };
+  // Pack fields into multiple embeds if total chars would exceed Discord's 6000 limit
+  function packEmbeds(fields) {
+    const LIMIT = 5800; // safe margin under 6000
+    const base = {
+      title: 'New Whitelist Application',
+      color: 0x00aeff,
+      thumbnail: { url: avatarUrl },
+      timestamp: new Date().toISOString(),
+      footer: { text: `Application from ${user.username}` },
+    };
+    const baseChars = base.title.length + base.footer.text.length;
+
+    const embeds = [];
+    let currentFields = [];
+    let currentChars = baseChars;
+
+    for (const field of fields) {
+      const fc = field.name.length + field.value.length;
+      if (currentChars + fc > LIMIT && currentFields.length > 0) {
+        embeds.push({ ...(embeds.length === 0 ? base : { color: base.color }), fields: currentFields });
+        currentFields = [];
+        currentChars = 0;
+      }
+      currentFields.push(field);
+      currentChars += fc;
+    }
+    if (currentFields.length > 0) {
+      embeds.push({ ...(embeds.length === 0 ? base : { color: base.color, footer: base.footer, timestamp: base.timestamp }), fields: currentFields });
+    }
+    return embeds;
+  }
+
+  const embeds = packEmbeds(fields);
 
   const components = [{
     type: 1,
@@ -130,7 +155,7 @@ export async function onRequestPost({ request, env }) {
         Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ embeds: [embed], components }),
+      body: JSON.stringify({ embeds, components }),
     }
   );
 
