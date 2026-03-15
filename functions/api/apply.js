@@ -52,12 +52,11 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  // Split text into ≤1024-char chunks, breaking at word boundaries
-  function fieldChunks(label, text) {
-    const LIMIT = 1024;
-    if (text.length <= LIMIT) return [{ name: label, value: text }];
-    const chunks = [];
-    let remaining = text;
+  // Split long text into ≤4096-char description embeds, breaking at word boundaries
+  function descriptionEmbeds(label, text) {
+    const LIMIT = 4096;
+    const embeds = [];
+    let remaining = text.trim();
     let first = true;
     while (remaining.length > 0) {
       let slice = remaining.slice(0, LIMIT);
@@ -65,56 +64,40 @@ export async function onRequestPost({ request, env }) {
         const lastSpace = slice.lastIndexOf(' ');
         if (lastSpace > 0) slice = slice.slice(0, lastSpace);
       }
-      chunks.push({ name: first ? label : '↳ continued', value: slice.trim() });
+      embeds.push({
+        color: 0x00aeff,
+        title: first ? label : `${label} (continued)`,
+        description: slice.trim(),
+      });
       remaining = remaining.slice(slice.length).trim();
       first = false;
-    }
-    return chunks;
-  }
-
-  const fields = [
-    { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
-    { name: 'Full Name',     value: fullname.trim(),                     inline: true },
-    { name: '\u200B',        value: '\u200B',                            inline: false },
-    { name: 'Date of Birth', value: dob.trim(),                         inline: true },
-    ...fieldChunks('RP Experience',        experience?.trim() || '*Not provided*'),
-    ...fieldChunks('Character Concept',    character?.trim()  || '*Not provided*'),
-    ...fieldChunks('Why do you want to join?', whyjoin.trim()),
-  ];
-
-  // Pack fields into multiple embeds if total chars would exceed Discord's 6000 limit
-  function packEmbeds(fields) {
-    const LIMIT = 5800; // safe margin under 6000
-    const base = {
-      title: 'New Whitelist Application',
-      color: 0x00aeff,
-      thumbnail: { url: avatarUrl },
-      timestamp: new Date().toISOString(),
-      footer: { text: `Application from ${user.username}` },
-    };
-    const baseChars = base.title.length + base.footer.text.length;
-
-    const embeds = [];
-    let currentFields = [];
-    let currentChars = baseChars;
-
-    for (const field of fields) {
-      const fc = field.name.length + field.value.length;
-      if (currentChars + fc > LIMIT && currentFields.length > 0) {
-        embeds.push({ ...(embeds.length === 0 ? base : { color: base.color }), fields: currentFields });
-        currentFields = [];
-        currentChars = 0;
-      }
-      currentFields.push(field);
-      currentChars += fc;
-    }
-    if (currentFields.length > 0) {
-      embeds.push({ ...(embeds.length === 0 ? base : { color: base.color, footer: base.footer, timestamp: base.timestamp }), fields: currentFields });
     }
     return embeds;
   }
 
-  const embeds = packEmbeds(fields);
+  // Embed 1: header info as fields
+  const headerEmbed = {
+    title: 'New Whitelist Application',
+    color: 0x00aeff,
+    thumbnail: { url: avatarUrl },
+    timestamp: new Date().toISOString(),
+    footer: { text: `Application from ${user.username}` },
+    fields: [
+      { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
+      { name: 'Full Name',     value: fullname.trim(),                     inline: true },
+      { name: '\u200B',        value: '\u200B',                            inline: false },
+      { name: 'Date of Birth', value: dob.trim(),                         inline: true },
+      { name: 'RP Experience', value: experience?.trim() || '*Not provided*', inline: true },
+    ],
+  };
+
+  // Long-answer embeds using description (4096 char limit)
+  const longEmbeds = [
+    ...( character?.trim() ? descriptionEmbeds('Character Concept', character.trim()) : [{ color: 0x00aeff, title: 'Character Concept', description: '*Not provided*' }] ),
+    ...descriptionEmbeds('Why do you want to join Capital Roleplay?', whyjoin.trim()),
+  ];
+
+  const embeds = [headerEmbed, ...longEmbeds];
 
   const components = [{
     type: 1,
@@ -146,7 +129,7 @@ export async function onRequestPost({ request, env }) {
     }
   }
 
-  // Post embed to Discord staff channel
+  // Post embeds to Discord whitelist channel
   const discordRes = await fetch(
     `https://discord.com/api/v10/channels/${WHITELIST_CHANNEL}/messages`,
     {

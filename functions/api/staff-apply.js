@@ -36,7 +36,6 @@ export async function onRequestPost({ request, env }) {
   );
 
   if (!memberRes.ok) {
-    // If we can't reach Discord, block the submission to be safe
     return json({ error: 'Could not verify your server membership. Make sure you are in the Capital Roleplay Discord.' }, 403);
   }
 
@@ -72,71 +71,52 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  // Split text into ≤1024-char chunks, breaking at word boundaries
-  function fieldChunks(label, text) {
-    const LIMIT = 1024;
-    if (text.length <= LIMIT) return [{ name: label, value: text }];
-    const chunks = [];
-    let remaining = text;
+  // Split long text into ≤4096-char description embeds, breaking at word boundaries
+  function descriptionEmbeds(label, text, color) {
+    const LIMIT = 4096;
+    const embeds = [];
+    let remaining = text.trim();
     let first = true;
     while (remaining.length > 0) {
       let slice = remaining.slice(0, LIMIT);
-      // Break at last space so we don't cut mid-word
       if (remaining.length > LIMIT) {
         const lastSpace = slice.lastIndexOf(' ');
         if (lastSpace > 0) slice = slice.slice(0, lastSpace);
       }
-      chunks.push({ name: first ? label : '↳ continued', value: slice.trim() });
+      embeds.push({
+        color,
+        title: first ? label : `${label} (continued)`,
+        description: slice.trim(),
+      });
       remaining = remaining.slice(slice.length).trim();
       first = false;
-    }
-    return chunks;
-  }
-
-  const fields = [
-    { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
-    { name: 'Age',           value: age.trim(),                          inline: true },
-    { name: 'Timezone',      value: timezone.trim(),                     inline: true },
-    { name: 'Availability',  value: availability.trim(),                 inline: true },
-    { name: '\u200B',        value: '\u200B',                            inline: false },
-    ...fieldChunks('Previous Experience', previous_experience?.trim() || '*Not provided*'),
-    ...fieldChunks('Why do you want to be staff?', why_staff.trim()),
-    ...fieldChunks('Why should we choose you over others?', why_choose.trim()),
-  ];
-
-  // Pack fields into multiple embeds if total chars would exceed Discord's 6000 limit
-  function packEmbeds(fields) {
-    const LIMIT = 5800;
-    const base = {
-      title: '📋 New Staff Application',
-      color: 0xf5a623,
-      thumbnail: { url: avatarUrl },
-      timestamp: new Date().toISOString(),
-      footer: { text: `Staff application from ${user.username}` },
-    };
-    const baseChars = base.title.length + base.footer.text.length;
-
-    const embeds = [];
-    let currentFields = [];
-    let currentChars = baseChars;
-
-    for (const field of fields) {
-      const fc = field.name.length + field.value.length;
-      if (currentChars + fc > LIMIT && currentFields.length > 0) {
-        embeds.push({ ...(embeds.length === 0 ? base : { color: base.color }), fields: currentFields });
-        currentFields = [];
-        currentChars = 0;
-      }
-      currentFields.push(field);
-      currentChars += fc;
-    }
-    if (currentFields.length > 0) {
-      embeds.push({ ...(embeds.length === 0 ? base : { color: base.color, footer: base.footer, timestamp: base.timestamp }), fields: currentFields });
     }
     return embeds;
   }
 
-  const embeds = packEmbeds(fields);
+  // Embed 1: header info as fields
+  const headerEmbed = {
+    title: '📋 New Staff Application',
+    color: 0xf5a623,
+    thumbnail: { url: avatarUrl },
+    timestamp: new Date().toISOString(),
+    footer: { text: `Staff application from ${user.username}` },
+    fields: [
+      { name: 'Discord',      value: `<@${user.id}> (${user.username})`, inline: true },
+      { name: 'Age',          value: age.trim(),                          inline: true },
+      { name: 'Timezone',     value: timezone.trim(),                     inline: true },
+      { name: 'Availability', value: availability.trim(),                 inline: true },
+      { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
+    ],
+  };
+
+  // Long-answer embeds using description (4096 char limit each)
+  const longEmbeds = [
+    ...descriptionEmbeds('Why do you want to be staff?', why_staff.trim(), 0xf5a623),
+    ...descriptionEmbeds('Why should we choose you over others?', why_choose.trim(), 0xf5a623),
+  ];
+
+  const embeds = [headerEmbed, ...longEmbeds];
 
   const components = [{
     type: 1,
