@@ -2,7 +2,7 @@
 const {
   title = "Capital Roleplay",
   description = "A whitelisted FiveM server built for players who want a cleaner, more immersive, and more deliberate roleplay environment. Custom vehicles, clothing, weapons, and scripts — 18+.",
-  ogImage = "https://capital-roleplay.com/og-image.png",
+  ogImage = "https://capital-roleplay.com/logo.png",
 } = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const storeUrl = "https://your-tebex-store-link.tebex.io";
@@ -32,11 +32,8 @@ const navItems = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
     <!-- Twitter / fallback -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
