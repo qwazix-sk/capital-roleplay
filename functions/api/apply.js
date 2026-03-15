@@ -50,20 +50,41 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
+  // Split text into ≤1024-char chunks, breaking at word boundaries
+  function fieldChunks(label, text) {
+    const LIMIT = 1024;
+    if (text.length <= LIMIT) return [{ name: label, value: text }];
+    const chunks = [];
+    let remaining = text;
+    let first = true;
+    while (remaining.length > 0) {
+      let slice = remaining.slice(0, LIMIT);
+      if (remaining.length > LIMIT) {
+        const lastSpace = slice.lastIndexOf(' ');
+        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
+      }
+      chunks.push({ name: first ? label : '↳ continued', value: slice.trim() });
+      remaining = remaining.slice(slice.length).trim();
+      first = false;
+    }
+    return chunks;
+  }
+
+  const fields = [
+    { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
+    { name: 'Full Name',     value: fullname.trim(),                     inline: true },
+    { name: '\u200B',        value: '\u200B',                            inline: false },
+    { name: 'Date of Birth', value: dob.trim(),                         inline: true },
+    ...fieldChunks('RP Experience',        experience?.trim() || '*Not provided*'),
+    ...fieldChunks('Character Concept',    character?.trim()  || '*Not provided*'),
+    ...fieldChunks('Why do you want to join?', whyjoin.trim()),
+  ];
+
   const embed = {
     title: 'New Whitelist Application',
     color: 0x00aeff,
     thumbnail: { url: avatarUrl },
-    fields: [
-      { name: 'Discord', value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Full Name', value: fullname.trim(), inline: true },
-      { name: '\u200B', value: '\u200B', inline: false },
-      { name: 'Date of Birth', value: dob.trim(), inline: true },
-      { name: 'RP Experience', value: experience?.trim() || '*Not provided*', inline: true },
-      { name: '\u200B', value: '\u200B', inline: false },
-      { name: 'Character Concept', value: character?.trim() || '*Not provided*' },
-      { name: 'Why do you want to join?', value: whyjoin.trim() },
-    ],
+    fields,
     timestamp: new Date().toISOString(),
     footer: { text: `Application from ${user.username}` },
   };
