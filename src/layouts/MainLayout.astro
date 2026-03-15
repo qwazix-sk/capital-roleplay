@@ -442,6 +442,19 @@ const navItems = [
         box-shadow: 0 0 7px rgba(0, 174, 255, 0.45);
       }
 
+      .meta-chip--age {
+        background: rgba(248, 113, 113, 0.1);
+        color: #fca5a5;
+        filter: drop-shadow(0 0 0.5px rgba(248, 113, 113, 0.3));
+      }
+      .meta-chip--age::before {
+        background: #f87171;
+        box-shadow: 0 0 7px rgba(248, 113, 113, 0.5);
+      }
+      .meta-chip--age:hover {
+        filter: drop-shadow(0 0 1px rgba(248, 113, 113, 0.8)) drop-shadow(0 0 7px rgba(248, 113, 113, 0.2));
+      }
+
       .hero-panel {
         position: relative;
         min-height: 520px;
