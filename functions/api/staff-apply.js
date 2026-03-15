@@ -70,46 +70,22 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-  // Split text into ≤4096-char chunks for embed descriptions
-  function descChunks(label, text, color) {
-    const LIMIT = 4096;
-    const embeds = [];
-    let remaining = text.trim();
-    let first = true;
-    while (remaining.length > 0) {
-      let slice = remaining.slice(0, LIMIT);
-      if (remaining.length > LIMIT) {
-        const lastSpace = slice.lastIndexOf(' ');
-        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
-      }
-      embeds.push({ color, title: first ? label : `${label} (continued)`, description: slice.trim() });
-      remaining = remaining.slice(slice.length).trim();
-      first = false;
-    }
-    return embeds;
-  }
-
-  const embeds = [
-    // Embed 1: header info
-    {
-      title: '📋 New Staff Application',
-      color: 0xf5a623,
-      thumbnail: { url: avatarUrl },
-      timestamp: new Date().toISOString(),
-      footer: { text: `Staff application from ${user.username}` },
-      fields: [
-        { name: 'Discord',             value: `<@${user.id}> (${user.username})`,              inline: true },
-        { name: 'Age',                 value: age.trim(),                                      inline: true },
-        { name: 'Timezone',            value: timezone.trim(),                                  inline: true },
-        { name: 'Availability',        value: availability.trim(),                              inline: true },
-        { name: 'Previous Experience', value: (previous_experience?.trim() || '*Not provided*').slice(0, 500) },
-      ],
-    },
-    // Embed 2+: Why staff in description
-    ...descChunks('Why do you want to be staff?', why_staff.trim(), 0xf5a623),
-    // Embed 3+: Why choose in description
-    ...descChunks('Why should we choose you over others?', why_choose.trim(), 0xf5a623),
-  ];
+  const embed = {
+    title: '📋 New Staff Application',
+    color: 0xf5a623,
+    thumbnail: { url: avatarUrl },
+    timestamp: new Date().toISOString(),
+    footer: { text: `Staff application from ${user.username}` },
+    fields: [
+      { name: 'Discord',             value: `<@${user.id}> (${user.username})`,              inline: true },
+      { name: 'Age',                 value: age.trim(),                                      inline: true },
+      { name: 'Timezone',            value: timezone.trim(),                                  inline: true },
+      { name: 'Availability',        value: availability.trim(),                              inline: true },
+      { name: 'Previous Experience', value: (previous_experience?.trim() || '*Not provided*').slice(0, 500) },
+      { name: 'Why do you want to be staff?',        value: why_staff.trim().slice(0, 1000) },
+      { name: 'Why should we choose you over others?', value: why_choose.trim().slice(0, 1000) },
+    ],
+  };
 
   const components = [{
     type: 1,
@@ -127,7 +103,7 @@ export async function onRequestPost({ request, env }) {
         Authorization: `Bot ${(env.DISCORD_BOT_TOKEN || '').trim()}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ embeds, components }),
+      body: JSON.stringify({ embeds: [embed], components }),
     }
   );
 
