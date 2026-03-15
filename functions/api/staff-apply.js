@@ -72,20 +72,43 @@ export async function onRequestPost({ request, env }) {
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
+  // Split text into ≤1024-char chunks, breaking at word boundaries
+  function fieldChunks(label, text) {
+    const LIMIT = 1024;
+    if (text.length <= LIMIT) return [{ name: label, value: text }];
+    const chunks = [];
+    let remaining = text;
+    let first = true;
+    while (remaining.length > 0) {
+      let slice = remaining.slice(0, LIMIT);
+      // Break at last space so we don't cut mid-word
+      if (remaining.length > LIMIT) {
+        const lastSpace = slice.lastIndexOf(' ');
+        if (lastSpace > 0) slice = slice.slice(0, lastSpace);
+      }
+      chunks.push({ name: first ? label : '↳ continued', value: slice.trim() });
+      remaining = remaining.slice(slice.length).trim();
+      first = false;
+    }
+    return chunks;
+  }
+
+  const fields = [
+    { name: 'Discord',       value: `<@${user.id}> (${user.username})`, inline: true },
+    { name: 'Age',           value: age.trim(),                          inline: true },
+    { name: 'Timezone',      value: timezone.trim(),                     inline: true },
+    { name: 'Availability',  value: availability.trim(),                 inline: true },
+    { name: '\u200B',        value: '\u200B',                            inline: false },
+    ...fieldChunks('Previous Experience', previous_experience?.trim() || '*Not provided*'),
+    ...fieldChunks('Why do you want to be staff?', why_staff.trim()),
+    ...fieldChunks('Why should we choose you over others?', why_choose.trim()),
+  ];
+
   const embed = {
     title: '📋 New Staff Application',
     color: 0xf5a623,
     thumbnail: { url: avatarUrl },
-    fields: [
-      { name: 'Discord', value: `<@${user.id}> (${user.username})`, inline: true },
-      { name: 'Age', value: age.trim(), inline: true },
-      { name: 'Timezone', value: timezone.trim(), inline: true },
-      { name: 'Availability', value: availability.trim(), inline: true },
-      { name: '\u200B', value: '\u200B', inline: false },
-      { name: 'Previous Experience', value: previous_experience?.trim() || '*Not provided*' },
-      { name: 'Why do you want to be staff?', value: why_staff.trim() },
-      { name: 'Why should we choose you over others?', value: why_choose.trim() },
-    ],
+    fields,
     timestamp: new Date().toISOString(),
     footer: { text: `Staff application from ${user.username}` },
   };
