@@ -51,10 +51,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
 <style>
   .app-sub-hero {
     position: relative;
-    min-height: 400px;
+    min-height: 500px;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
+    margin-top: -120px;
+    z-index: 0;
   }
 
   .app-sub-hero-bg {
@@ -74,26 +76,31 @@ import MainLayout from "../../layouts/MainLayout.astro";
     position: absolute;
     inset: 0;
     z-index: 1;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 36px 36px;
-    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
-    opacity: 0.4;
+    background:
+      linear-gradient(to bottom,
+        rgba(4,10,17,0.42) 0%,
+        rgba(4,10,17,0.10) 18%,
+        rgba(4,10,17,0.0)  40%,
+        rgba(4,10,17,0.0)  55%,
+        rgba(4,10,17,0.88) 84%,
+        rgba(6,10,17,1.0)  100%
+      );
   }
 
   .app-sub-hero-overlay {
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: linear-gradient(to bottom, transparent 0%, rgba(4,10,18,0.3) 60%, rgba(4,10,18,0.9) 100%);
+    background:
+      radial-gradient(ellipse at 15% 85%, rgba(0,174,255,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 15%, rgba(0,90,180,0.07) 0%, transparent 45%);
   }
 
   .app-sub-hero-inner {
     position: relative;
     z-index: 3;
-    padding-top: 100px;
-    padding-bottom: 72px;
+    padding-top: 190px;
+    padding-bottom: 80px;
     display: flex;
     flex-direction: column;
     gap: 18px;
