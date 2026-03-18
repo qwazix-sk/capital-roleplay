@@ -1,0 +1,610 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Vehicle Developer Application — Capital Roleplay">
+
+  <section class="vdev-hero">
+    <div class="vdev-hero-bg">
+      <video autoplay muted loop playsinline>
+        <source src="https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/lgmods-pd-vehicles-showcase.webm" type="video/webm" />
+      </video>
+    </div>
+    <div class="vdev-hero-noise"></div>
+    <div class="vdev-hero-overlay"></div>
+    <div class="container vdev-hero-inner">
+      <a href="/applications" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        All Applications
+      </a>
+      <div class="vdev-badge">
+        <span class="vdev-badge-dot"></span>
+        Vehicle Development · Now Open
+      </div>
+      <h1>Vehicle Developer Application</h1>
+      <p>
+        We're looking for experienced vehicle developers to help expand Capital Roleplay's fleet.
+        You'll be responsible for sourcing, editing meta files, streaming, and maintaining high-quality vehicles.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="apply">
+    <div class="container">
+
+      <div id="oauth-error-msg" class="apply-error" style="display:none">
+        Discord login failed — please try again.
+      </div>
+
+      <div class="apply-shell">
+        <div class="apply-grid">
+
+          <!-- Auth card -->
+          <div id="auth-card" class="login-card">
+            <div class="login-badge">Step 1 · Discord login required</div>
+            <h3>Authenticate with Discord first</h3>
+            <p>
+              You must sign in with Discord before submitting a Vehicle Developer application.
+              This verifies your identity and links your application to your account.
+            </p>
+            <div style="margin-top: 22px;">
+              <a class="button discord" href="/api/auth/discord?from=/applications/vehicle-dev">Continue with Discord</a>
+            </div>
+            <ul class="login-points" style="margin-top: 22px;">
+              <li>Discord account required before applying</li>
+              <li>Identity verified via OAuth2</li>
+              <li>Application forwarded to the dev review channel</li>
+            </ul>
+          </div>
+
+          <!-- Form -->
+          <div id="apply-form-wrapper" class="application-form application-form--locked">
+            <h3>Vehicle Developer application form</h3>
+            <p id="form-status-text">Sign in with Discord on the left to unlock and submit this application.</p>
+
+            <div id="form-locked-overlay" class="form-locked">
+              <div>
+                <strong>Form locked</strong>
+                <span>Sign in with Discord to unlock.</span>
+              </div>
+            </div>
+
+            <div id="apply-success" class="apply-success" style="display:none">
+              <strong>Application submitted!</strong>
+              <span>Our team will review it shortly. Keep an eye on your Discord DMs.</span>
+            </div>
+
+            <div id="apply-error-msg" class="apply-error-inline" style="display:none"></div>
+
+            <form id="apply-form">
+              <div class="form-grid">
+
+                <div class="field">
+                  <label for="age">Your Age <span class="field-required">*</span></label>
+                  <input id="age" name="age" type="text" placeholder="e.g. 19" disabled />
+                </div>
+
+                <div class="field">
+                  <label for="timezone">Timezone <span class="field-required">*</span></label>
+                  <input id="timezone" name="timezone" type="text" placeholder="e.g. GMT+1 / BST" disabled />
+                </div>
+
+                <div class="field full">
+                  <label for="portfolio">Portfolio / Previous Work Links <span class="field-optional">(Optional)</span></label>
+                  <input id="portfolio" name="portfolio" type="text" placeholder="Google Drive, GitHub, Dropbox, or any other link to your work" disabled />
+                </div>
+
+                <div class="field full">
+                  <label for="vdev_experience">Vehicle Development Experience <span class="field-required">*</span></label>
+                  <textarea id="vdev_experience" name="vdev_experience" placeholder="Describe your experience developing vehicles. How long have you been doing this? What types of vehicles have you worked on? Minimum 50 words required." disabled></textarea>
+                  <div class="field-wordcount">
+                    <span id="vdev-exp-count">0</span> / 50 words minimum
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label for="meta_experience">Meta File Editing Experience <span class="field-required">*</span></label>
+                  <textarea id="meta_experience" name="meta_experience" placeholder="Describe your experience editing vehicle meta files (handling.meta, carcols.meta, carvariations.meta, vehicles.meta, etc.). Minimum 30 words required." disabled></textarea>
+                  <div class="field-wordcount">
+                    <span id="meta-exp-count">0</span> / 30 words minimum
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label for="streaming_experience">Streaming Experience <span class="field-required">*</span></label>
+                  <textarea id="streaming_experience" name="streaming_experience" placeholder="Describe your experience streaming vehicle files into FiveM or similar frameworks. How do you structure resource files? Minimum 30 words required." disabled></textarea>
+                  <div class="field-wordcount">
+                    <span id="stream-exp-count">0</span> / 30 words minimum
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label for="zmod_experience">ZMod3 Experience <span class="field-optional">(Optional)</span></label>
+                  <textarea id="zmod_experience" name="zmod_experience" placeholder="Do you have experience using ZMod3? If so, describe what kind of modifications or detail edits you've made to vehicle models." disabled></textarea>
+                </div>
+
+                <div class="field full">
+                  <label for="why_vdev">Why do you want to be a Vehicle Developer for Capital Roleplay? <span class="field-required">*</span></label>
+                  <textarea id="why_vdev" name="why_vdev" placeholder="Explain why you want to join our vehicle development team and what you would bring to the role. Minimum 75 words required." disabled></textarea>
+                  <div class="field-wordcount" id="charcount-wrap">
+                    <span id="why-vdev-count">0</span> / 75 words minimum
+                    <span class="charcount-sep">·</span>
+                    <span id="charcount-used">0</span> / 6,000 characters
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-footer">
+                <div id="form-note-text" class="form-note">Sign in with Discord to enable submission.</div>
+                <button type="submit" id="submit-btn" class="button submit-disabled" disabled>
+                  Submit Application
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      function esc(str: string) {
+        return String(str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      let discordUser: { id: string; username: string; avatar: string | null } | null = null;
+      const match = document.cookie.split('; ').find(r => r.startsWith('dc_user='));
+      if (match) {
+        try { discordUser = JSON.parse(decodeURIComponent(match.split('=').slice(1).join('='))); }
+        catch { /* invalid */ }
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error') === 'oauth') {
+        const errEl = document.getElementById('oauth-error-msg');
+        if (errEl) errEl.style.display = 'block';
+      }
+
+      if (!discordUser) return;
+
+      const authCard = document.getElementById('auth-card');
+      const avatarUrl = discordUser.avatar
+        ? `https://cdn.discordapp.com/avatars/${esc(discordUser.id)}/${esc(discordUser.avatar)}.png?size=64`
+        : `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+      fetch('/api/check-whitelist')
+        .then(r => r.json())
+        .then((data: { whitelisted: boolean; reason: string }) => {
+          if (data.whitelisted) {
+            if (authCard) {
+              authCard.className = 'login-card login-card--authed';
+              authCard.innerHTML = `
+                <div class="login-badge login-badge--ok">Step 1 &middot; Authenticated</div>
+                <h3>Signed in with Discord</h3>
+                <div class="dc-user-row">
+                  <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                  <div>
+                    <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                    <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                  </div>
+                </div>
+                <ul class="login-points" style="margin-top:22px">
+                  <li>Identity verified via Discord OAuth</li>
+                  <li>Whitelist role confirmed</li>
+                  <li>You will receive a DM with the outcome</li>
+                </ul>
+                <div style="margin-top:24px">
+                  <a class="button ghost small logout" href="/api/auth/logout?from=/applications/vehicle-dev">Sign out</a>
+                </div>
+              `;
+            }
+
+            const wrapper = document.getElementById('apply-form-wrapper');
+            if (wrapper) wrapper.classList.remove('application-form--locked');
+
+            const overlay = document.getElementById('form-locked-overlay');
+            if (overlay) overlay.remove();
+
+            document.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+              '#apply-form input, #apply-form select, #apply-form textarea'
+            ).forEach(el => el.removeAttribute('disabled'));
+
+            const statusText = document.getElementById('form-status-text');
+            if (statusText) statusText.textContent = 'Form is unlocked. Fill in your details and submit below.';
+
+            const noteText = document.getElementById('form-note-text');
+            if (noteText) noteText.textContent = 'Your application will be sent directly to our development review channel.';
+
+            const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+              submitBtn.className = 'button';
+            }
+          } else {
+            if (authCard) {
+              authCard.className = 'login-card login-card--authed';
+              authCard.innerHTML = `
+                <div class="login-badge login-badge--ok">Authenticated</div>
+                <h3>Signed in with Discord</h3>
+                <div class="dc-user-row">
+                  <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                  <div>
+                    <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                    <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                  </div>
+                </div>
+                <div style="margin-top:20px;padding:14px 16px;border-radius:12px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.22);">
+                  <strong style="color:#fca5a5;font-size:0.9rem;">Whitelist required</strong>
+                  <p style="color:#9db0c6;font-size:0.86rem;margin-top:6px;line-height:1.65;">
+                    You must be a whitelisted member of Capital Roleplay before applying.
+                    <a href="/#apply" style="color:#00aeff;">Apply for whitelist first.</a>
+                  </p>
+                </div>
+                <div style="margin-top:18px">
+                  <a class="button ghost small logout" href="/api/auth/logout?from=/applications/vehicle-dev">Sign out</a>
+                </div>
+              `;
+            }
+
+            const overlay = document.getElementById('form-locked-overlay');
+            if (overlay) {
+              overlay.innerHTML = `<div><strong>Whitelist required</strong><span>You must be whitelisted to apply.</span></div>`;
+            }
+
+            const statusText = document.getElementById('form-status-text');
+            if (statusText) statusText.textContent = 'You need the whitelist role to access this form.';
+          }
+        })
+        .catch(() => {
+          if (authCard) {
+            authCard.className = 'login-card login-card--authed';
+            authCard.innerHTML = `
+              <div class="login-badge login-badge--ok">Authenticated</div>
+              <h3>Signed in with Discord</h3>
+              <div class="dc-user-row">
+                <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                <div>
+                  <strong class="dc-user-name">${esc(discordUser!.username)}</strong>
+                  <span class="dc-user-id">ID ${esc(discordUser!.id)}</span>
+                </div>
+              </div>
+              <p style="color:#9db0c6;font-size:0.88rem;margin-top:16px;">Could not verify whitelist status — please try refreshing.</p>
+              <div style="margin-top:18px">
+                <a class="button ghost small logout" href="/api/auth/logout?from=/applications/vehicle-dev">Sign out</a>
+              </div>
+            `;
+          }
+        });
+    })();
+
+    function countWords(str: string) {
+      return str.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    const vdevExpEl     = document.getElementById('vdev_experience')     as HTMLTextAreaElement | null;
+    const metaExpEl     = document.getElementById('meta_experience')     as HTMLTextAreaElement | null;
+    const streamExpEl   = document.getElementById('streaming_experience') as HTMLTextAreaElement | null;
+    const zmodExpEl     = document.getElementById('zmod_experience')     as HTMLTextAreaElement | null;
+    const whyVdevEl     = document.getElementById('why_vdev')            as HTMLTextAreaElement | null;
+    const charcountUsed = document.getElementById('charcount-used');
+    const CHAR_LIMIT    = 6000;
+
+    function updateCharCount() {
+      const total = (vdevExpEl?.value.length   ?? 0)
+                  + (metaExpEl?.value.length   ?? 0)
+                  + (streamExpEl?.value.length ?? 0)
+                  + (zmodExpEl?.value.length   ?? 0)
+                  + (whyVdevEl?.value.length   ?? 0);
+      if (charcountUsed) {
+        charcountUsed.textContent = String(total);
+        document.getElementById('charcount-wrap')?.classList.toggle('over', total > CHAR_LIMIT);
+      }
+    }
+
+    const vdevExpCount = document.getElementById('vdev-exp-count');
+    if (vdevExpEl && vdevExpCount) {
+      vdevExpEl.addEventListener('input', () => {
+        const words = countWords(vdevExpEl.value);
+        vdevExpCount.textContent = String(words);
+        vdevExpCount.parentElement!.classList.toggle('valid', words >= 50);
+        vdevExpCount.parentElement!.classList.toggle('invalid', !( words >= 50) && words > 0);
+        updateCharCount();
+      });
+    }
+
+    const metaExpCount = document.getElementById('meta-exp-count');
+    if (metaExpEl && metaExpCount) {
+      metaExpEl.addEventListener('input', () => {
+        const words = countWords(metaExpEl.value);
+        metaExpCount.textContent = String(words);
+        metaExpCount.parentElement!.classList.toggle('valid', words >= 30);
+        metaExpCount.parentElement!.classList.toggle('invalid', !(words >= 30) && words > 0);
+        updateCharCount();
+      });
+    }
+
+    const streamExpCount = document.getElementById('stream-exp-count');
+    if (streamExpEl && streamExpCount) {
+      streamExpEl.addEventListener('input', () => {
+        const words = countWords(streamExpEl.value);
+        streamExpCount.textContent = String(words);
+        streamExpCount.parentElement!.classList.toggle('valid', words >= 30);
+        streamExpCount.parentElement!.classList.toggle('invalid', !(words >= 30) && words > 0);
+        updateCharCount();
+      });
+    }
+
+    const whyVdevCount = document.getElementById('why-vdev-count');
+    if (whyVdevEl && whyVdevCount) {
+      whyVdevEl.addEventListener('input', () => {
+        const words = countWords(whyVdevEl.value);
+        whyVdevCount.textContent = String(words);
+        whyVdevCount.parentElement!.classList.toggle('valid', words >= 75);
+        whyVdevCount.parentElement!.classList.toggle('invalid', !(words >= 75) && words > 0);
+        updateCharCount();
+      });
+    }
+
+    zmodExpEl?.addEventListener('input', updateCharCount);
+
+    // ── Draft persistence ────────────────────────────────────────────────────
+    const DRAFT_KEY = 'vdev_form_draft';
+
+    function saveDraft() {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        age:                  (document.getElementById('age')       as HTMLInputElement)?.value  ?? '',
+        timezone:             (document.getElementById('timezone')  as HTMLInputElement)?.value  ?? '',
+        portfolio:            (document.getElementById('portfolio') as HTMLInputElement)?.value  ?? '',
+        vdev_experience:      vdevExpEl?.value   ?? '',
+        meta_experience:      metaExpEl?.value   ?? '',
+        streaming_experience: streamExpEl?.value ?? '',
+        zmod_experience:      zmodExpEl?.value   ?? '',
+        why_vdev:             whyVdevEl?.value   ?? '',
+      }));
+    }
+
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      '#apply-form input, #apply-form textarea'
+    ).forEach(el => el.addEventListener('input', saveDraft));
+
+    (function restoreDraft() {
+      let draft: Record<string, string> | null = null;
+      try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? 'null'); } catch { return; }
+      if (!draft) return;
+      const ageEl      = document.getElementById('age')       as HTMLInputElement | null;
+      const tzEl       = document.getElementById('timezone')  as HTMLInputElement | null;
+      const portfolioEl = document.getElementById('portfolio') as HTMLInputElement | null;
+      if (ageEl       && draft.age)       ageEl.value       = draft.age;
+      if (tzEl        && draft.timezone)  tzEl.value        = draft.timezone;
+      if (portfolioEl && draft.portfolio) portfolioEl.value = draft.portfolio;
+      if (vdevExpEl   && draft.vdev_experience)      { vdevExpEl.value   = draft.vdev_experience;      vdevExpEl.dispatchEvent(new Event('input'));   }
+      if (metaExpEl   && draft.meta_experience)      { metaExpEl.value   = draft.meta_experience;      metaExpEl.dispatchEvent(new Event('input'));   }
+      if (streamExpEl && draft.streaming_experience) { streamExpEl.value = draft.streaming_experience; streamExpEl.dispatchEvent(new Event('input')); }
+      if (zmodExpEl   && draft.zmod_experience)      { zmodExpEl.value   = draft.zmod_experience;      zmodExpEl.dispatchEvent(new Event('input'));   }
+      if (whyVdevEl   && draft.why_vdev)             { whyVdevEl.value   = draft.why_vdev;             whyVdevEl.dispatchEvent(new Event('input'));   }
+    })();
+
+    // Form submit
+    const form      = document.getElementById('apply-form')    as HTMLFormElement    | null;
+    const submitBtn = document.getElementById('submit-btn')    as HTMLButtonElement  | null;
+    const successEl = document.getElementById('apply-success');
+    const errorEl   = document.getElementById('apply-error-msg');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!submitBtn || submitBtn.disabled) return;
+
+      const age                  = (document.getElementById('age')       as HTMLInputElement).value.trim();
+      const timezone             = (document.getElementById('timezone')  as HTMLInputElement).value.trim();
+      const portfolio            = (document.getElementById('portfolio') as HTMLInputElement).value.trim();
+      const vdev_experience      = (document.getElementById('vdev_experience')      as HTMLTextAreaElement).value.trim();
+      const meta_experience      = (document.getElementById('meta_experience')      as HTMLTextAreaElement).value.trim();
+      const streaming_experience = (document.getElementById('streaming_experience') as HTMLTextAreaElement).value.trim();
+      const zmod_experience      = (document.getElementById('zmod_experience')      as HTMLTextAreaElement).value.trim();
+      const why_vdev             = (document.getElementById('why_vdev')             as HTMLTextAreaElement).value.trim();
+
+      if (countWords(vdev_experience) < 50) {
+        if (errorEl) {
+          errorEl.textContent = `"Vehicle Development Experience" needs at least 50 words (you have ${countWords(vdev_experience)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (countWords(meta_experience) < 30) {
+        if (errorEl) {
+          errorEl.textContent = `"Meta File Editing Experience" needs at least 30 words (you have ${countWords(meta_experience)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (countWords(streaming_experience) < 30) {
+        if (errorEl) {
+          errorEl.textContent = `"Streaming Experience" needs at least 30 words (you have ${countWords(streaming_experience)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (countWords(why_vdev) < 75) {
+        if (errorEl) {
+          errorEl.textContent = `"Why do you want to be a Vehicle Developer" needs at least 75 words (you have ${countWords(why_vdev)}).`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const totalChars = vdev_experience.length + meta_experience.length + streaming_experience.length + zmod_experience.length + why_vdev.length;
+      if (totalChars > CHAR_LIMIT) {
+        if (errorEl) {
+          errorEl.textContent = `Your answers are too long (${totalChars} / ${CHAR_LIMIT} characters). Please shorten your responses.`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      if (errorEl) errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/vehicle-dev-apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ age, timezone, portfolio, vdev_experience, meta_experience, streaming_experience, zmod_experience, why_vdev }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.removeItem(DRAFT_KEY);
+          if (form) form.style.display = 'none';
+          if (successEl) successEl.style.display = 'block';
+        } else {
+          if (errorEl) {
+            errorEl.textContent = data.error ?? 'Submission failed — please try again.';
+            errorEl.style.display = 'block';
+          }
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Application';
+        }
+      } catch {
+        if (errorEl) {
+          errorEl.textContent = 'Network error — please check your connection and try again.';
+          errorEl.style.display = 'block';
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+      }
+    });
+  </script>
+
+</MainLayout>
+
+<style>
+  /* ── Hero ─────────────────────────────────────────────── */
+  .vdev-hero {
+    position: relative;
+    min-height: 580px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    margin-top: -120px;
+    z-index: 0;
+  }
+
+  .vdev-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .vdev-hero-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .vdev-hero-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(to bottom,
+        rgba(4,10,17,0.52) 0%,
+        rgba(4,10,17,0.18) 18%,
+        rgba(4,10,17,0.0)  38%,
+        rgba(4,10,17,0.0)  52%,
+        rgba(4,10,17,0.90) 82%,
+        rgba(6,10,17,1.0)  100%
+      );
+  }
+
+  .vdev-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 15% 85%, rgba(168,85,247,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 15%, rgba(109,40,217,0.08) 0%, transparent 45%);
+  }
+
+  .vdev-hero-inner {
+    position: relative;
+    z-index: 3;
+    padding-top: 190px;
+    padding-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .vdev-hero-inner h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    max-width: 22ch;
+  }
+
+  .vdev-hero-inner p {
+    color: #9db0c6;
+    font-size: 1.05rem;
+    line-height: 1.78;
+    max-width: 60ch;
+  }
+
+  /* ── Back link ────────────────────────────────────────── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #9db0c6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+  .back-link:hover { color: #f4f8ff; }
+
+  /* ── Badge ──────────────────────────────────────────── */
+  .vdev-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(168,85,247,0.12);
+    border: 1px solid rgba(168,85,247,0.30);
+    color: #d8b4fe;
+  }
+
+  .vdev-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a855f7;
+    box-shadow: 0 0 12px rgba(168,85,247,0.7);
+    animation: pulse-vdev 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-vdev {
+    0%, 100% { box-shadow: 0 0 6px rgba(168,85,247,0.6); }
+    50%       { box-shadow: 0 0 18px rgba(168,85,247,1); }
+  }
+</style>

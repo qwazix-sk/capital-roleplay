@@ -47,6 +47,36 @@ import MainLayout from "../layouts/MainLayout.astro";
           </div>
         </a>
 
+        <!-- Vehicle Developer -->
+        <a href="/applications/vehicle-dev" class="app-card app-card--vdev">
+          <div class="app-card-video">
+            <video autoplay muted loop playsinline>
+              <source src="https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/lgmods-pd-vehicles-showcase.webm" type="video/webm" />
+            </video>
+          </div>
+          <div class="app-card-overlay"></div>
+          <div class="app-card-inner">
+            <div class="app-card-left">
+              <div class="app-badge app-badge--purple">
+                <span class="app-badge-dot"></span>
+                Vehicle Development
+              </div>
+              <h2>Vehicle Developer</h2>
+              <p>Source, configure, and stream high-quality vehicles into the server. Requires hands-on experience with meta files, FiveM streaming, and vehicle development workflows.</p>
+            </div>
+            <div class="app-card-right">
+              <div class="app-status app-status--open">
+                <span class="app-status-dot"></span>
+                Open
+              </div>
+              <div class="app-cta">
+                <span>Apply Now</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+
         <!-- Police -->
         <a href="/applications/police" class="app-card app-card--police">
           <div class="app-card-bg"></div>
@@ -210,6 +240,54 @@ import MainLayout from "../layouts/MainLayout.astro";
     box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,166,35,0.14);
   }
 
+  /* Vehicle Dev */
+  .app-card--vdev {
+    position: relative;
+  }
+  .app-card-video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    border-radius: 24px;
+  }
+  .app-card-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.38) saturate(0.7);
+  }
+  .app-card--vdev .app-card-overlay {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-color: transparent;
+  }
+  /* Purple tint radial on right side */
+  .app-card--vdev .app-card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: radial-gradient(ellipse at 100% 50%, rgba(168,85,247,0.22) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .app-card--vdev .app-card-inner {
+    position: relative;
+  }
+  .app-card--vdev .app-card-left,
+  .app-card--vdev .app-card-right {
+    position: relative;
+    z-index: 1;
+  }
+  .app-card--vdev:hover {
+    border-color: rgba(168, 85, 247, 0.32);
+    box-shadow: 0 32px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(168,85,247,0.14);
+  }
+
   /* Police */
   .app-card--police .app-card-bg {
     background:
@@ -329,6 +407,14 @@ import MainLayout from "../layouts/MainLayout.astro";
 
   .app-badge--orange{ background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.24); color: #fdba74; }
   .app-badge--orange .app-badge-dot{ background: #f97316; box-shadow: 0 0 10px rgba(249,115,22,0.5); }
+
+  .app-badge--purple { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.28); color: #d8b4fe; }
+  .app-badge--purple .app-badge-dot { background: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.6); animation: pulse-vdev-card 2s ease-in-out infinite; }
+
+  @keyframes pulse-vdev-card {
+    0%, 100% { box-shadow: 0 0 6px rgba(168,85,247,0.6); }
+    50%       { box-shadow: 0 0 14px rgba(168,85,247,1); }
+  }
 
   /* ── Status pill ───────────────────────────────────────── */
   .app-status {
