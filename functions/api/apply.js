@@ -70,7 +70,7 @@ export async function onRequestPost({ request, env }) {
     type: 1,
     components: [
       { type: 2, style: 3, label: '✅  Accept', custom_id: `wl_accept_${user.id}` },
-      { type: 2, style: 4, label: 'Reject',    custom_id: `wl_reject_${user.id}` },
+      { type: 2, style: 4, label: '❌  Reject',  custom_id: `wl_reject_${user.id}` },
     ],
   }];
 
