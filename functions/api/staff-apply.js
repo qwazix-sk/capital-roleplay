@@ -90,9 +90,9 @@ export async function onRequestPost({ request, env }) {
   const components = [{
     type: 1,
     components: [
-      { type: 2, style: 3, label: '✅  Accept',             custom_id: `staff_accept_${user.id}` },
-      { type: 2, style: 1, label: '📋  Invite to Interview', custom_id: `staff_interview_${user.id}` },
-      { type: 2, style: 4, label: '❌  Reject',             custom_id: `staff_reject_${user.id}` },
+      { type: 2, style: 3, label: 'Accept',             emoji: { name: '✅' }, custom_id: `staff_accept_${user.id}` },
+      { type: 2, style: 1, label: 'Invite to Interview', emoji: { name: '📋' }, custom_id: `staff_interview_${user.id}` },
+      { type: 2, style: 4, label: 'Reject',                                     custom_id: `staff_reject_${user.id}` },
     ],
   }];
 
