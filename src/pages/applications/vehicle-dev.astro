@@ -98,38 +98,44 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="vdev_experience">Vehicle Development Experience <span class="field-required">*</span></label>
-                  <textarea id="vdev_experience" name="vdev_experience" placeholder="Describe your experience developing vehicles. How long have you been doing this? What types of vehicles have you worked on? Minimum 50 words required." disabled></textarea>
-                  <div class="field-wordcount">
-                    <span id="vdev-exp-count">0</span> / 50 words minimum
-                  </div>
+                  <textarea id="vdev_experience" name="vdev_experience" placeholder="Describe your experience developing vehicles. How long have you been doing this? What types of vehicles have you worked on?" disabled></textarea>
                 </div>
 
                 <div class="field full">
-                  <label for="meta_experience">Meta File Editing Experience <span class="field-required">*</span></label>
-                  <textarea id="meta_experience" name="meta_experience" placeholder="Describe your experience editing vehicle meta files (handling.meta, carcols.meta, carvariations.meta, vehicles.meta, etc.). Minimum 30 words required." disabled></textarea>
-                  <div class="field-wordcount">
-                    <span id="meta-exp-count">0</span> / 30 words minimum
+                  <span class="field-label-group">Skills &amp; Experience</span>
+                  <div class="checkbox-group" id="skills-group">
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="skill_meta" name="skill_meta" disabled />
+                      <span class="checkbox-box"></span>
+                      <span class="checkbox-text">
+                        <strong>Meta file experience</strong>
+                        <span>handling.meta, carcols.meta, carvariations.meta, vehicles.meta, etc.</span>
+                      </span>
+                    </label>
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="skill_model" name="skill_model" disabled />
+                      <span class="checkbox-box"></span>
+                      <span class="checkbox-text">
+                        <strong>Model and garage edits</strong>
+                        <span>Editing vehicle model files, garage configurations, or liveries</span>
+                      </span>
+                    </label>
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="skill_zmod" name="skill_zmod" disabled />
+                      <span class="checkbox-box"></span>
+                      <span class="checkbox-text">
+                        <strong>ZMod3 / Blender (Sollumz)</strong>
+                        <span>3D model editing or exporting vehicles using ZMod3 or Blender with Sollumz</span>
+                      </span>
+                    </label>
                   </div>
-                </div>
-
-                <div class="field full">
-                  <label for="streaming_experience">Streaming Experience <span class="field-required">*</span></label>
-                  <textarea id="streaming_experience" name="streaming_experience" placeholder="Describe your experience streaming vehicle files into FiveM or similar frameworks. How do you structure resource files? Minimum 30 words required." disabled></textarea>
-                  <div class="field-wordcount">
-                    <span id="stream-exp-count">0</span> / 30 words minimum
-                  </div>
-                </div>
-
-                <div class="field full">
-                  <label for="zmod_experience">ZMod3 Experience <span class="field-optional">(Optional)</span></label>
-                  <textarea id="zmod_experience" name="zmod_experience" placeholder="Do you have experience using ZMod3? If so, describe what kind of modifications or detail edits you've made to vehicle models." disabled></textarea>
                 </div>
 
                 <div class="field full">
                   <label for="why_vdev">Why do you want to be a Vehicle Developer for Capital Roleplay? <span class="field-required">*</span></label>
-                  <textarea id="why_vdev" name="why_vdev" placeholder="Explain why you want to join our vehicle development team and what you would bring to the role. Minimum 75 words required." disabled></textarea>
+                  <textarea id="why_vdev" name="why_vdev" placeholder="Explain why you want to join our vehicle development team and what you would bring to the role. Minimum 50 words required." disabled></textarea>
                   <div class="field-wordcount" id="charcount-wrap">
-                    <span id="why-vdev-count">0</span> / 75 words minimum
+                    <span id="why-vdev-count">0</span> / 50 words minimum
                     <span class="charcount-sep">·</span>
                     <span id="charcount-used">0</span> / 6,000 characters
                   </div>
@@ -288,112 +294,78 @@ import MainLayout from "../../layouts/MainLayout.astro";
       return str.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
 
-    const vdevExpEl     = document.getElementById('vdev_experience')     as HTMLTextAreaElement | null;
-    const metaExpEl     = document.getElementById('meta_experience')     as HTMLTextAreaElement | null;
-    const streamExpEl   = document.getElementById('streaming_experience') as HTMLTextAreaElement | null;
-    const zmodExpEl     = document.getElementById('zmod_experience')     as HTMLTextAreaElement | null;
-    const whyVdevEl     = document.getElementById('why_vdev')            as HTMLTextAreaElement | null;
+    const vdevExpEl     = document.getElementById('vdev_experience') as HTMLTextAreaElement | null;
+    const whyVdevEl     = document.getElementById('why_vdev')        as HTMLTextAreaElement | null;
     const charcountUsed = document.getElementById('charcount-used');
     const CHAR_LIMIT    = 6000;
 
     function updateCharCount() {
-      const total = (vdevExpEl?.value.length   ?? 0)
-                  + (metaExpEl?.value.length   ?? 0)
-                  + (streamExpEl?.value.length ?? 0)
-                  + (zmodExpEl?.value.length   ?? 0)
-                  + (whyVdevEl?.value.length   ?? 0);
+      const total = (vdevExpEl?.value.length ?? 0) + (whyVdevEl?.value.length ?? 0);
       if (charcountUsed) {
         charcountUsed.textContent = String(total);
         document.getElementById('charcount-wrap')?.classList.toggle('over', total > CHAR_LIMIT);
       }
     }
 
-    const vdevExpCount = document.getElementById('vdev-exp-count');
-    if (vdevExpEl && vdevExpCount) {
-      vdevExpEl.addEventListener('input', () => {
-        const words = countWords(vdevExpEl.value);
-        vdevExpCount.textContent = String(words);
-        vdevExpCount.parentElement!.classList.toggle('valid', words >= 50);
-        vdevExpCount.parentElement!.classList.toggle('invalid', !( words >= 50) && words > 0);
-        updateCharCount();
-      });
-    }
-
-    const metaExpCount = document.getElementById('meta-exp-count');
-    if (metaExpEl && metaExpCount) {
-      metaExpEl.addEventListener('input', () => {
-        const words = countWords(metaExpEl.value);
-        metaExpCount.textContent = String(words);
-        metaExpCount.parentElement!.classList.toggle('valid', words >= 30);
-        metaExpCount.parentElement!.classList.toggle('invalid', !(words >= 30) && words > 0);
-        updateCharCount();
-      });
-    }
-
-    const streamExpCount = document.getElementById('stream-exp-count');
-    if (streamExpEl && streamExpCount) {
-      streamExpEl.addEventListener('input', () => {
-        const words = countWords(streamExpEl.value);
-        streamExpCount.textContent = String(words);
-        streamExpCount.parentElement!.classList.toggle('valid', words >= 30);
-        streamExpCount.parentElement!.classList.toggle('invalid', !(words >= 30) && words > 0);
-        updateCharCount();
-      });
-    }
+    vdevExpEl?.addEventListener('input', updateCharCount);
 
     const whyVdevCount = document.getElementById('why-vdev-count');
     if (whyVdevEl && whyVdevCount) {
       whyVdevEl.addEventListener('input', () => {
         const words = countWords(whyVdevEl.value);
         whyVdevCount.textContent = String(words);
-        whyVdevCount.parentElement!.classList.toggle('valid', words >= 75);
-        whyVdevCount.parentElement!.classList.toggle('invalid', !(words >= 75) && words > 0);
+        whyVdevCount.parentElement!.classList.toggle('valid', words >= 50);
+        whyVdevCount.parentElement!.classList.toggle('invalid', !(words >= 50) && words > 0);
         updateCharCount();
       });
     }
-
-    zmodExpEl?.addEventListener('input', updateCharCount);
 
     // ── Draft persistence ────────────────────────────────────────────────────
     const DRAFT_KEY = 'vdev_form_draft';
 
     function saveDraft() {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({
-        age:                  (document.getElementById('age')       as HTMLInputElement)?.value  ?? '',
-        timezone:             (document.getElementById('timezone')  as HTMLInputElement)?.value  ?? '',
-        portfolio:            (document.getElementById('portfolio') as HTMLInputElement)?.value  ?? '',
-        vdev_experience:      vdevExpEl?.value   ?? '',
-        meta_experience:      metaExpEl?.value   ?? '',
-        streaming_experience: streamExpEl?.value ?? '',
-        zmod_experience:      zmodExpEl?.value   ?? '',
-        why_vdev:             whyVdevEl?.value   ?? '',
+        age:             (document.getElementById('age')       as HTMLInputElement)?.value ?? '',
+        timezone:        (document.getElementById('timezone')  as HTMLInputElement)?.value ?? '',
+        portfolio:       (document.getElementById('portfolio') as HTMLInputElement)?.value ?? '',
+        skill_meta:      (document.getElementById('skill_meta')  as HTMLInputElement)?.checked ?? false,
+        skill_model:     (document.getElementById('skill_model') as HTMLInputElement)?.checked ?? false,
+        skill_zmod:      (document.getElementById('skill_zmod')  as HTMLInputElement)?.checked ?? false,
+        vdev_experience: vdevExpEl?.value ?? '',
+        why_vdev:        whyVdevEl?.value ?? '',
       }));
     }
 
     document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
       '#apply-form input, #apply-form textarea'
     ).forEach(el => el.addEventListener('input', saveDraft));
+    document.querySelectorAll<HTMLInputElement>(
+      '#apply-form input[type="checkbox"]'
+    ).forEach(el => el.addEventListener('change', saveDraft));
 
     (function restoreDraft() {
-      let draft: Record<string, string> | null = null;
+      let draft: Record<string, any> | null = null;
       try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? 'null'); } catch { return; }
       if (!draft) return;
-      const ageEl      = document.getElementById('age')       as HTMLInputElement | null;
-      const tzEl       = document.getElementById('timezone')  as HTMLInputElement | null;
-      const portfolioEl = document.getElementById('portfolio') as HTMLInputElement | null;
+      const ageEl       = document.getElementById('age')        as HTMLInputElement | null;
+      const tzEl        = document.getElementById('timezone')   as HTMLInputElement | null;
+      const portfolioEl = document.getElementById('portfolio')  as HTMLInputElement | null;
+      const metaCbEl    = document.getElementById('skill_meta')  as HTMLInputElement | null;
+      const modelCbEl   = document.getElementById('skill_model') as HTMLInputElement | null;
+      const zmodCbEl    = document.getElementById('skill_zmod')  as HTMLInputElement | null;
       if (ageEl       && draft.age)       ageEl.value       = draft.age;
       if (tzEl        && draft.timezone)  tzEl.value        = draft.timezone;
       if (portfolioEl && draft.portfolio) portfolioEl.value = draft.portfolio;
-      if (vdevExpEl   && draft.vdev_experience)      { vdevExpEl.value   = draft.vdev_experience;      vdevExpEl.dispatchEvent(new Event('input'));   }
-      if (metaExpEl   && draft.meta_experience)      { metaExpEl.value   = draft.meta_experience;      metaExpEl.dispatchEvent(new Event('input'));   }
-      if (streamExpEl && draft.streaming_experience) { streamExpEl.value = draft.streaming_experience; streamExpEl.dispatchEvent(new Event('input')); }
-      if (zmodExpEl   && draft.zmod_experience)      { zmodExpEl.value   = draft.zmod_experience;      zmodExpEl.dispatchEvent(new Event('input'));   }
-      if (whyVdevEl   && draft.why_vdev)             { whyVdevEl.value   = draft.why_vdev;             whyVdevEl.dispatchEvent(new Event('input'));   }
+      if (metaCbEl  && draft.skill_meta)  metaCbEl.checked  = true;
+      if (modelCbEl && draft.skill_model) modelCbEl.checked = true;
+      if (zmodCbEl  && draft.skill_zmod)  zmodCbEl.checked  = true;
+      if (vdevExpEl && draft.vdev_experience) { vdevExpEl.value = draft.vdev_experience; vdevExpEl.dispatchEvent(new Event('input')); }
+      if (whyVdevEl && draft.why_vdev)        { whyVdevEl.value = draft.why_vdev;        whyVdevEl.dispatchEvent(new Event('input')); }
     })();
 
     // Form submit
-    const form      = document.getElementById('apply-form')    as HTMLFormElement    | null;
-    const submitBtn = document.getElementById('submit-btn')    as HTMLButtonElement  | null;
+    const form      = document.getElementById('apply-form')   as HTMLFormElement   | null;
+    const submitBtn = document.getElementById('submit-btn')   as HTMLButtonElement | null;
     const successEl = document.getElementById('apply-success');
     const errorEl   = document.getElementById('apply-error-msg');
 
@@ -401,48 +373,24 @@ import MainLayout from "../../layouts/MainLayout.astro";
       e.preventDefault();
       if (!submitBtn || submitBtn.disabled) return;
 
-      const age                  = (document.getElementById('age')       as HTMLInputElement).value.trim();
-      const timezone             = (document.getElementById('timezone')  as HTMLInputElement).value.trim();
-      const portfolio            = (document.getElementById('portfolio') as HTMLInputElement).value.trim();
-      const vdev_experience      = (document.getElementById('vdev_experience')      as HTMLTextAreaElement).value.trim();
-      const meta_experience      = (document.getElementById('meta_experience')      as HTMLTextAreaElement).value.trim();
-      const streaming_experience = (document.getElementById('streaming_experience') as HTMLTextAreaElement).value.trim();
-      const zmod_experience      = (document.getElementById('zmod_experience')      as HTMLTextAreaElement).value.trim();
-      const why_vdev             = (document.getElementById('why_vdev')             as HTMLTextAreaElement).value.trim();
+      const age            = (document.getElementById('age')       as HTMLInputElement).value.trim();
+      const timezone       = (document.getElementById('timezone')  as HTMLInputElement).value.trim();
+      const portfolio      = (document.getElementById('portfolio') as HTMLInputElement).value.trim();
+      const skill_meta     = (document.getElementById('skill_meta')  as HTMLInputElement).checked;
+      const skill_model    = (document.getElementById('skill_model') as HTMLInputElement).checked;
+      const skill_zmod     = (document.getElementById('skill_zmod')  as HTMLInputElement).checked;
+      const vdev_experience = (document.getElementById('vdev_experience') as HTMLTextAreaElement).value.trim();
+      const why_vdev        = (document.getElementById('why_vdev')        as HTMLTextAreaElement).value.trim();
 
-      if (countWords(vdev_experience) < 50) {
+      if (countWords(why_vdev) < 50) {
         if (errorEl) {
-          errorEl.textContent = `"Vehicle Development Experience" needs at least 50 words (you have ${countWords(vdev_experience)}).`;
+          errorEl.textContent = `"Why do you want to be a Vehicle Developer" needs at least 50 words (you have ${countWords(why_vdev)}).`;
           errorEl.style.display = 'block';
         }
         return;
       }
 
-      if (countWords(meta_experience) < 30) {
-        if (errorEl) {
-          errorEl.textContent = `"Meta File Editing Experience" needs at least 30 words (you have ${countWords(meta_experience)}).`;
-          errorEl.style.display = 'block';
-        }
-        return;
-      }
-
-      if (countWords(streaming_experience) < 30) {
-        if (errorEl) {
-          errorEl.textContent = `"Streaming Experience" needs at least 30 words (you have ${countWords(streaming_experience)}).`;
-          errorEl.style.display = 'block';
-        }
-        return;
-      }
-
-      if (countWords(why_vdev) < 75) {
-        if (errorEl) {
-          errorEl.textContent = `"Why do you want to be a Vehicle Developer" needs at least 75 words (you have ${countWords(why_vdev)}).`;
-          errorEl.style.display = 'block';
-        }
-        return;
-      }
-
-      const totalChars = vdev_experience.length + meta_experience.length + streaming_experience.length + zmod_experience.length + why_vdev.length;
+      const totalChars = vdev_experience.length + why_vdev.length;
       if (totalChars > CHAR_LIMIT) {
         if (errorEl) {
           errorEl.textContent = `Your answers are too long (${totalChars} / ${CHAR_LIMIT} characters). Please shorten your responses.`;
@@ -459,7 +407,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
         const res = await fetch('/api/vehicle-dev-apply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ age, timezone, portfolio, vdev_experience, meta_experience, streaming_experience, zmod_experience, why_vdev }),
+          body: JSON.stringify({ age, timezone, portfolio, skill_meta, skill_model, skill_zmod, vdev_experience, why_vdev }),
         });
 
         const data = await res.json();
@@ -606,5 +554,105 @@ import MainLayout from "../../layouts/MainLayout.astro";
   @keyframes pulse-vdev {
     0%, 100% { box-shadow: 0 0 6px rgba(168,85,247,0.6); }
     50%       { box-shadow: 0 0 18px rgba(168,85,247,1); }
+  }
+
+  /* ── Skills checkboxes ────────────────────────────────── */
+  .field-label-group {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #c9d8e8;
+    margin-bottom: 12px;
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease;
+    user-select: none;
+  }
+
+  .checkbox-item:hover {
+    border-color: rgba(168,85,247,0.28);
+    background: rgba(168,85,247,0.05);
+  }
+
+  /* Hide native checkbox */
+  .checkbox-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .checkbox-box {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.04);
+    margin-top: 1px;
+    transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkbox-box::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: 2px solid transparent;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    transition: border-color 120ms ease;
+  }
+
+  .checkbox-item input[type="checkbox"]:checked ~ .checkbox-box {
+    background: rgba(168,85,247,0.22);
+    border-color: #a855f7;
+    box-shadow: 0 0 10px rgba(168,85,247,0.3);
+  }
+
+  .checkbox-item input[type="checkbox"]:checked ~ .checkbox-box::after {
+    border-color: #d8b4fe;
+  }
+
+  .checkbox-item:has(input:checked) {
+    border-color: rgba(168,85,247,0.32);
+    background: rgba(168,85,247,0.07);
+  }
+
+  .checkbox-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .checkbox-text strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e8f0f8;
+  }
+
+  .checkbox-text span {
+    font-size: 0.82rem;
+    color: #6b849a;
+    line-height: 1.5;
   }
 </style>

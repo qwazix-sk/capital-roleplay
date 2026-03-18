@@ -50,31 +50,22 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Invalid request body' }, 400);
   }
 
-  const { age, timezone, portfolio, vdev_experience, meta_experience, streaming_experience, zmod_experience, why_vdev } = body;
+  const { age, timezone, portfolio, skill_meta, skill_model, skill_zmod, vdev_experience, why_vdev } = body;
 
-  if (!age?.trim() || !timezone?.trim() || !vdev_experience?.trim() || !meta_experience?.trim() || !streaming_experience?.trim() || !why_vdev?.trim()) {
+  if (!age?.trim() || !timezone?.trim() || !vdev_experience?.trim() || !why_vdev?.trim()) {
     return json({ error: 'Please fill in all required fields' }, 400);
   }
 
-  const vdevWords = vdev_experience.trim().split(/\s+/).filter(w => w.length > 0).length;
-  if (vdevWords < 50) {
-    return json({ error: `"Vehicle Development Experience" must be at least 50 words (currently ${vdevWords})` }, 400);
-  }
-
-  const metaWords = meta_experience.trim().split(/\s+/).filter(w => w.length > 0).length;
-  if (metaWords < 30) {
-    return json({ error: `"Meta File Editing Experience" must be at least 30 words (currently ${metaWords})` }, 400);
-  }
-
-  const streamWords = streaming_experience.trim().split(/\s+/).filter(w => w.length > 0).length;
-  if (streamWords < 30) {
-    return json({ error: `"Streaming Experience" must be at least 30 words (currently ${streamWords})` }, 400);
-  }
-
   const whyWords = why_vdev.trim().split(/\s+/).filter(w => w.length > 0).length;
-  if (whyWords < 75) {
-    return json({ error: `"Why do you want to be a Vehicle Developer" must be at least 75 words (currently ${whyWords})` }, 400);
+  if (whyWords < 50) {
+    return json({ error: `"Why do you want to be a Vehicle Developer" must be at least 50 words (currently ${whyWords})` }, 400);
   }
+
+  const skillLines = [
+    skill_meta  ? '✅ Meta file experience'          : '☐ Meta file experience',
+    skill_model ? '✅ Model and garage edits'         : '☐ Model and garage edits',
+    skill_zmod  ? '✅ ZMod3 / Blender (Sollumz)'     : '☐ ZMod3 / Blender (Sollumz)',
+  ].join('\n');
 
   const avatarUrl = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
@@ -90,11 +81,9 @@ export async function onRequestPost({ request, env }) {
       { name: 'Discord',              value: `<@${user.id}> (${user.username})`,                              inline: true },
       { name: 'Age',                  value: age.trim(),                                                       inline: true },
       { name: 'Timezone',             value: timezone.trim(),                                                   inline: true },
-      { name: 'Portfolio / Links',    value: (portfolio?.trim() || '*Not provided*').slice(0, 500),            inline: false },
-      { name: 'Vehicle Dev Experience',   value: vdev_experience.trim().slice(0, 1024) },
-      { name: 'Meta File Experience',     value: meta_experience.trim().slice(0, 1024) },
-      { name: 'Streaming Experience',     value: streaming_experience.trim().slice(0, 1024) },
-      { name: 'ZMod3 Experience',         value: (zmod_experience?.trim() || '*Not provided*').slice(0, 500) },
+      { name: 'Portfolio / Links',             value: (portfolio?.trim() || '*Not provided*').slice(0, 500), inline: false },
+      { name: 'Skills & Experience',           value: skillLines,                                             inline: false },
+      { name: 'Vehicle Dev Experience',        value: vdev_experience.trim().slice(0, 1024) },
       { name: 'Why Vehicle Developer for Capital RP?', value: why_vdev.trim().slice(0, 1024) },
     ],
   };
