@@ -265,7 +265,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="experience">Roleplay Experience <span class="field-required">*</span></label>
-                  <textarea id="experience" name="experience" placeholder="Describe your previous roleplay experience, including any FiveM or GTA RP servers you have played on previously." disabled></textarea>
+                  <textarea id="experience" name="experience" placeholder="Describe your previous roleplay experience, including any FiveM RP servers you have played on previously." disabled></textarea>
                 </div>
 
                 <div class="field full">
@@ -275,9 +275,9 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                 <div class="field full">
                   <label for="whyjoin">Why do you want to join Capital Roleplay? <span class="field-required">*</span></label>
-                  <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for." disabled></textarea>
+                  <textarea id="whyjoin" name="whyjoin" placeholder="Explain what attracts you to the server and what kind of roleplay you are looking for. Minimum 100 words required." disabled></textarea>
                   <div class="field-wordcount" id="charcount-wrap">
-                    <span id="whyjoin-count">0</span> words
+                    <span id="whyjoin-count">0</span> / 100 words minimum
                     <span class="charcount-sep">·</span>
                     <span id="charcount-used">0</span> / 6,000 characters
                   </div>
@@ -515,6 +515,9 @@ import MainLayout from "../layouts/MainLayout.astro";
       whyjoinEl.addEventListener('input', () => {
         const words = countWords(whyjoinEl.value);
         whyjoinCount.textContent = String(words);
+        const valid = words >= 100;
+        whyjoinCount.parentElement!.classList.toggle('valid', valid);
+        whyjoinCount.parentElement!.classList.toggle('invalid', !valid && words > 0);
         updateCharCount();
       });
     }
@@ -570,6 +573,15 @@ import MainLayout from "../layouts/MainLayout.astro";
       if (!experience) {
         if (errorEl) {
           errorEl.textContent = 'Please describe your roleplay experience before submitting.';
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const words = countWords(whyjoin);
+      if (words < 100) {
+        if (errorEl) {
+          errorEl.textContent = `"Why do you want to join" needs at least 100 words (you have ${words}).`;
           errorEl.style.display = 'block';
         }
         return;
