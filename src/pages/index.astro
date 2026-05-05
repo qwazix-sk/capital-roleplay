@@ -43,13 +43,35 @@ import MainLayout from "../layouts/MainLayout.astro";
           </div>
         </div>
 
-        <div class="panel-card panel-main">
-          <strong>Built to feel premium from the first minute.</strong>
-          <p>
-            Capital Roleplay is designed to avoid the recycled feel of generic public servers.
-            The world, systems, and presentation are aligned around immersion, consistency, and
-            long-term community quality.
-          </p>
+        <div class="panel-card panel-main panel-main--release-soon" id="fivemPanel">
+          <div class="pm-header">
+            <div class="pm-identity" id="fivemIdentity">
+              <span class="pm-dot" id="fivemStatusDot"></span>
+              <span class="pm-status-label" id="fivemStatusLabel">WIP</span>
+            </div>
+            <span class="pm-server-name">Capital Roleplay</span>
+          </div>
+
+          <div class="pm-body">
+            <span class="pm-num" id="fivemPlayerCount">—</span>
+            <span class="pm-slash">/</span>
+            <span class="pm-of-max" id="fivemMaxPlayers">—</span>
+            <span class="pm-in-game">Players in-game</span>
+          </div>
+
+          <div class="pm-release-block" aria-live="polite">
+            <strong>Release Date</strong>
+            <span>Will be released soon</span>
+          </div>
+
+          <div class="pm-offline-block" aria-live="polite">
+            <strong>Server Offline</strong>
+            <span>Checking again in 30s</span>
+          </div>
+
+          <a class="pm-connect" id="fivemConnectBtn" href="#" target="_blank" rel="noreferrer">
+            Release coming soon <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -73,6 +95,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           <span>Every asset is custom — nothing off the shelf</span>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -80,7 +103,7 @@ import MainLayout from "../layouts/MainLayout.astro";
     <div class="container">
       <div class="showcase-banner">
         <video
-          src="https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/Video%20Project.webm"
+          src="https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/Caprptest.webm"
           autoplay
           loop
           muted
@@ -717,5 +740,168 @@ import MainLayout from "../layouts/MainLayout.astro";
 
     loadDiscordStats();
     setInterval(() => loadDiscordStats(), 30_000); // poll every 30s (was 60s)
+  </script>
+
+  <script>
+    // ── FiveM Live Server Stats ──────────────────────────────────────────────
+    const RELEASE_SOON_FRONT = true;
+    const FIVEM_CACHE_P = "fivem_players";
+    const FIVEM_CACHE_M = "fivem_max";
+
+    const fivemPanelEl    = document.getElementById("fivemPanel");
+    const fivemIdentityEl = document.getElementById("fivemIdentity");
+    const fivemCountEl    = document.getElementById("fivemPlayerCount");
+    const fivemMaxEl      = document.getElementById("fivemMaxPlayers");
+    const fivemDotEl      = document.getElementById("fivemStatusDot");
+    const fivemLabelEl    = document.getElementById("fivemStatusLabel");
+    const fivemConnectBtn = document.getElementById("fivemConnectBtn") as HTMLAnchorElement | null;
+
+    let cachedPlayers = parseInt(localStorage.getItem(FIVEM_CACHE_P) ?? "0", 10);
+    let cachedMax     = parseInt(localStorage.getItem(FIVEM_CACHE_M) ?? "0", 10);
+    let displayedPlayers = cachedPlayers;
+    let stickyMax     = cachedMax;          // last known good maxPlayers — never decays to 0
+    let offlineStreak = 0;                  // consecutive offline reports
+    const OFFLINE_FLIP_AFTER = 2;           // require N back-to-back offline reports before flipping UI
+
+    function applyReleaseSoonFront() {
+      if (!RELEASE_SOON_FRONT) return;
+
+      fivemPanelEl?.classList.add("panel-main--release-soon");
+
+      if (fivemDotEl) {
+        fivemDotEl.className = "pm-dot pm-dot--release-soon";
+      }
+      if (fivemIdentityEl) {
+        fivemIdentityEl.className = "pm-identity pm-identity--release-soon";
+      }
+      if (fivemLabelEl) {
+        fivemLabelEl.textContent = "WIP";
+        fivemLabelEl.className = "pm-status-label pm-status-label--release-soon";
+      }
+      if (fivemConnectBtn) {
+        fivemConnectBtn.classList.add("is-release-soon");
+        fivemConnectBtn.innerHTML = "Release coming soon";
+      }
+    }
+
+    // Animate the count from current displayed value to target — gives the
+    // counter a "live, breathing" feel when the number changes.
+    function animateCount(from: number, to: number) {
+      if (!fivemCountEl) return;
+      if (from === to) { fivemCountEl.textContent = String(to); return; }
+
+      const start = performance.now();
+      const dur   = Math.min(800, 120 + Math.abs(to - from) * 60);
+      const delta = to - from;
+
+      function step(now: number) {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+        const v = Math.round(from + delta * eased);
+        if (fivemCountEl) fivemCountEl.textContent = String(v);
+        if (t < 1) requestAnimationFrame(step);
+        else {
+          // brief "bump" highlight when the value lands on a new number
+          fivemCountEl?.classList.remove("pm-num--bump");
+          void fivemCountEl?.offsetWidth;
+          fivemCountEl?.classList.add("pm-num--bump");
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function renderFiveM(players: number, maxPlayers: number, online: boolean) {
+      // maxPlayers never decays — once we know it's 128, keep showing 128.
+      if (maxPlayers > 0) stickyMax = maxPlayers;
+      if (fivemMaxEl) fivemMaxEl.textContent = stickyMax > 0 ? String(stickyMax) : "—";
+
+      if (online) {
+        fivemPanelEl?.classList.remove("is-offline");
+        if (fivemCountEl) {
+          if (displayedPlayers !== players) {
+            animateCount(displayedPlayers, players);
+            displayedPlayers = players;
+          } else {
+            fivemCountEl.textContent = String(players);
+          }
+        }
+      } else {
+        fivemPanelEl?.classList.add("is-offline");
+        if (fivemCountEl) fivemCountEl.textContent = "—";
+        displayedPlayers = 0;
+      }
+
+      if (fivemDotEl) {
+        fivemDotEl.className = "pm-dot" + (online ? " pm-dot--online" : " pm-dot--offline");
+      }
+      if (fivemIdentityEl) {
+        fivemIdentityEl.className = "pm-identity " + (online ? "pm-identity--online" : "pm-identity--offline");
+      }
+      if (fivemLabelEl) {
+        fivemLabelEl.textContent = online ? "Live" : "Offline";
+        fivemLabelEl.className   = "pm-status-label " + (online ? "pm-status-label--online" : "pm-status-label--offline");
+      }
+      if (fivemConnectBtn) {
+        if (online) {
+          fivemConnectBtn.classList.remove("is-offline");
+          fivemConnectBtn.innerHTML = 'Connect to server <i class="fa-solid fa-arrow-right"></i>';
+        } else {
+          fivemConnectBtn.classList.add("is-offline");
+          fivemConnectBtn.textContent = "Server is currently offline";
+        }
+      }
+
+      applyReleaseSoonFront();
+    }
+
+    // Seed cached values instantly — no blank state for returning visitors
+    if (cachedMax > 0) renderFiveM(cachedPlayers, cachedMax, true);
+    else if (fivemDotEl) fivemDotEl.className = "pm-dot";
+    applyReleaseSoonFront();
+
+    // Don't flip to "Offline" on a single bad report — the worker's data
+    // sources (FXServer endpoints, CFX) are flaky and an isolated failure
+    // is almost never a real outage. Require N consecutive offline reports.
+    function applyOnlineSmoothing(reportedOnline: boolean) {
+      if (reportedOnline) {
+        offlineStreak = 0;
+        return true;
+      }
+      offlineStreak += 1;
+      // While we're below the flip threshold, keep showing the previous state.
+      // If we've never seen the server online (no cached max), report offline immediately.
+      if (offlineStreak < OFFLINE_FLIP_AFTER && stickyMax > 0) return true;
+      return false;
+    }
+
+    async function loadFiveMStats(): Promise<void> {
+      try {
+        const res = await fetch("/api/fivem", { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json() as { players: number; maxPlayers: number; online: boolean; connectUrl: string };
+
+        if (data.maxPlayers > 0) {
+          localStorage.setItem(FIVEM_CACHE_P, String(data.players));
+          localStorage.setItem(FIVEM_CACHE_M, String(data.maxPlayers));
+        }
+
+        if (fivemConnectBtn && data.connectUrl) {
+          fivemConnectBtn.href = data.connectUrl;
+        }
+
+        const effectiveOnline = applyOnlineSmoothing(data.online);
+        // While smoothing keeps us "online" but the worker reported offline,
+        // hold the previous player count rather than animating to the worker's 0.
+        const effectivePlayers = effectiveOnline && !data.online ? displayedPlayers : data.players;
+        renderFiveM(effectivePlayers, data.maxPlayers, effectiveOnline);
+      } catch {
+        // /api/fivem unreachable — same smoothing as a worker-reported offline.
+        const effectiveOnline = applyOnlineSmoothing(false);
+        renderFiveM(effectiveOnline ? displayedPlayers : 0, cachedMax, effectiveOnline);
+      }
+    }
+
+    loadFiveMStats();
+    setInterval(loadFiveMStats, 30_000);
   </script>
 </MainLayout>

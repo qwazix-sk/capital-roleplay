@@ -20,7 +20,8 @@ import MainLayout from "../../layouts/MainLayout.astro";
         All Applications
       </a>
       <div class="vdev-badge">
-        <span class="vdev-badge-dot"></span>
+        <span class="vdev-badge-label">Vehicle Development</span>
+        <span class="vdev-badge-value">Open</span>
         Vehicle Development · Now Open
       </div>
       <h1>Vehicle Developer Application</h1>
@@ -654,5 +655,38 @@ import MainLayout from "../../layouts/MainLayout.astro";
     font-size: 0.82rem;
     color: #6b849a;
     line-height: 1.5;
+  }
+
+  .vdev-badge {
+    gap: 4px;
+    padding: 4px;
+    font-size: 0;
+    background: rgba(9, 14, 22, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .vdev-badge-label,
+  .vdev-badge-value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .vdev-badge-label {
+    color: #7f93a8;
+    background: rgba(255, 255, 255, 0.03);
+    font-weight: 600;
+  }
+
+  .vdev-badge-value {
+    color: #b9e7c6;
+    background: rgba(35, 111, 72, 0.34);
+    font-weight: 700;
   }
 </style>

@@ -7,12 +7,14 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:cf": "wrangler pages dev --proxy 4321 --port 8788 -- astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.0.4"
+    "astro": "^6.0.4",
+    "fivem-stats": "^1.0.0"
   },
   "devDependencies": {
     "wrangler": "^4.73.0"

@@ -1,0 +1,91 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Courts & Tribunals Service — Capital Roleplay">
+
+  <section class="subfaction-hero subfaction-courts">
+    <div class="subfaction-hero-bg"></div>
+    <div class="subfaction-hero-noise"></div>
+    <div class="subfaction-hero-overlay"></div>
+    <div class="container subfaction-hero-inner">
+      <a href="/factions/police" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Police, Emergency &amp; Courts
+      </a>
+      <div class="subfaction-badge subfaction-badge--gold">Justice &amp; Tribunals</div>
+      <h1>Courts &amp; Tribunals Service</h1>
+      <p>
+        Judges, prosecutors, defence counsel, and tribunal panels. The judiciary that turns
+        arrests into rulings and gives every citizen due process.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wip-section">
+    <div class="container">
+      <div class="wip-block wip-block--gold">
+        <div class="wip-label">Work in progress</div>
+        <div class="wip-text">WIP</div>
+        <p class="wip-sub">Court structure, judicial appointments, and trial procedure will be published here before launch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h3>Interested in legal roleplay?</h3>
+          <p>Get whitelisted first, then express interest in the Courts & Tribunals Service through Discord.</p>
+        </div>
+        <a class="button" href="/#apply">Apply for Whitelist</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>
+
+<style>
+  .subfaction-hero { position: relative; min-height: 420px; display: flex; align-items: flex-end; overflow: hidden; }
+  .subfaction-hero-bg { position: absolute; inset: 0; z-index: 0; }
+  .subfaction-courts .subfaction-hero-bg {
+    background:
+      radial-gradient(circle at 22% 30%, rgba(245, 200, 110, 0.32) 0%, transparent 52%),
+      radial-gradient(circle at 80% 70%, rgba(245, 166, 35, 0.22) 0%, transparent 44%),
+      linear-gradient(160deg, #1a1306 0%, #2a1f08 40%, #20180a 75%, #140e05 100%);
+  }
+  .subfaction-hero-noise {
+    position: absolute; inset: 0; z-index: 1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
+    opacity: 0.4;
+  }
+  .subfaction-hero-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(to bottom, transparent 0%, rgba(4, 10, 18, 0.3) 60%, rgba(4, 10, 18, 0.9) 100%);
+  }
+  .subfaction-hero-inner { position: relative; z-index: 3; padding-top: 100px; padding-bottom: 72px; display: flex; flex-direction: column; gap: 18px; }
+  .subfaction-hero-inner h1 { font-family: "Space Grotesk", sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.05em; max-width: 18ch; }
+  .subfaction-hero-inner p { color: #9db0c6; font-size: 1.05rem; line-height: 1.78; max-width: 56ch; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 8px; color: #9db0c6; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: color 220ms ease; align-self: flex-start; }
+  .back-link:hover { color: #f4f8ff; }
+
+  .subfaction-badge { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 34px; padding: 0 14px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .subfaction-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .subfaction-badge--gold { background: rgba(245, 166, 35, 0.12); border: 1px solid rgba(245, 166, 35, 0.26); color: #f5c96a; }
+  .subfaction-badge--gold::before { background: #f5a623; box-shadow: 0 0 12px rgba(245, 166, 35, 0.5); }
+
+  .wip-section { padding-bottom: 0; }
+  .wip-block { border-radius: 28px; border: 1px solid rgba(255,255,255,0.08); background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); padding: 80px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .wip-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; }
+  .wip-text { font-family: "Space Grotesk", sans-serif; font-size: clamp(6rem, 18vw, 14rem); font-weight: 700; letter-spacing: -0.06em; line-height: 1; opacity: 0.12; }
+  .wip-block--gold .wip-text { color: #f5a623; opacity: 0.18; }
+  .wip-sub { color: #9db0c6; font-size: 1rem; line-height: 1.75; max-width: 52ch; margin-top: -8px; }
+</style>

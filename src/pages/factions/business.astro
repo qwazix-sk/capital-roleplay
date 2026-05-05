@@ -1,319 +1,70 @@
 ---
-import MainLayout from "../../layouts/MainLayout.astro";
+import FactionHub from "../../components/FactionHub.astro";
+
+const cards = [
+  {
+    id: "businesses",
+    badge: "Commerce & Retail",
+    eyebrow: "Track 01",
+    title: "Businesses",
+    description:
+      "Retail storefronts, hospitality venues, and service operators that give the city a public economy and a place for day-to-day roleplay to live.",
+    icon: "briefcase",
+    departments: ["Retail", "Hospitality", "Nightlife", "Service Venues"],
+    ctaLabel: "Work in Progress",
+  },
+  {
+    id: "media",
+    badge: "Public Presence",
+    eyebrow: "Track 02",
+    title: "Media & Events",
+    description:
+      "News outlets, creators, promoters, and organisers who shape the city's public image, social calendar, and civilian spotlight moments.",
+    icon: "broadcast",
+    departments: ["Media", "Events", "Promotion", "Branding"],
+    ctaLabel: "Work in Progress",
+  },
+  {
+    id: "community",
+    badge: "Community Layer",
+    eyebrow: "Track 03",
+    title: "Civilian Organisations",
+    description:
+      "Clubs, charities, social groups, and resident networks that turn ordinary characters into long-running communities and stories.",
+    icon: "users",
+    departments: ["Clubs", "Charities", "Communities", "Networks"],
+    ctaLabel: "Work in Progress",
+  },
+];
 ---
 
-<MainLayout title="Business & Civilian Groups — Capital Roleplay">
-
-  <section class="subfaction-hero subfaction-business">
-    <div class="subfaction-hero-bg"></div>
-    <div class="subfaction-hero-noise"></div>
-    <div class="subfaction-hero-overlay"></div>
-    <div class="container subfaction-hero-inner">
-      <a href="/factions" class="back-link">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        All Factions
-      </a>
-      <div class="subfaction-badge subfaction-badge--gold">Civilian Life</div>
-      <h1>Business &amp; Civilian Groups</h1>
-      <p>
-        Player-run businesses, media organisations, and civilian groups that shape
-        the social and economic fabric of the city.
-      </p>
-    </div>
-  </section>
-
-  <section class="section wip-section">
-    <div class="container">
-      <div class="wip-block wip-block--gold">
-        <div class="wip-label">Work in progress</div>
-        <div class="wip-text">WIP</div>
-        <p class="wip-sub">This faction page is being built. Business listings, civilian roles, and how to apply will all be published here before launch.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="cta-box">
-        <div>
-          <h3>Build something in the city.</h3>
-          <p>Get whitelisted first, then bring your business concept to the Discord for review.</p>
-        </div>
-        <a class="button" href="/#apply">Apply for Whitelist</a>
-      </div>
-    </div>
-  </section>
-
-</MainLayout>
-
-<style>
-  .subfaction-hero {
-    position: relative;
-    min-height: 420px;
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
-  }
-
-  .subfaction-hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-
-  .subfaction-business .subfaction-hero-bg {
-    background:
-      radial-gradient(circle at 25% 28%, rgba(245, 166, 35, 0.24) 0%, transparent 52%),
-      radial-gradient(circle at 78% 68%, rgba(200, 120, 0, 0.18) 0%, transparent 44%),
-      linear-gradient(160deg, #130f04 0%, #1e1505 40%, #261a06 75%, #110d03 100%);
-  }
-
-  .subfaction-hero-noise {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-    background-size: 36px 36px;
-    mask-image: radial-gradient(circle at 30% 40%, black 20%, transparent 75%);
-    opacity: 0.4;
-  }
-
-  .subfaction-hero-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(4, 10, 18, 0.3) 60%,
-      rgba(4, 10, 18, 0.9) 100%
-    );
-  }
-
-  .subfaction-hero-inner {
-    position: relative;
-    z-index: 3;
-    padding-top: 100px;
-    padding-bottom: 72px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .subfaction-hero-inner h1 {
-    font-family: "Space Grotesk", sans-serif;
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    line-height: 1;
-    letter-spacing: -0.05em;
-    max-width: 18ch;
-  }
-
-  .subfaction-hero-inner p {
-    color: #9db0c6;
-    font-size: 1.05rem;
-    line-height: 1.78;
-    max-width: 56ch;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #9db0c6;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 220ms ease;
-  }
-
-  .back-link:hover {
-    color: #f4f8ff;
-  }
-
-  .subfaction-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    align-self: flex-start;
-    min-height: 34px;
-    padding: 0 14px;
-    border-radius: 999px;
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .subfaction-badge::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .subfaction-badge--gold {
-    background: rgba(245, 166, 35, 0.1);
-    border: 1px solid rgba(245, 166, 35, 0.24);
-    color: #f5c96a;
-  }
-  .subfaction-badge--gold::before {
-    background: #f5a623;
-    box-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
-  }
-
-  /* ── WIP block ────────────────────────────────────────── */
-  .wip-section { padding-bottom: 0; }
-  .wip-block {
-    border-radius: 28px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-    padding: 80px 40px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-  .wip-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    opacity: 0.5;
-  }
-  .wip-text {
-    font-family: "Space Grotesk", sans-serif;
-    font-size: clamp(6rem, 18vw, 14rem);
-    font-weight: 700;
-    letter-spacing: -0.06em;
-    line-height: 1;
-  }
-  .wip-block--gold .wip-text { color: #f5a623; opacity: 0.18; }
-  .wip-sub {
-    color: #9db0c6;
-    font-size: 1rem;
-    line-height: 1.75;
-    max-width: 52ch;
-    margin-top: -8px;
-  }
-
-  .subfaction-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-
-  .subfaction-panel {
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
-    padding: 28px;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
-  }
-
-  .subfaction-panel h3 {
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-  }
-
-  .subfaction-panel p {
-    color: #9db0c6;
-    line-height: 1.8;
-    font-size: 0.97rem;
-  }
-
-  .subfaction-panel--wide {
-    grid-column: 1 / -1;
-  }
-
-  .subfaction-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    font-size: 1rem;
-    margin-bottom: 18px;
-  }
-
-  .subfaction-icon--gold {
-    background: rgba(245, 166, 35, 0.1);
-    border: 1px solid rgba(245, 166, 35, 0.2);
-    color: #f5c96a;
-  }
-
-  .subfaction-list {
-    list-style: none;
-    display: grid;
-    gap: 10px;
-    margin-top: 18px;
-  }
-
-  .subfaction-list li {
-    display: flex;
-    gap: 10px;
-    color: #c8d5e3;
-    font-size: 0.94rem;
-    line-height: 1.65;
-  }
-
-  .subfaction-list--gold li::before {
-    content: "•";
-    color: #f5a623;
-    font-size: 1.1rem;
-    line-height: 1;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
-
-  .dept-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 22px;
-  }
-
-  .dept-card {
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 18px;
-  }
-
-  .dept-card strong {
-    display: block;
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 0.98rem;
-    margin-bottom: 8px;
-  }
-
-  .dept-card span {
-    color: #9db0c6;
-    font-size: 0.9rem;
-    line-height: 1.65;
-  }
-
-  .dept-card--gold {
-    border-color: rgba(245, 166, 35, 0.12);
-  }
-
-  @media (max-width: 860px) {
-    .subfaction-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .subfaction-panel--wide {
-      grid-column: 1;
-    }
-
-    .dept-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+<FactionHub
+  pageTitle="Business & Civilian Groups - Capital Roleplay"
+  badge="Civilian Life Division"
+  titleLines={["Business & Civilian", "Groups."]}
+  lead="The civilian layer of Capital Roleplay. Player-run business, public-facing media, and community-driven organisations that make the city feel lived in."
+  indexLabel="WIP"
+  footerLabel="WIP"
+  dividerLabel="WIP"
+  dividerMeta="3 / 3"
+  stats={[
+    { value: "03", label: "Sections" },
+    { value: "Player-led", label: "Direction" },
+  ]}
+  cards={cards}
+  heroBackground="radial-gradient(ellipse 60% 80% at 8% 20%, rgba(245, 166, 35, 0.28) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 92% 78%, rgba(190, 120, 20, 0.16) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 60% 8%, rgba(255, 220, 150, 0.10) 0%, transparent 55%), linear-gradient(160deg, #130f04 0%, #1e1505 40%, #261a06 75%, #110d03 100%)"
+  cardBackground="radial-gradient(circle at 28% 30%, rgba(245, 200, 110, 0.42) 0%, transparent 55%), radial-gradient(circle at 78% 76%, rgba(245, 166, 35, 0.30) 0%, transparent 52%), linear-gradient(140deg, #2a1f08 0%, #3d2f10 50%, #1a1306 100%)"
+  cardGlow="radial-gradient(circle at 50% 55%, rgba(255,255,255,0.12) 0%, transparent 60%)"
+  accentColor="#f5a623"
+  accentSoft="#f5c96a"
+  accentBorder="rgba(245,166,35,0.28)"
+  iconColor="#f5d28a"
+  ctaTitle="Build something in the city."
+  ctaBody="Get whitelisted first, then bring your business concept to the Discord for review."
+  showCards={false}
+  wipBox={{
+    label: "Work in Progress",
+    title: "WIP",
+    body: "Business listings, media pathways, and civilian organisation details are still being prepared for launch.",
+  }}
+/>

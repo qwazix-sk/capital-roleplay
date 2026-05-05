@@ -1,21 +1,23 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+
+const RULES_WIP = true;
 ---
 
 <MainLayout title="Rules — Capital Roleplay">
 
-  {/* ── WIP OVERLAY — remove this block when rules are ready ── */}
-  <div class="wip-overlay">
-    <div class="wip-inner">
-      <span class="wip-label">COMING SOON</span>
-      <h1 class="wip-title">WIP</h1>
-      <p class="wip-sub">The rulebook is being finalised. Check back soon.</p>
-      <a href="/" class="button">Back to Home</a>
+  {RULES_WIP && (
+    <div class="wip-overlay">
+      <div class="wip-inner">
+        <span class="wip-label">COMING SOON</span>
+        <h1 class="wip-title">WIP</h1>
+        <p class="wip-sub">The rules page is being updated. Check back soon.</p>
+        <a href="/" class="button">Back to Home</a>
+      </div>
     </div>
-  </div>
-  {/* ── END WIP OVERLAY ── */}
+  )}
 
-  <div class="rules-page" style="display:none">
+  <div class:list={["rules-page", RULES_WIP && "rules-page--hidden"]}>
 
     <!-- Page header -->
     <div class="rules-header">
@@ -1468,6 +1470,10 @@ import MainLayout from "../layouts/MainLayout.astro";
     line-height: 1.6;
   }
 
+  .rules-page--hidden {
+    display: none;
+  }
+
   /* --- Responsive --- */
   @media (max-width: 960px) {
     .rules-outer {
@@ -1531,6 +1537,7 @@ import MainLayout from "../layouts/MainLayout.astro";
     .rules-footer-cta-icon {
       display: none;
     }
+
   }
 </style>
 

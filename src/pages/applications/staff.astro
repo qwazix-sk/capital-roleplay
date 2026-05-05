@@ -7,7 +7,6 @@ import MainLayout from "../../layouts/MainLayout.astro";
   <section class="staff-hero">
     <div class="staff-hero-bg"></div>
     <div class="staff-hero-noise"></div>
-    <div class="staff-hero-overlay"></div>
     <div class="container staff-hero-inner">
       <a href="/applications" class="back-link">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -16,13 +15,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
         All Applications
       </a>
       <div class="staff-badge">
-        <span class="staff-badge-dot"></span>
-        Staff Team · Now Open
+        <span class="staff-badge-label">Staff Team</span>
+        <span class="staff-badge-value">Closed</span>
+        Staff Team · Closed
       </div>
       <h1>Staff Application</h1>
       <p>
-        We're looking for dedicated players to help run Capital Roleplay. Staff members keep the
-        server running, the community healthy, and the standard high.
+        Staff applications are currently closed while we refine the internal workflow.
+        The page will reopen once the next recruitment window is ready.
       </p>
     </div>
   </section>
@@ -39,31 +39,28 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
           <!-- Auth card -->
           <div id="auth-card" class="login-card">
-            <div class="login-badge">Step 1 · Discord login required</div>
-            <h3>Authenticate with Discord first</h3>
+            <div class="login-badge">Recruitment paused</div>
+            <h3>Staff applications are currently closed</h3>
             <p>
-              You must sign in with Discord before submitting a staff application.
-              This verifies your identity and links your application to your account.
+              We are not taking new staff applications right now. When recruitment reopens,
+              this page will be updated and the full Discord-linked application flow will return.
             </p>
-            <div style="margin-top: 22px;">
-              <a class="button discord" href="/api/auth/discord?from=/applications/staff">Continue with Discord</a>
-            </div>
             <ul class="login-points" style="margin-top: 22px;">
-              <li>Discord account required before applying</li>
-              <li>Identity verified via OAuth2</li>
-              <li>Application forwarded to the staff review channel</li>
+              <li>Applications are temporarily closed</li>
+              <li>The form will reopen here when recruitment resumes</li>
+              <li>Whitelist access is still required once applications return</li>
             </ul>
           </div>
 
           <!-- Form -->
           <div id="apply-form-wrapper" class="application-form application-form--locked">
             <h3>Staff application form</h3>
-            <p id="form-status-text">Sign in with Discord on the left to unlock and submit this application.</p>
+            <p id="form-status-text">Staff applications are currently closed.</p>
 
             <div id="form-locked-overlay" class="form-locked">
               <div>
-                <strong>Form locked</strong>
-                <span>Sign in with Discord to unlock.</span>
+                <strong>Applications closed</strong>
+                <span>Recruitment will reopen on a later date.</span>
               </div>
             </div>
 
@@ -118,9 +115,9 @@ import MainLayout from "../../layouts/MainLayout.astro";
               </div>
 
               <div class="form-footer">
-                <div id="form-note-text" class="form-note">Sign in with Discord to enable submission.</div>
+                <div id="form-note-text" class="form-note">This form is unavailable while staff recruitment is paused.</div>
                 <button type="submit" id="submit-btn" class="button submit-disabled" disabled>
-                  Submit Application
+                  Applications Closed
                 </button>
               </div>
             </form>
@@ -132,6 +129,8 @@ import MainLayout from "../../layouts/MainLayout.astro";
   </section>
 
   <script>
+    const STAFF_APPLICATIONS_OPEN = false;
+
     (function () {
       function esc(str: string) {
         return String(str)
@@ -150,6 +149,69 @@ import MainLayout from "../../layouts/MainLayout.astro";
       if (urlParams.get('error') === 'oauth') {
         const errEl = document.getElementById('oauth-error-msg');
         if (errEl) errEl.style.display = 'block';
+      }
+
+      if (!STAFF_APPLICATIONS_OPEN) {
+        const authCard = document.getElementById('auth-card');
+        const statusText = document.getElementById('form-status-text');
+        const noteText = document.getElementById('form-note-text');
+        const overlay = document.getElementById('form-locked-overlay');
+        const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+        if (statusText) statusText.textContent = 'Staff applications are currently closed.';
+        if (noteText) noteText.textContent = 'This form will reopen once the next recruitment window is announced.';
+        if (overlay) {
+          overlay.innerHTML = `<div><strong>Applications closed</strong><span>Recruitment will reopen on a later date.</span></div>`;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Applications Closed';
+        }
+
+        if (authCard) {
+          if (discordUser) {
+            const avatarUrl = discordUser.avatar
+              ? `https://cdn.discordapp.com/avatars/${esc(discordUser.id)}/${esc(discordUser.avatar)}.png?size=64`
+              : `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+            authCard.className = 'login-card login-card--authed';
+            authCard.innerHTML = `
+              <div class="login-badge login-badge--ok">Recruitment paused</div>
+              <h3>Signed in with Discord</h3>
+              <div class="dc-user-row">
+                <img class="dc-user-avatar" src="${avatarUrl}" alt="Discord avatar" />
+                <div>
+                  <strong class="dc-user-name">${esc(discordUser.username)}</strong>
+                  <span class="dc-user-id">ID ${esc(discordUser.id)}</span>
+                </div>
+              </div>
+              <ul class="login-points" style="margin-top:22px">
+                <li>Your account is recognised</li>
+                <li>New staff applications are not being accepted yet</li>
+                <li>Check back here when recruitment reopens</li>
+              </ul>
+              <div style="margin-top:24px">
+                <a class="button ghost small logout" href="/api/auth/logout?from=/applications/staff">Sign out</a>
+              </div>
+            `;
+          } else {
+            authCard.innerHTML = `
+              <div class="login-badge">Recruitment paused</div>
+              <h3>Staff applications are currently closed</h3>
+              <p>
+                We are not taking staff applications at the moment. When recruitment resumes,
+                the Discord sign-in and whitelist checks will be restored here.
+              </p>
+              <ul class="login-points" style="margin-top: 22px;">
+                <li>Applications are temporarily closed</li>
+                <li>The full application flow will return on this page</li>
+                <li>Whitelist access will still be required once it reopens</li>
+              </ul>
+            `;
+          }
+        }
+
+        return;
       }
 
       if (!discordUser) return;
@@ -360,6 +422,13 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!STAFF_APPLICATIONS_OPEN) {
+        if (errorEl) {
+          errorEl.textContent = 'Staff applications are currently closed.';
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
       if (!submitBtn || submitBtn.disabled) return;
 
       const age            = (document.getElementById('age') as HTMLInputElement).value.trim();
@@ -449,7 +518,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
     inset: 0;
     z-index: 0;
     background:
-      url('https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/capital-roleplay-staff-applications-subpage.webp') center top / cover no-repeat;
+      url('https://pub-80ebeb36fdbb49b4966de28f8ce1b7a3.r2.dev/website/capital-staff-applications-no-text.png') center top / cover no-repeat;
   }
 
   .staff-hero-noise {
@@ -544,5 +613,46 @@ import MainLayout from "../../layouts/MainLayout.astro";
   @keyframes pulse-staff {
     0%, 100% { box-shadow: 0 0 6px rgba(245,166,35,0.6); }
     50%       { box-shadow: 0 0 16px rgba(245,166,35,1); }
+  }
+
+  .staff-hero-inner {
+    gap: 16px;
+  }
+
+  .staff-hero-inner p {
+    margin-top: 0;
+  }
+
+  .staff-badge {
+    gap: 4px;
+    padding: 4px;
+    font-size: 0;
+    background: rgba(9, 14, 22, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .staff-badge-label,
+  .staff-badge-value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .staff-badge-label {
+    color: #7f93a8;
+    background: rgba(255, 255, 255, 0.03);
+    font-weight: 600;
+  }
+
+  .staff-badge-value {
+    color: #f0b1b1;
+    background: rgba(110, 42, 42, 0.34);
+    font-weight: 700;
   }
 </style>
