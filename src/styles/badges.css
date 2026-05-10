@@ -1,0 +1,157 @@
+/* ── Status tag — angled parallelogram badge ─────────────────────────────
+   Solid near-black body for legibility; variant color lives on icon + border + glow.
+   Used across factions cards, server panel WIP/Live/Offline label, Discord "Online" pill.
+   Variants: --featured (cyan), --bestseller (amber), --popular (red), --live (green). */
+
+.fc-status-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  width: fit-content;
+  max-width: fit-content;
+  gap: 9px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  line-height: 1;
+  font-weight: 700;
+  font-family: "Space Grotesk", sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  color: #f4f8ff;
+  transition: color 220ms ease;
+  isolation: isolate;
+}
+.fc-status-tag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: skewX(-9deg);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(22, 26, 34, 0.96) 0%, rgba(10, 12, 16, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 280ms ease, box-shadow 280ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.fc-status-tag > i {
+  position: relative;
+  z-index: 1;
+  font-size: 0.92rem;
+  line-height: 1;
+  transition: color 220ms ease, filter 220ms ease;
+}
+.fc-status-tag > span { position: relative; z-index: 1; }
+
+/* Featured — cyan */
+.fc-status-tag--featured > i { color: #5ec8ff; filter: drop-shadow(0 0 6px rgba(0, 174, 255, 0.55)); }
+.fc-status-tag--featured::before {
+  border-color: rgba(0, 174, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.38),
+    0 0 10px rgba(0, 174, 255, 0.28),
+    0 0 22px rgba(0, 174, 255, 0.14);
+}
+
+/* Best Seller — amber */
+.fc-status-tag--bestseller > i { color: #ffc46a; filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.55)); }
+.fc-status-tag--bestseller::before {
+  border-color: rgba(245, 166, 35, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.38),
+    0 0 10px rgba(245, 166, 35, 0.26),
+    0 0 22px rgba(245, 166, 35, 0.12);
+}
+
+/* Popular — red */
+.fc-status-tag--popular > i { color: #ff8a8a; filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.55)); }
+.fc-status-tag--popular::before {
+  border-color: rgba(239, 68, 68, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.38),
+    0 0 10px rgba(239, 68, 68, 0.26),
+    0 0 22px rgba(239, 68, 68, 0.12);
+}
+
+/* Live — green (online / active) */
+.fc-status-tag--live { color: #f4f8ff; }
+.fc-status-tag--live > i { color: #74e8a4; filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.6)); }
+.fc-status-tag--live::before {
+  border-color: rgba(74, 222, 128, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.38),
+    0 0 10px rgba(74, 222, 128, 0.3),
+    0 0 22px rgba(74, 222, 128, 0.16);
+}
+/* Subtle pulsing breath on the live variant — signals "currently online" */
+.fc-status-tag--live::before {
+  animation: fc-status-live-pulse 2.6s ease-in-out infinite;
+}
+@keyframes fc-status-live-pulse {
+  0%, 100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 6px 18px rgba(0, 0, 0, 0.38),
+      0 0 10px rgba(74, 222, 128, 0.3),
+      0 0 22px rgba(74, 222, 128, 0.16);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 6px 18px rgba(0, 0, 0, 0.38),
+      0 0 14px rgba(74, 222, 128, 0.45),
+      0 0 30px rgba(74, 222, 128, 0.22);
+  }
+}
+
+/* Hover-intensify when sitting inside a faction-card link (factions hub only).
+   No transform — only glow + border to avoid layout shift. */
+.faction-card:hover .fc-status-tag--featured > i { filter: drop-shadow(0 0 9px rgba(0, 174, 255, 0.85)); }
+.faction-card:hover .fc-status-tag--featured::before {
+  border-color: rgba(0, 174, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 22px rgba(0, 0, 0, 0.42),
+    0 0 14px rgba(0, 174, 255, 0.42),
+    0 0 30px rgba(0, 174, 255, 0.2);
+}
+.faction-card:hover .fc-status-tag--bestseller > i { filter: drop-shadow(0 0 9px rgba(245, 166, 35, 0.85)); }
+.faction-card:hover .fc-status-tag--bestseller::before {
+  border-color: rgba(245, 166, 35, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 22px rgba(0, 0, 0, 0.42),
+    0 0 14px rgba(245, 166, 35, 0.42),
+    0 0 30px rgba(245, 166, 35, 0.2);
+}
+.faction-card:hover .fc-status-tag--popular > i { filter: drop-shadow(0 0 9px rgba(239, 68, 68, 0.85)); }
+.faction-card:hover .fc-status-tag--popular::before {
+  border-color: rgba(239, 68, 68, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 22px rgba(0, 0, 0, 0.42),
+    0 0 14px rgba(239, 68, 68, 0.42),
+    0 0 30px rgba(239, 68, 68, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-status-tag,
+  .fc-status-tag::before,
+  .fc-status-tag > i { transition: none; }
+  .fc-status-tag--live::before { animation: none; }
+}

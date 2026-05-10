@@ -2,34 +2,34 @@
 import MainLayout from "../../../layouts/MainLayout.astro";
 ---
 
-<MainLayout title="Courts & Tribunals Service — Capital Roleplay">
+<MainLayout title="Fire & Rescue Service — Capital Roleplay">
 
-  <section class="subfaction-hero subfaction-courts">
+  <section class="subfaction-hero subfaction-fire">
     <div class="subfaction-hero-bg"></div>
     <div class="subfaction-hero-noise"></div>
     <div class="subfaction-hero-overlay"></div>
     <div class="container subfaction-hero-inner">
-      <a href="/factions/police" class="back-link">
+      <a href="/factions/civil-services" class="back-link">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Police, Emergency &amp; Courts
+        Civil Services
       </a>
-      <div class="subfaction-badge subfaction-badge--gold">Justice &amp; Tribunals</div>
-      <h1>Courts &amp; Tribunals Service</h1>
+      <div class="subfaction-badge subfaction-badge--orange">Fire &amp; Rescue</div>
+      <h1>Fire &amp; Rescue Service</h1>
       <p>
-        Judges, prosecutors, defence counsel, and tribunal panels. The judiciary that turns
-        arrests into rulings and gives every citizen due process.
+        Fire suppression, technical rescue, and hazmat response. Pumps, ladders, and scene
+        command — holding the line between disaster and the city.
       </p>
     </div>
   </section>
 
   <section class="section wip-section">
     <div class="container">
-      <div class="wip-block wip-block--gold">
+      <div class="wip-block wip-block--orange">
         <div class="wip-label">Work in progress</div>
         <div class="wip-text">WIP</div>
-        <p class="wip-sub">Court structure, judicial appointments, and trial procedure will be published here before launch.</p>
+        <p class="wip-sub">Service structure, training tracks, and recruitment standards will be published here before launch.</p>
       </div>
     </div>
   </section>
@@ -38,8 +38,8 @@ import MainLayout from "../../../layouts/MainLayout.astro";
     <div class="container">
       <div class="cta-box">
         <div>
-          <h3>Interested in legal roleplay?</h3>
-          <p>Get whitelisted first, then express interest in the Courts & Tribunals Service through Discord.</p>
+          <h3>Ready to answer the call?</h3>
+          <p>Get whitelisted first, then apply for the fire &amp; rescue service through Discord once recruitment opens.</p>
         </div>
         <a class="button" href="/#apply">Apply for Whitelist</a>
       </div>
@@ -51,11 +51,11 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 <style>
   .subfaction-hero { position: relative; min-height: 420px; display: flex; align-items: flex-end; overflow: hidden; }
   .subfaction-hero-bg { position: absolute; inset: 0; z-index: 0; }
-  .subfaction-courts .subfaction-hero-bg {
+  .subfaction-fire .subfaction-hero-bg {
     background:
-      radial-gradient(circle at 22% 30%, rgba(245, 200, 110, 0.32) 0%, transparent 52%),
-      radial-gradient(circle at 80% 70%, rgba(245, 166, 35, 0.22) 0%, transparent 44%),
-      linear-gradient(160deg, #1a1306 0%, #2a1f08 40%, #20180a 75%, #140e05 100%);
+      radial-gradient(circle at 22% 30%, rgba(255, 165, 60, 0.34) 0%, transparent 52%),
+      radial-gradient(circle at 80% 70%, rgba(220, 90, 30, 0.26) 0%, transparent 44%),
+      linear-gradient(160deg, #1a0d05 0%, #2a1408 40%, #20100a 75%, #140805 100%);
   }
   .subfaction-hero-noise {
     position: absolute; inset: 0; z-index: 1;
@@ -79,13 +79,13 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 
   .subfaction-badge { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 34px; padding: 0 14px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
   .subfaction-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .subfaction-badge--gold { background: rgba(245, 166, 35, 0.12); border: 1px solid rgba(245, 166, 35, 0.26); color: #f5c96a; }
-  .subfaction-badge--gold::before { background: #f5a623; box-shadow: 0 0 12px rgba(245, 166, 35, 0.5); }
+  .subfaction-badge--orange { background: rgba(245, 140, 35, 0.12); border: 1px solid rgba(245, 140, 35, 0.28); color: #ffb872; }
+  .subfaction-badge--orange::before { background: #ff9a3c; box-shadow: 0 0 12px rgba(245, 140, 35, 0.55); }
 
   .wip-section { padding-bottom: 0; }
   .wip-block { border-radius: 28px; border: 1px solid rgba(255,255,255,0.08); background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); padding: 80px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
   .wip-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; }
   .wip-text { font-family: "Space Grotesk", sans-serif; font-size: clamp(6rem, 18vw, 14rem); font-weight: 700; letter-spacing: -0.06em; line-height: 1; opacity: 0.12; }
-  .wip-block--gold .wip-text { color: #f5a623; opacity: 0.18; }
+  .wip-block--orange .wip-text { color: #ff9a3c; opacity: 0.20; }
   .wip-sub { color: #9db0c6; font-size: 1rem; line-height: 1.75; max-width: 52ch; margin-top: -8px; }
 </style>

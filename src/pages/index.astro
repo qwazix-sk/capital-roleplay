@@ -1,5 +1,15 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+
+// Initial countdown values rendered at build time so first paint is approximate;
+// the client-side JS smooths to the exact remaining time within ms of hydration.
+const LAUNCH_AT_MS = Date.UTC(2026, 4, 15, 18, 0, 0); // Fri 15 May 2026, 18:00 UTC
+const _remaining = Math.max(0, LAUNCH_AT_MS - Date.now());
+const _totalSeconds = Math.floor(_remaining / 1000);
+const initialDays    = Math.floor(_totalSeconds / 86400);
+const initialHours   = Math.floor((_totalSeconds % 86400) / 3600);
+const initialMinutes = Math.floor((_totalSeconds % 3600) / 60);
+const initialSeconds = _totalSeconds % 60;
 ---
 
 <MainLayout title="Capital Roleplay — Serious UK FiveM Roleplay">
@@ -45,10 +55,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
         <div class="panel-card panel-main panel-main--release-soon" id="fivemPanel">
           <div class="pm-header">
-            <div class="pm-identity" id="fivemIdentity">
-              <span class="pm-dot" id="fivemStatusDot"></span>
-              <span class="pm-status-label" id="fivemStatusLabel">WIP</span>
-            </div>
+            <div class="pm-identity" id="fivemIdentity"></div>
             <span class="pm-server-name">Capital Roleplay</span>
           </div>
 
@@ -59,9 +66,18 @@ import MainLayout from "../layouts/MainLayout.astro";
             <span class="pm-in-game">Players in-game</span>
           </div>
 
-          <div class="pm-release-block" aria-live="polite">
-            <strong>Release Date</strong>
-            <span>Will be released soon</span>
+          <div class="pm-release-block" id="fivemReleaseBlock">
+            <span class="pm-release-eyebrow">Clear Your Calendar</span>
+            <p class="pm-release-countdown" id="fivemCountdownText" aria-live="off">
+              <span class="pm-release-countdown-label">Server releases in:</span>
+              <span class="pm-release-countdown-time">
+                <b id="cdDays">{initialDays} day{initialDays === 1 ? "" : "s"}</b>,
+                <b id="cdHours">{initialHours} hr{initialHours === 1 ? "" : "s"}</b>,
+                <b id="cdMinutes">{initialMinutes} min{initialMinutes === 1 ? "" : "s"}</b>,
+                <b id="cdSeconds">{initialSeconds} sec{initialSeconds === 1 ? "" : "s"}</b>
+              </span>
+            </p>
+            <span class="pm-release-date">Fri 15 May 2026 · 6PM GMT</span>
           </div>
 
           <div class="pm-offline-block" aria-live="polite">
@@ -70,7 +86,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           </div>
 
           <a class="pm-connect" id="fivemConnectBtn" href="#" target="_blank" rel="noreferrer">
-            Release coming soon <i class="fa-solid fa-arrow-right"></i>
+            Apply for whitelist to join launch day <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </div>
@@ -182,10 +198,10 @@ import MainLayout from "../layouts/MainLayout.astro";
         <div class="dc-cards">
 
           <div class="dc-stats-card">
-            <div class="dc-live-row">
-              <span class="dc-live-dot"></span>
-              <span class="dc-live-text">Live Stats</span>
-            </div>
+            <span class="fc-status-tag fc-status-tag--featured dc-live-tag">
+              <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+              <span>Live Stats</span>
+            </span>
             <div class="dc-numbers-row">
               <div class="dc-num-block">
                 <strong id="discordMemberCount" data-fallback="—">—</strong>
@@ -201,10 +217,10 @@ import MainLayout from "../layouts/MainLayout.astro";
           </div>
 
           <div class="dc-join-card">
-            <div class="dc-online-pill">
-              <span class="dc-online-dot"></span>
+            <span class="fc-status-tag fc-status-tag--live dc-online-tag">
+              <span class="dc-online-dot" aria-hidden="true"></span>
               <span>Online</span>
-            </div>
+            </span>
             <h3 class="dc-join-title">Capital Roleplay</h3>
             <p class="dc-join-body">Discord is where the community lives. Join to apply for whitelist, follow updates, and connect before you enter the city.</p>
             <a class="dc-join-btn" href="https://discord.gg/drpNDbTgBM" target="_blank" rel="noreferrer">
@@ -283,7 +299,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                 <div class="field">
                   <label for="dob">Date of Birth (IRL) <span class="field-required">*</span></label>
-                  <input id="dob" name="dob" type="text" placeholder="mm/dd/yyyy" maxlength="10" disabled />
+                  <input id="dob" name="dob" type="text" inputmode="numeric" autocomplete="bday" placeholder="mm/dd/yyyy" maxlength="10" disabled />
                 </div>
 
                 <div class="field full">
@@ -461,53 +477,37 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
     })();
 
-    // ── DOB masked input (mm/dd/yyyy with _ placeholders, keydown-driven) ────
+    // ── DOB formatter (mm/dd/yyyy, input-driven, IME-safe) ──────────────────
+    // Value holds only real digits + slash separators. No underscore padding,
+    // no setSelectionRange, no keydown preventDefault — those break Samsung
+    // Keyboard / GBoard composition on Android.
     const dobEl = document.getElementById('dob') as HTMLInputElement | null;
     if (dobEl) {
-      let dobDigits = '';
+      let dobPrev = '';
 
-      function applyDobMask(d: string): string {
-        const mm   = (d.slice(0, 2) + '__').slice(0, 2);
-        const dd   = (d.slice(2, 4) + '__').slice(0, 2);
-        const yyyy = (d.slice(4, 8) + '____').slice(0, 4);
-        return `${mm}/${dd}/${yyyy}`;
+      function formatDob(digits: string): string {
+        digits = digits.slice(0, 8);
+        let out = digits.slice(0, 2);
+        if (digits.length >= 2) out += '/' + digits.slice(2, 4);
+        if (digits.length >= 4) out += '/' + digits.slice(4, 8);
+        return out;
       }
 
-      // Cursor sits right after the last typed digit (skipping slashes)
-      function cursorPos(d: string): number {
-        const len = d.length;
-        if (len <= 2) return len;
-        if (len <= 4) return len + 1;
-        return len + 2;
-      }
-
-      function commit(d: string) {
-        dobDigits = d;
-        dobEl.value = d ? applyDobMask(d) : '';
-        if (d) {
-          const pos = cursorPos(d);
-          dobEl.setSelectionRange(pos, pos);
-        }
-      }
-
-      dobEl.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Backspace') {
-          e.preventDefault();
-          commit(dobDigits.slice(0, -1));
-        } else if (/^\d$/.test(e.key) && dobDigits.length < 8) {
-          e.preventDefault();
-          commit(dobDigits + e.key);
-        }
-      });
-
-      // Handle paste / autofill
       dobEl.addEventListener('input', () => {
-        const raw = dobEl.value.replace(/\D/g, '').slice(0, 8);
-        commit(raw);
-      });
-
-      dobEl.addEventListener('blur', () => {
-        if (!dobDigits) dobEl.value = '';
+        let digits = dobEl.value.replace(/\D/g, '').slice(0, 8);
+        // If the user deleted a slash (length shrank but digit count didn't),
+        // also drop the preceding digit so backspace feels natural.
+        const prevDigits = dobPrev.replace(/\D/g, '');
+        if (
+          dobEl.value.length < dobPrev.length &&
+          digits.length === prevDigits.length &&
+          digits.length > 0
+        ) {
+          digits = digits.slice(0, -1);
+        }
+        const formatted = formatDob(digits);
+        if (formatted !== dobEl.value) dobEl.value = formatted;
+        dobPrev = formatted;
       });
     }
 
@@ -756,6 +756,48 @@ import MainLayout from "../layouts/MainLayout.astro";
     const fivemLabelEl    = document.getElementById("fivemStatusLabel");
     const fivemConnectBtn = document.getElementById("fivemConnectBtn") as HTMLAnchorElement | null;
 
+    // ── Launch countdown ────────────────────────────────────────────────────
+    // Updates the four <b> nodes (cdDays / cdHours / cdMinutes / cdSeconds)
+    // every second. At t≤0 the sentence collapses to a "server is live now"
+    // line and the timer clears — renderFiveM handles the actual go-live state.
+    {
+      const cdDaysEl    = document.getElementById("cdDays");
+      const cdHoursEl   = document.getElementById("cdHours");
+      const cdMinutesEl = document.getElementById("cdMinutes");
+      const cdSecondsEl = document.getElementById("cdSeconds");
+      const cdTextEl    = document.getElementById("fivemCountdownText");
+
+      if (cdDaysEl && cdHoursEl && cdMinutesEl && cdSecondsEl && cdTextEl) {
+        const LAUNCH_AT = Date.UTC(2026, 4, 15, 18, 0, 0); // Fri 15 May 2026, 18:00 UTC
+        let countdownTimer: ReturnType<typeof setInterval> | null = null;
+
+        function tickCountdown() {
+          if (!cdDaysEl || !cdHoursEl || !cdMinutesEl || !cdSecondsEl || !cdTextEl) return;
+          const remaining = LAUNCH_AT - Date.now();
+          if (remaining <= 0) {
+            cdTextEl.textContent = "The server is live now.";
+            if (countdownTimer !== null) {
+              clearInterval(countdownTimer);
+              countdownTimer = null;
+            }
+            return;
+          }
+          const totalSeconds = Math.floor(remaining / 1000);
+          const days    = Math.floor(totalSeconds / 86400);
+          const hours   = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          cdDaysEl.textContent    = `${days} day${days       === 1 ? "" : "s"}`;
+          cdHoursEl.textContent   = `${hours} hr${hours      === 1 ? "" : "s"}`;
+          cdMinutesEl.textContent = `${minutes} min${minutes === 1 ? "" : "s"}`;
+          cdSecondsEl.textContent = `${seconds} sec${seconds === 1 ? "" : "s"}`;
+        }
+
+        tickCountdown();
+        countdownTimer = setInterval(tickCountdown, 1000);
+      }
+    }
+
     let cachedPlayers = parseInt(localStorage.getItem(FIVEM_CACHE_P) ?? "0", 10);
     let cachedMax     = parseInt(localStorage.getItem(FIVEM_CACHE_M) ?? "0", 10);
     let displayedPlayers = cachedPlayers;
@@ -769,18 +811,18 @@ import MainLayout from "../layouts/MainLayout.astro";
       fivemPanelEl?.classList.add("panel-main--release-soon");
 
       if (fivemDotEl) {
-        fivemDotEl.className = "pm-dot pm-dot--release-soon";
+        fivemDotEl.className = "pm-dot pm-dot--hidden";
       }
       if (fivemIdentityEl) {
         fivemIdentityEl.className = "pm-identity pm-identity--release-soon";
       }
       if (fivemLabelEl) {
         fivemLabelEl.textContent = "WIP";
-        fivemLabelEl.className = "pm-status-label pm-status-label--release-soon";
+        fivemLabelEl.className = "fc-status-tag fc-status-tag--bestseller";
       }
       if (fivemConnectBtn) {
         fivemConnectBtn.classList.add("is-release-soon");
-        fivemConnectBtn.innerHTML = "Release coming soon";
+        fivemConnectBtn.innerHTML = 'Apply for whitelist to join launch day <i class="fa-solid fa-arrow-right"></i>';
       }
     }
 
@@ -839,7 +881,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
       if (fivemLabelEl) {
         fivemLabelEl.textContent = online ? "Live" : "Offline";
-        fivemLabelEl.className   = "pm-status-label " + (online ? "pm-status-label--online" : "pm-status-label--offline");
+        fivemLabelEl.className   = "fc-status-tag " + (online ? "fc-status-tag--live" : "fc-status-tag--popular");
       }
       if (fivemConnectBtn) {
         if (online) {

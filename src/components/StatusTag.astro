@@ -1,0 +1,17 @@
+---
+type Variant = "featured" | "bestseller" | "popular" | "live";
+
+interface Props {
+  variant: Variant;
+  icon?: string;
+  id?: string;
+  class?: string;
+}
+
+const { variant, icon, id, class: className = "" } = Astro.props;
+const cls = `fc-status-tag fc-status-tag--${variant} ${className}`.trim();
+---
+<span class={cls} id={id}>
+  {icon && <i class={`fa-solid ${icon}`} aria-hidden="true"></i>}
+  <span><slot /></span>
+</span>

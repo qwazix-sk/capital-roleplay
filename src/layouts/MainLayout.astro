@@ -1,4 +1,6 @@
 ---
+import "../styles/badges.css";
+
 const {
   title = "Capital Roleplay",
   description = "A whitelisted FiveM server built for players who want a cleaner, more immersive, and more deliberate roleplay environment. Custom vehicles, clothing, weapons, and scripts — 18+.",
@@ -579,33 +581,10 @@ const navItems = [
         justify-content: space-between;
       }
 
+      /* Bare flex wrapper — chrome lives on the inner .fc-status-tag badge. */
       .pm-identity {
         display: inline-flex;
         align-items: center;
-        gap: 7px;
-        padding: 4px 9px 4px 8px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.06);
-        transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-      }
-
-      .pm-identity--online {
-        background: rgba(34,197,94,0.08);
-        border-color: rgba(34,197,94,0.28);
-        box-shadow: 0 0 14px rgba(34,197,94,0.12);
-      }
-
-      .pm-identity--offline {
-        background: rgba(239,68,68,0.08);
-        border-color: rgba(239,68,68,0.32);
-        box-shadow: 0 0 14px rgba(239,68,68,0.12);
-      }
-
-      .pm-identity--release-soon {
-        background: rgba(245,166,35,0.12);
-        border-color: rgba(245,166,35,0.28);
-        box-shadow: 0 0 14px rgba(245,166,35,0.14);
       }
 
       .pm-dot {
@@ -655,19 +634,6 @@ const navItems = [
         .pm-dot--offline,
         .pm-dot--release-soon { animation: none; }
       }
-
-      .pm-status-label {
-        font-size: 0.62rem;
-        font-weight: 800;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--muted);
-        transition: color 0.3s;
-      }
-
-      .pm-status-label--online  { color: #4ade80; }
-      .pm-status-label--offline { color: #f87171; }
-      .pm-status-label--release-soon { color: #f5c96a; }
 
       .pm-server-name {
         font-size: 0.72rem;
@@ -735,29 +701,72 @@ const navItems = [
         display: none;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 14px;
         position: relative;
         z-index: 1;
-        padding: 6px 0;
+        padding: 10px 4px 4px;
+        text-align: center;
       }
 
-      .pm-release-block strong {
+      .pm-release-eyebrow {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 2rem;
+        font-size: clamp(1.4rem, 4.6vw, 1.9rem);
         font-weight: 800;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: #f5c96a;
         line-height: 1;
-        text-shadow: 0 0 18px rgba(245,166,35,0.28);
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        align-self: stretch;
+        text-align: center;
+        background: linear-gradient(135deg, #bfeaff 0%, #79d6ff 45%, #00aeff 100%);
+        -webkit-background-clip: text;
+                background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 22px rgba(0, 174, 255, 0.32));
       }
 
-      .pm-release-block span {
-        font-size: 0.72rem;
+      .pm-release-countdown {
+        margin: 0;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: #c8d5e3;
+        max-width: 34ch;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .pm-release-countdown-label {
+        color: #9db0c6;
+        letter-spacing: 0.02em;
+      }
+
+      .pm-release-countdown-time {
+        display: block;
+        text-align: center;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        font-size: 1.02rem;
+        line-height: 1.4;
+      }
+
+      .pm-release-countdown b {
+        font-weight: 700;
+        white-space: nowrap;
+        background: linear-gradient(180deg, #ffffff 0%, #cfe5ff 100%);
+        -webkit-background-clip: text;
+                background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.22));
+      }
+
+      .pm-release-date {
+        font-size: 0.7rem;
         font-weight: 800;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: #f5c96a;
+        color: #79d6ff;
         opacity: 0.9;
       }
 
@@ -867,17 +876,22 @@ const navItems = [
       .pm-connect.is-offline i { display: none; }
 
       .pm-connect.is-release-soon {
-        background: rgba(245,166,35,0.1);
-        border-color: rgba(245,166,35,0.26);
-        color: #fcd47a;
+        background: linear-gradient(135deg, rgba(0,174,255,0.18) 0%, rgba(0,174,255,0.06) 100%);
+        border-color: rgba(0, 174, 255, 0.38);
+        color: #bfeaff;
         pointer-events: none;
-        opacity: 0.9;
+        opacity: 1;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          0 0 24px rgba(0, 174, 255, 0.18);
       }
 
       .pm-connect.is-release-soon i { display: none; }
 
       .panel-main--release-soon::after {
-        background: radial-gradient(ellipse 80% 80% at 50% 110%, rgba(245,166,35,0.12), transparent 65%);
+        background:
+          radial-gradient(ellipse 90% 70% at 50% 0%, rgba(0,174,255,0.16), transparent 60%),
+          radial-gradient(ellipse 80% 80% at 50% 110%, rgba(0,174,255,0.14), transparent 65%);
       }
 
       .panel-main--release-soon .pm-body,
@@ -887,6 +901,11 @@ const navItems = [
 
       .panel-main--release-soon .pm-release-block {
         display: flex;
+      }
+
+      /* Release-soon panel has its own headline — hide the redundant server name. */
+      .panel-main--release-soon .pm-server-name {
+        display: none;
       }
 
       .stats-row,
@@ -2010,36 +2029,8 @@ const navItems = [
 
       /* — Left: stats — */
 
-      .dc-live-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 22px;
-      }
-
-      .dc-live-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--primary);
-        box-shadow: 0 0 10px rgba(0, 174, 255, 0.5);
-        animation: dc-pulse 2s ease-in-out infinite;
-        flex-shrink: 0;
-      }
-
-      @keyframes dc-pulse {
-        0%, 100% { box-shadow: 0 0 6px rgba(0, 174, 255, 0.4); }
-        50%       { box-shadow: 0 0 16px rgba(0, 174, 255, 0.75); }
-      }
-
-      .dc-live-text {
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: #9fe6ff;
-      }
+      /* "Live Stats" badge — same treatment as Discord "Online". */
+      .dc-live-tag { margin-bottom: 22px; }
 
       .dc-numbers-row {
         display: flex;
@@ -2116,41 +2107,35 @@ const navItems = [
 
       .dc-join-card > * { position: relative; z-index: 1; }
 
-      .dc-online-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        height: 28px;
-        padding: 0 12px;
-        border-radius: 999px;
-        background: rgba(34, 197, 94, 0.14);
-        border: 1px solid rgba(34, 197, 94, 0.32);
-        width: fit-content;
-        margin-bottom: 18px;
-      }
-
-      .dc-online-pill span:last-child {
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #4ade80;
-      }
-
-      .dc-online-dot {
-        display: inline-block;
-        width: 7px;
-        height: 7px;
+      /* ── Discord "Online" badge — fc-status-tag with CSS breathing dot ── */
+      .dc-online-tag { margin-bottom: 18px; }
+      .dc-online-tag .dc-online-dot {
+        position: relative;
+        z-index: 1;
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
-        background: #4ade80;
-        box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
-        animation: dc-pulse-green 2s ease-in-out infinite;
+        background: #74e8a4;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.65);
+        transform-origin: center;
+        animation: dc-online-breath 1.8s ease-in-out infinite;
         flex-shrink: 0;
       }
-
-      @keyframes dc-pulse-green {
-        0%, 100% { box-shadow: 0 0 6px rgba(74, 222, 128, 0.5); }
-        50%       { box-shadow: 0 0 14px rgba(74, 222, 128, 0.9); }
+      @keyframes dc-online-breath {
+        0%, 100% {
+          transform: scale(0.85);
+          box-shadow: 0 0 6px rgba(74, 222, 128, 0.45);
+        }
+        50% {
+          transform: scale(1.3);
+          box-shadow: 0 0 14px rgba(74, 222, 128, 0.95);
+        }
+      }
+      /* The dot already breathes — silence the ::before pulse on this specific tag
+         to avoid double-animation. */
+      .dc-online-tag::before { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        .dc-online-tag .dc-online-dot { animation: none; }
       }
 
       .dc-join-title {

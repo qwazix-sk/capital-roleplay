@@ -2,24 +2,24 @@
 import MainLayout from "../../../layouts/MainLayout.astro";
 ---
 
-<MainLayout title="Emergency Service — Capital Roleplay">
+<MainLayout title="Health Service — Capital Roleplay">
 
-  <section class="subfaction-hero subfaction-emergency">
+  <section class="subfaction-hero subfaction-health">
     <div class="subfaction-hero-bg"></div>
     <div class="subfaction-hero-noise"></div>
     <div class="subfaction-hero-overlay"></div>
     <div class="container subfaction-hero-inner">
-      <a href="/factions/police" class="back-link">
+      <a href="/factions/civil-services" class="back-link">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.25 8H3.75M3.75 8L7.25 4.5M3.75 8L7.25 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Police, Emergency &amp; Courts
+        Civil Services
       </a>
-      <div class="subfaction-badge subfaction-badge--red">First Responders</div>
-      <h1>Emergency Service</h1>
+      <div class="subfaction-badge subfaction-badge--red">Medical Response</div>
+      <h1>Health Service</h1>
       <p>
-        Paramedics and fire response. The first on scene when seconds matter — medical care,
-        rescue operations, and incident command across the city.
+        Paramedics, air ambulance, and hospital care. Pre-hospital medicine and trauma
+        response when seconds matter — from street treatment to surgical handover.
       </p>
     </div>
   </section>
@@ -39,7 +39,7 @@ import MainLayout from "../../../layouts/MainLayout.astro";
       <div class="cta-box">
         <div>
           <h3>Ready to respond?</h3>
-          <p>Get whitelisted first, then apply for the emergency service through Discord once recruitment opens.</p>
+          <p>Get whitelisted first, then apply for the health service through Discord once recruitment opens.</p>
         </div>
         <a class="button" href="/#apply">Apply for Whitelist</a>
       </div>
@@ -51,7 +51,7 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 <style>
   .subfaction-hero { position: relative; min-height: 420px; display: flex; align-items: flex-end; overflow: hidden; }
   .subfaction-hero-bg { position: absolute; inset: 0; z-index: 0; }
-  .subfaction-emergency .subfaction-hero-bg {
+  .subfaction-health .subfaction-hero-bg {
     background:
       radial-gradient(circle at 22% 30%, rgba(255, 80, 110, 0.32) 0%, transparent 52%),
       radial-gradient(circle at 80% 70%, rgba(220, 38, 68, 0.24) 0%, transparent 44%),

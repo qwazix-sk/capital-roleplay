@@ -4,10 +4,10 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 const divisions = [
   {
     id: "police",
-    href: "/factions/police/department",
+    href: "/factions/civil-services/department",
     badge: "Sworn Officers",
     eyebrow: "Division 01",
-    title: "Police",
+    title: "Police Service",
     description:
       "Patrol units, detectives, and tactical response. Enforce the law, protect the city, and lead criminal investigations from the street to the courtroom.",
     accent: "blue",
@@ -15,22 +15,34 @@ const divisions = [
     departments: ["Patrol", "CID", "Traffic", "Armed Response"],
   },
   {
-    id: "emergency",
-    href: "/factions/police/emergency",
-    badge: "First Responders",
+    id: "health",
+    href: "/factions/civil-services/health",
+    badge: "Medical Response",
     eyebrow: "Division 02",
-    title: "Emergency Service",
+    title: "Health Service",
     description:
-      "Paramedics and fire response. The first on scene when seconds matter — medical care, rescue operations, and incident command across the city.",
+      "Paramedics, air ambulance, and hospital care. Pre-hospital medicine and trauma response when seconds matter — from street treatment to surgical handover.",
     accent: "red",
     icon: "pulse",
-    departments: ["Paramedics", "Fire & Rescue", "Air Ambulance"],
+    departments: ["Paramedics", "Air Ambulance", "Hospital"],
+  },
+  {
+    id: "fire",
+    href: "/factions/civil-services/fire",
+    badge: "Fire & Rescue",
+    eyebrow: "Division 03",
+    title: "Fire & Rescue Service",
+    description:
+      "Fire suppression, technical rescue, and hazmat response. Holding the line between disaster and the city — pumps, ladders, and scene command.",
+    accent: "orange",
+    icon: "flame",
+    departments: ["Fire Suppression", "Technical Rescue", "Hazmat", "Incident Command"],
   },
   {
     id: "courts",
-    href: "/factions/police/courts",
+    href: "/factions/civil-services/courts",
     badge: "Justice & Tribunals",
-    eyebrow: "Division 03",
+    eyebrow: "Division 04",
     title: "Courts & Tribunals Service",
     description:
       "Judges, prosecutors, defence counsel, and tribunal panels. The judiciary that turns arrests into rulings and gives every citizen due process.",
@@ -41,7 +53,7 @@ const divisions = [
 ];
 ---
 
-<MainLayout title="Police, Emergency & Courts — Capital Roleplay">
+<MainLayout title="Civil Services — Capital Roleplay">
 
   <!-- ─── EDITORIAL HERO ────────────────────────────────────── -->
   <section class="hub-hero">
@@ -64,18 +76,18 @@ const divisions = [
           <div class="hub-badge reveal" style="--delay: 60ms">Law &amp; Order Division</div>
 
           <h1 class="hub-title reveal" style="--delay: 120ms">
-            <span class="hub-title-line">Police, Emergency</span>
-            <span class="hub-title-line hub-title-line--accent">&amp; Courts.</span>
+            <span class="hub-title-line">Civil</span>
+            <span class="hub-title-line hub-title-line--accent">Services.</span>
           </h1>
 
           <p class="hub-lead reveal" style="--delay: 200ms">
-            The civic backbone of Capital Roleplay. Three structured services working in
-            concert — those who enforce, those who respond, and those who judge.
+            The civic backbone of Capital Roleplay. Four structured services working in
+            concert — those who enforce, those who heal, those who rescue, and those who judge.
           </p>
 
           <div class="hub-stats reveal" style="--delay: 280ms">
             <div class="hub-stat">
-              <span class="hub-stat-num">03</span>
+              <span class="hub-stat-num">04</span>
               <span class="hub-stat-label">Services</span>
             </div>
             <div class="hub-stat">
@@ -125,7 +137,7 @@ const divisions = [
   <div class="hub-divider container">
     <span class="hub-divider-eyebrow">WIP</span>
     <span class="hub-divider-line"></span>
-    <span class="hub-divider-meta">3 / 3</span>
+    <span class="hub-divider-meta">4 / 4</span>
   </div>
 
   <!-- ─── 3-UP CARDS ────────────────────────────────────────── -->
@@ -135,7 +147,7 @@ const divisions = [
         <div class="hub-wip-box-inner">
           <span class="hub-wip-box-label">Work in Progress</span>
           <h2 class="hub-wip-box-title">WIP</h2>
-          <p class="hub-wip-box-body">Police, emergency, and courts faction details are still being prepared for release.</p>
+          <p class="hub-wip-box-body">Police, health, fire &amp; rescue, and courts service details are still being prepared for release.</p>
         </div>
       </article>
     </div>
@@ -498,6 +510,10 @@ const divisions = [
   .hub-index-row--gold:hover .hub-index-num,  .hub-index-row--gold:focus-visible .hub-index-num  { color: #f5c96a; }
   .hub-index-row--gold:hover .hub-index-arrow,.hub-index-row--gold:focus-visible .hub-index-arrow{ color: #f5c96a; transform: translateX(2px); }
 
+  .hub-index-row--orange:hover, .hub-index-row--orange:focus-visible { background: rgba(245,140,35,0.08); border-color: rgba(245,140,35,0.32); }
+  .hub-index-row--orange:hover .hub-index-num,  .hub-index-row--orange:focus-visible .hub-index-num  { color: #ffb872; }
+  .hub-index-row--orange:hover .hub-index-arrow,.hub-index-row--orange:focus-visible .hub-index-arrow{ color: #ffb872; transform: translateX(2px); }
+
   .hub-index-footer {
     display: inline-flex;
     align-items: center;
@@ -684,9 +700,10 @@ const divisions = [
     outline: none;
   }
 
-  .col-card--blue:hover,  .col-card--blue:focus-visible  { border-color: rgba(0, 174, 255, 0.42); }
-  .col-card--red:hover,   .col-card--red:focus-visible   { border-color: rgba(255, 110, 140, 0.42); }
-  .col-card--gold:hover,  .col-card--gold:focus-visible  { border-color: rgba(245, 166, 35, 0.42); }
+  .col-card--blue:hover,   .col-card--blue:focus-visible   { border-color: rgba(0, 174, 255, 0.42); }
+  .col-card--red:hover,    .col-card--red:focus-visible    { border-color: rgba(255, 110, 140, 0.42); }
+  .col-card--gold:hover,   .col-card--gold:focus-visible   { border-color: rgba(245, 166, 35, 0.42); }
+  .col-card--orange:hover, .col-card--orange:focus-visible { border-color: rgba(245, 140, 35, 0.42); }
 
   /* Media — top of card, 16:9 */
   .col-card-media {
@@ -715,6 +732,12 @@ const divisions = [
       radial-gradient(circle at 28% 30%, rgba(245, 200, 110, 0.42) 0%, transparent 55%),
       radial-gradient(circle at 78% 76%, rgba(245, 166, 35, 0.30) 0%, transparent 52%),
       linear-gradient(140deg, #2a1f08 0%, #3d2f10 50%, #1a1306 100%);
+  }
+  .col-card-media--orange {
+    background:
+      radial-gradient(circle at 26% 30%, rgba(255, 165, 60, 0.46) 0%, transparent 55%),
+      radial-gradient(circle at 80% 78%, rgba(220, 90, 30, 0.34) 0%, transparent 52%),
+      linear-gradient(140deg, #2a1006 0%, #401a08 50%, #1a0a04 100%);
   }
 
   .col-card-media-glow {
@@ -756,6 +779,7 @@ const divisions = [
   .col-card-media--blue .col-card-media-icon { color: #b9e3ff; }
   .col-card-media--red  .col-card-media-icon { color: #ffb3c2; }
   .col-card-media--gold .col-card-media-icon { color: #f5d28a; }
+  .col-card-media--orange .col-card-media-icon { color: #ffc794; }
 
   .col-card:hover .col-card-media-icon { transform: scale(1.07) rotate(-2deg); }
   .col-card:hover .col-card-media-glow { transform: scale(1.2); opacity: 0.85; }
@@ -840,6 +864,7 @@ const divisions = [
   .col-card-departments--blue li { background: rgba(0,174,255,0.06);   border-color: rgba(0,174,255,0.18);   color: #b9e3ff; }
   .col-card-departments--red  li { background: rgba(255,80,110,0.06);  border-color: rgba(255,80,110,0.20);  color: #ffb3c2; }
   .col-card-departments--gold li { background: rgba(245,166,35,0.06);  border-color: rgba(245,166,35,0.20);  color: #f5d28a; }
+  .col-card-departments--orange li { background: rgba(245,140,35,0.06); border-color: rgba(245,140,35,0.20); color: #ffc794; }
 
   .col-card-cta {
     display: inline-flex;
@@ -856,9 +881,10 @@ const divisions = [
   .col-card:hover .col-card-cta { gap: 12px; }
   .col-card:hover .col-card-cta svg { transform: translateX(3px); }
 
-  .col-card--blue:hover  .col-card-cta { color: #7ed9ff; }
-  .col-card--red:hover   .col-card-cta { color: #ff97ad; }
-  .col-card--gold:hover  .col-card-cta { color: #f5c96a; }
+  .col-card--blue:hover   .col-card-cta { color: #7ed9ff; }
+  .col-card--red:hover    .col-card-cta { color: #ff97ad; }
+  .col-card--gold:hover   .col-card-cta { color: #f5c96a; }
+  .col-card--orange:hover .col-card-cta { color: #ffb872; }
 
   /* ──────────────────────────────────────────────────────────
      RESPONSIVE
@@ -872,23 +898,14 @@ const divisions = [
     .hub-index { max-width: 560px; }
   }
 
-  @media (max-width: 980px) {
-    /* 3-up → 2-up; third card centers */
+  @media (max-width: 1180px) {
+    /* 4-up → 2×2 grid */
     .hub-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .hub-rows > .col-card:nth-child(3) {
-      grid-column: 1 / -1;
-      max-width: calc(50% - 11px);
-      justify-self: center;
-    }
   }
 
   @media (max-width: 720px) {
     /* 1-up stack */
     .hub-rows { grid-template-columns: 1fr; }
-    .hub-rows > .col-card:nth-child(3) {
-      max-width: none;
-      justify-self: stretch;
-    }
     .hub-hero { padding-bottom: 64px; }
     .hub-stats { flex-wrap: wrap; }
     .hub-stat { padding: 0 24px; }
