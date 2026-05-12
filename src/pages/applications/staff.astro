@@ -16,13 +16,12 @@ import MainLayout from "../../layouts/MainLayout.astro";
       </a>
       <div class="staff-badge">
         <span class="staff-badge-label">Staff Team</span>
-        <span class="staff-badge-value">Closed</span>
-        Staff Team · Closed
+        <span class="staff-badge-value">Open</span>
       </div>
       <h1>Staff Application</h1>
       <p>
-        Staff applications are currently closed while we refine the internal workflow.
-        The page will reopen once the next recruitment window is ready.
+        We're looking for dedicated players to help run Capital Roleplay. Staff members keep the
+        server running, the community healthy, and the standard high.
       </p>
     </div>
   </section>
@@ -39,28 +38,31 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
           <!-- Auth card -->
           <div id="auth-card" class="login-card">
-            <div class="login-badge">Recruitment paused</div>
-            <h3>Staff applications are currently closed</h3>
+            <div class="login-badge">Step 1 · Discord login required</div>
+            <h3>Authenticate with Discord first</h3>
             <p>
-              We are not taking new staff applications right now. When recruitment reopens,
-              this page will be updated and the full Discord-linked application flow will return.
+              You must sign in with Discord before submitting a staff application.
+              This verifies your identity and links your application to your account.
             </p>
+            <div style="margin-top: 22px;">
+              <a class="button discord" href="/api/auth/discord?from=/applications/staff">Continue with Discord</a>
+            </div>
             <ul class="login-points" style="margin-top: 22px;">
-              <li>Applications are temporarily closed</li>
-              <li>The form will reopen here when recruitment resumes</li>
-              <li>Whitelist access is still required once applications return</li>
+              <li>Discord account required before applying</li>
+              <li>Identity verified via OAuth2</li>
+              <li>Application forwarded to the staff review channel</li>
             </ul>
           </div>
 
           <!-- Form -->
           <div id="apply-form-wrapper" class="application-form application-form--locked">
             <h3>Staff application form</h3>
-            <p id="form-status-text">Staff applications are currently closed.</p>
+            <p id="form-status-text">Sign in with Discord on the left to unlock and submit this application.</p>
 
             <div id="form-locked-overlay" class="form-locked">
               <div>
-                <strong>Applications closed</strong>
-                <span>Recruitment will reopen on a later date.</span>
+                <strong>Form locked</strong>
+                <span>Sign in with Discord to unlock.</span>
               </div>
             </div>
 
@@ -115,9 +117,9 @@ import MainLayout from "../../layouts/MainLayout.astro";
               </div>
 
               <div class="form-footer">
-                <div id="form-note-text" class="form-note">This form is unavailable while staff recruitment is paused.</div>
+                <div id="form-note-text" class="form-note">Sign in with Discord to enable submission.</div>
                 <button type="submit" id="submit-btn" class="button submit-disabled" disabled>
-                  Applications Closed
+                  Submit Application
                 </button>
               </div>
             </form>
@@ -129,7 +131,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
   </section>
 
   <script>
-    const STAFF_APPLICATIONS_OPEN = false;
+    const STAFF_APPLICATIONS_OPEN = true;
 
     (function () {
       function esc(str: string) {
@@ -651,8 +653,8 @@ import MainLayout from "../../layouts/MainLayout.astro";
   }
 
   .staff-badge-value {
-    color: #f0b1b1;
-    background: rgba(110, 42, 42, 0.34);
+    color: #b9e7c6;
+    background: rgba(35, 111, 72, 0.34);
     font-weight: 700;
   }
 </style>
