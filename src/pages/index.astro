@@ -3,7 +3,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
 // Initial countdown values rendered at build time so first paint is approximate;
 // the client-side JS smooths to the exact remaining time within ms of hydration.
-const LAUNCH_AT_MS = Date.UTC(2026, 4, 15, 18, 0, 0); // Fri 15 May 2026, 18:00 UTC
+const LAUNCH_AT_MS = Date.UTC(2026, 4, 15, 17, 0, 0); // Fri 15 May 2026, 17:00 UTC
 const _remaining = Math.max(0, LAUNCH_AT_MS - Date.now());
 const _totalSeconds = Math.floor(_remaining / 1000);
 const initialDays    = Math.floor(_totalSeconds / 86400);
@@ -768,7 +768,7 @@ const initialSeconds = _totalSeconds % 60;
       const cdTextEl    = document.getElementById("fivemCountdownText");
 
       if (cdDaysEl && cdHoursEl && cdMinutesEl && cdSecondsEl && cdTextEl) {
-        const LAUNCH_AT = Date.UTC(2026, 4, 15, 18, 0, 0); // Fri 15 May 2026, 18:00 UTC
+        const LAUNCH_AT = Date.UTC(2026, 4, 15, 17, 0, 0); // Fri 15 May 2026, 17:00 UTC
         let countdownTimer: ReturnType<typeof setInterval> | null = null;
 
         function tickCountdown() {

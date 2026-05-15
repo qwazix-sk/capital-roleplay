@@ -1,23 +1,729 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 
-const RULES_WIP = true;
+type Severity = "permaban" | "bannable" | "failrp" | "note";
+
+type Rule = {
+  id: string;
+  title: string;
+  body: string;
+  severity: Severity;
+  display?: "tier-cards" | "strike-pips";
+};
+
+type Subsection = {
+  id: string;
+  label: string;
+  rules: Rule[];
+};
+
+type Variant =
+  | ""
+  | "standards"
+  | "conduct"
+  | "police"
+  | "civilian"
+  | "crime"
+  | "warn"
+  | "danger";
+
+type Section = {
+  num: string;
+  slug: string;
+  variant: Variant;
+  icon: string;
+  title: string;
+  description: string;
+  tocLabel: string;
+  rules?: Rule[];
+  subsections?: Subsection[];
+};
+
+const sevLabel: Record<Severity, string> = {
+  permaban: "Permanent Ban",
+  bannable: "Bannable",
+  failrp: "FailRP",
+  note: "Notice",
+};
+
+const sevIcon: Record<Severity, string> = {
+  permaban: "fa-ban",
+  bannable: "fa-gavel",
+  failrp: "fa-circle-exclamation",
+  note: "fa-circle-info",
+};
+
+const sections: Section[] = [
+  {
+    num: "01",
+    slug: "section-1",
+    variant: "",
+    icon: "fa-users",
+    title: "Community & Conduct",
+    description:
+      "Out-of-character standards that apply everywhere you carry the Capital Roleplay name. In-game, on Discord, on stream, and on any platform.",
+    tocLabel: "Community",
+    rules: [
+      {
+        id: "1.1",
+        title: "Respect & Inclusion",
+        severity: "bannable",
+        body: "Harassment, discrimination, or slurs targeting race, gender, sexuality, religion, disability, nationality, or any protected characteristic carry immediate sanction. This applies in-game, in voice, in our Discord, and on any platform where you represent yourself as a Capital RP player.",
+      },
+      {
+        id: "1.2",
+        title: "Out-of-Character Conduct",
+        severity: "failrp",
+        body: "OOC arguments, insults, or toxicity toward other players or staff are not tolerated. Resolve OOC disputes through tickets, never by escalating in chat, voice, or DMs.",
+      },
+      {
+        id: "1.3",
+        title: "Harassment & Targeting",
+        severity: "bannable",
+        body: "Repeatedly singling out the same player or group across scenes, sessions, or platforms is harassment regardless of in-character framing. Patterns are judged across the whole community, not per scene.",
+      },
+      {
+        id: "1.4",
+        title: "Threats & Real-World Behaviour",
+        severity: "permaban",
+        body: "Intimidation, doxxing, leaking screenshots or clips to attack another player, and any real-world threat result in a permanent community ban.",
+      },
+      {
+        id: "1.5",
+        title: "Trolling & Bad Faith",
+        severity: "bannable",
+        body: "Joining solely to disrupt others' roleplay, test rule limits, or stir staff is bannable. &ldquo;I was just roleplaying&rdquo; is not a defence for deliberate disruption.",
+      },
+      {
+        id: "1.6",
+        title: "Encouraging Rule-Breaks",
+        severity: "bannable",
+        body: "Persuading, baiting, paying, or pressuring another player into a rule violation is the same offence as breaking it yourself, and may be punished more severely if planned.",
+      },
+      {
+        id: "1.7",
+        title: "Ban Evasion",
+        severity: "permaban",
+        body: "Returning under any alternate account, identity, IP, or hardware while banned results in a permanent community ban with no appeal window. Players sharing accounts with banned individuals are jointly accountable.",
+      },
+      {
+        id: "1.8",
+        title: "Age Requirement",
+        severity: "note",
+        body: "Players must be 18 or older. Anyone found to be underage is removed regardless of roleplay quality, character history, or assets, and may not return until eligible.",
+      },
+      {
+        id: "1.9",
+        title: "Common Sense",
+        severity: "note",
+        body: "Where a rule has not been written for a specific situation, behave the way a reasonable player would expect. &ldquo;It's not technically against the rules&rdquo; is not a defence; staff judge intent and outcome.",
+      },
+      {
+        id: "1.10",
+        title: "Real-World Trading",
+        severity: "permaban",
+        body: "Selling, buying, or trading in-game items, currency, characters, vehicles, properties, or access for real-world money outside official Tebex channels is prohibited and results in a permanent ban plus asset wipe for all involved accounts.",
+      },
+      {
+        id: "1.11",
+        title: "Infrastructure Abuse",
+        severity: "permaban",
+        body: "Attempting to crash, lag, DDoS, exploit, or otherwise damage server systems, staff tools, or other players' connections is an immediate permanent ban with no appeal.",
+      },
+      {
+        id: "1.12",
+        title: "External Platform Terms",
+        severity: "bannable",
+        body: "Players must follow the terms of service and community guidelines of any platform they use while representing Capital Roleplay, including TikTok, Twitch, YouTube, Kick, Discord, and similar services. Content creation, streaming, or promotion connected to the community must not encourage harassment, ban evasion, platform rule-breaking, or conduct that could place Capital Roleplay or another player at risk.",
+      },
+    ],
+  },
+  {
+    num: "02",
+    slug: "section-2",
+    variant: "standards",
+    icon: "fa-masks-theater",
+    title: "Roleplay Standards",
+    description:
+      "The baseline expectations for every scene. Capital RP is a serious whitelisted server, and these rules define what that means in practice.",
+    tocLabel: "Standards",
+    rules: [
+      {
+        id: "2.1",
+        title: "In Character at All Times",
+        severity: "failrp",
+        body: "Once connected, you are in character. Use designated OOC channels and tickets for anything that breaks the fiction. In-game OOC chat, &ldquo;voices in my head,&rdquo; and references to streams, Discord, or other servers are FailRP.",
+      },
+      {
+        id: "2.2",
+        title: "Quality of Roleplay",
+        severity: "failrp",
+        body: "Capital Roleplay is a serious whitelisted server. Low-effort GTA Online behaviour, grinding without character, drive-by-style scenes, and cartoonish play break immersion and may result in removal.",
+      },
+      {
+        id: "2.3",
+        title: "Value of Life (FearRP)",
+        severity: "failrp",
+        body: "React as if your character has one life. When realistically outnumbered, outgunned, or held at gunpoint, comply. Heroic charges, fleeing while a gun is pressed to your head, or talking back to executions are FailRP.",
+      },
+      {
+        id: "2.4",
+        title: "New Life Rule (NLR)",
+        severity: "failrp",
+        body: "After being killed, your character has no memory of the events leading to their death, no awareness of attackers, and may not return to the scene for <strong>15 minutes</strong>. You may not act on information your character only learned in the moments before death.",
+      },
+      {
+        id: "2.5",
+        title: "Combat Logging",
+        severity: "bannable",
+        body: "Disconnecting, alt-tabbing out, or &ldquo;going to sleep&rdquo; mid-scene to escape consequences is treated as the worst possible outcome of that scene and is bannable. Genuine crashes must be reported by ticket immediately and you must rejoin as soon as possible.",
+      },
+      {
+        id: "2.6",
+        title: "Breaking Character Mid-Scene",
+        severity: "failrp",
+        body: "Pausing a scene to argue rules, threaten reports, or call staff in voice or text is prohibited. Continue in good faith and submit a ticket once the scene ends. Staff will not adjudicate from inside an active scene.",
+      },
+      {
+        id: "2.7",
+        title: "Sensitive Content",
+        severity: "bannable",
+        body: "Sexual roleplay, suicide, self-harm, terrorism, real-world tragedies, and torture without consent are not permitted. Themes approaching these areas require all involved players' agreement in advance and may be paused by staff at any time.",
+      },
+      {
+        id: "2.8",
+        title: "Erotic Roleplay (ERP)",
+        severity: "permaban",
+        body: "ERP must be kept extremely minimal and never explicit. All parties must consent in advance via OOC. Any uninvited or non-consensual sexual content is an immediate permanent ban.",
+      },
+      {
+        id: "2.9",
+        title: "Voice & Microphone",
+        severity: "failrp",
+        body: "A clear, working microphone is required. Excessive shouting, mic spamming, music or audio played over voice, or unintelligible audio is FailRP.",
+      },
+      {
+        id: "2.10",
+        title: "Inactivity & AFK",
+        severity: "failrp",
+        body: "Going AFK mid-scene to avoid a consequence (cuffs, robbery, medical attention) is FailRP. Stepping away briefly in a safe location is fine; leaving your character inside an active scenario is not.",
+      },
+      {
+        id: "2.11",
+        title: "Community Leaders Set the Example",
+        severity: "note",
+        body: "Civil services, faction leaders, and senior staff are held to a higher standard. Repeated rule-stretching in these roles is treated more severely than the same conduct from a new player.",
+      },
+    ],
+  },
+  {
+    num: "03",
+    slug: "section-3",
+    variant: "conduct",
+    icon: "fa-people-arrows",
+    title: "In-Character Conduct",
+    description:
+      "Standards for direct in-game interactions, hostile scenes, combat, and the integrity of every encounter.",
+    tocLabel: "Conduct",
+    rules: [
+      {
+        id: "3.1",
+        title: "Random Deathmatch (RDM)",
+        severity: "failrp",
+        body: "Attacking, shooting, or killing another player without proper roleplay build-up and clear hostile initiation is forbidden. Prior personal conflict only justifies action when your character can reasonably know who the target is and why right now.",
+      },
+      {
+        id: "3.2",
+        title: "Hostile Initiation",
+        severity: "failrp",
+        body: "Before any violent action you must give the other party a clear, voiced demand or threat naming what you want, with at least <strong>7 seconds</strong> to respond. &ldquo;Hands up or die&rdquo; alone is not initiation; conditions must be specific and achievable.",
+      },
+      {
+        id: "3.3",
+        title: "Random Vehicle Deathmatch (RVDM)",
+        severity: "failrp",
+        body: "Using a vehicle as a weapon without roleplay reason, including ramming, pinning, or running over players, is prohibited. Brief, justified contact in an active chase or scene is acceptable when proportionate.",
+      },
+      {
+        id: "3.4",
+        title: "Metagaming",
+        severity: "bannable",
+        body: "Acting on any information your character did not learn in-game is forbidden. This includes stream chats, third-party voice apps, Discord DMs, alt-character knowledge, and identifying players by voice alone.",
+      },
+      {
+        id: "3.5",
+        title: "Powergaming",
+        severity: "failrp",
+        body: "You may not force outcomes on another player, ignore injuries, perform actions your character realistically cannot, or chain <code>/me</code> commands to bypass mechanics or another player's response.",
+      },
+      {
+        id: "3.6",
+        title: "Baiting",
+        severity: "bannable",
+        body: "Provoking another player into a rule break, recording it, and reporting is forbidden. Both the baiter and the responder may be sanctioned; staff judge intent.",
+      },
+      {
+        id: "3.7",
+        title: "Combat Storing",
+        severity: "failrp",
+        body: "Putting weapons, contraband, vehicles, or cash into storage, garages, or stashes once a scene becomes hostile or police are en route is prohibited.",
+      },
+      {
+        id: "3.8",
+        title: "Hostages & Kidnapping",
+        severity: "failrp",
+        body: "A group may take hostages at most <strong>once per 24 hours</strong> for the same purpose, with a maximum of two hostages per scene. Torture, sexual scenarios, forced bank withdrawals, forced asset transfers, and forced property sales are never permitted.",
+      },
+      {
+        id: "3.9",
+        title: "Interfering With Active Scenes",
+        severity: "failrp",
+        body: "Do not insert yourself into a robbery, chase, or hostage scene unless you have a realistic IC reason to be present. &ldquo;Driving past and noticing&rdquo; is not enough.",
+      },
+      {
+        id: "3.10",
+        title: "UK Driving Standards",
+        severity: "failrp",
+        body: "Drive in a way consistent with the UK setting and your character. Constant reckless driving, ignoring traffic, treating vehicles as disposable, or arcade-style stunts during normal travel are FailRP.",
+      },
+      {
+        id: "3.11",
+        title: "Returning to Scenes",
+        severity: "failrp",
+        body: "Once a scene concludes, both attackers and victims must move on. Returning to the same location, vehicle, or group within <strong>30 minutes</strong> without fresh IC reason is FailRP, regardless of which side you were on.",
+      },
+      {
+        id: "3.12",
+        title: "Character Separation",
+        severity: "bannable",
+        body: "Each of your characters exists independently and may not share knowledge, assets, contacts, or affiliation. Transferring money, items, or information between your own characters is prohibited.",
+      },
+    ],
+  },
+  {
+    num: "04",
+    slug: "section-4",
+    variant: "police",
+    icon: "fa-shield-halved",
+    title: "Police, CHS & Civil Services",
+    description:
+      "Rules for whitelisted civil services roles: Metropolitan Police, CHS, Fire, and any future government faction. Higher access carries higher accountability.",
+    tocLabel: "Police & CHS",
+    rules: [
+      {
+        id: "4.1",
+        title: "On-Duty Conduct",
+        severity: "note",
+        body: "Civil services personnel must remain professional, responsive, and present. Going AFK on-duty, idling for paychecks, or treating the role as side income results in removal from the faction.",
+      },
+      {
+        id: "4.2",
+        title: "Use of Force",
+        severity: "failrp",
+        body: "Force must escalate proportionally. Lethal force is permitted only against a clear, immediate threat of death or serious injury. Executing compliant suspects, downed players, or hostages is FailRP and may end careers.",
+      },
+      {
+        id: "4.3",
+        title: "Corruption",
+        severity: "bannable",
+        body: "Any roleplay where civil services personnel break the law or assist criminals must be pre-approved by faction leadership and senior staff. Unsanctioned corruption results in immediate removal from the faction.",
+      },
+      {
+        id: "4.4",
+        title: "Radio & Intelligence Security",
+        severity: "bannable",
+        body: "Frequencies, patrol movements, asset locations, and operational intelligence may not be shared with civilians or criminals. Leaking radio counts as metagaming and is a dismissible offence.",
+      },
+      {
+        id: "4.5",
+        title: "CHS Neutrality",
+        severity: "bannable",
+        body: "CHS staff must treat all injured parties regardless of warrants, faction, or prior conflict. Refusing or withholding care, identifying patients to police, or selecting whom to treat by allegiance is a breach.",
+      },
+      {
+        id: "4.6",
+        title: "Impersonation",
+        severity: "bannable",
+        body: "Wearing civil services uniform, driving emergency vehicles, or issuing orders as an officer or medic without the role results in a ban. Convincing fake-ID roleplay must be pre-approved by faction leadership.",
+      },
+      {
+        id: "4.7",
+        title: "Off-Duty Authority",
+        severity: "note",
+        body: "Off-duty civil services personnel hold no powers, may not access duty weapons or vehicles, and may not relay duty intel to civilians or criminals.",
+      },
+      {
+        id: "4.8",
+        title: "Cross-Faction Coordination",
+        severity: "bannable",
+        body: "Joint operations between civil services factions must be coordinated through documented IC channels. Pre-arranging tactics in OOC voice or Discord is metagaming.",
+      },
+      {
+        id: "4.9",
+        title: "Cop Baiting",
+        severity: "failrp",
+        body: "Drawing officers into a situation purely to ambush, troll, or generate content without genuine criminal intent is FailRP. Officers may not provoke confrontations without legitimate cause.",
+      },
+    ],
+  },
+  {
+    num: "05",
+    slug: "section-5",
+    variant: "civilian",
+    icon: "fa-briefcase",
+    title: "Business & Civilian Groups",
+    description:
+      "Rules for registered businesses, civilian crews, and ordinary residents. Where you stand when the city is not on fire.",
+    tocLabel: "Business",
+    rules: [
+      {
+        id: "5.1",
+        title: "Legitimate Operations",
+        severity: "note",
+        body: "Approved businesses must operate within their declared scope. Using a registered business as cover for unapproved criminal enterprise voids the licence and may incur a ban.",
+      },
+      {
+        id: "5.2",
+        title: "Owner Accountability",
+        severity: "note",
+        body: "Business owners are accountable for employee conduct while on premises or representing the brand. Repeated violations result in action against leadership, not only the individual offender.",
+      },
+      {
+        id: "5.3",
+        title: "Civilians in Hostile Scenes",
+        severity: "note",
+        body: "Civilians who insert themselves into criminal scenes accept the realistic consequences. &ldquo;I was just watching&rdquo; is not protection from being told to leave, restrained, or harmed if you escalate.",
+      },
+      {
+        id: "5.4",
+        title: "Business Robbery Limits",
+        severity: "bannable",
+        body: "The same business or owner may not be robbed more than <strong>twice in a 24-hour window</strong>. Repeat targeting beyond that is harassment regardless of in-character framing.",
+      },
+      {
+        id: "5.5",
+        title: "Civilian Weapons",
+        severity: "note",
+        body: "Civilians may carry licensed firearms appropriate to their background. Military, fully automatic, or suppressed weapons require an approved character history, and public brandishing without cause is an offence in and out of character.",
+      },
+      {
+        id: "5.6",
+        title: "Civilian Groups & Crews",
+        severity: "note",
+        body: "Friend groups, car meets, and unofficial crews are welcome but may not operate as unregistered gangs. The moment a group coordinates organised crime, the Organised Crime rules apply.",
+      },
+    ],
+  },
+  {
+    num: "06",
+    slug: "section-6",
+    variant: "crime",
+    icon: "fa-user-secret",
+    title: "Organised Crime & Gangs",
+    description:
+      "Capital Roleplay supports two tiers of gang activity, both tightly governed. Reputation, territory, and story come first; gunplay is the consequence of escalation, not the goal.",
+    tocLabel: "Crime & Gangs",
+    subsections: [
+      {
+        id: "structure",
+        label: "Gang Structure",
+        rules: [
+          {
+            id: "6.1",
+            title: "Gang Tiers",
+            severity: "note",
+            display: "tier-cards",
+            body: "Capital Roleplay recognises two tiers of gang. Non-whitelisted groups operate at a smaller scale to build reputation; whitelisted groups gain access to deeper RP arcs and territorial play.",
+          },
+          {
+            id: "6.2",
+            title: "Identification",
+            severity: "note",
+            body: "Gang members must be visibly identifiable at all times while engaged in gang activity. If you are not wearing your identifier, you cannot claim gang involvement in that scene and any action you take counts as a private individual.",
+          },
+          {
+            id: "6.3",
+            title: "Faction Registration",
+            severity: "note",
+            body: "Any group of three or more players running coordinated criminal activity must be registered with staff. Unregistered factions running organised operations face disbandment and asset removal.",
+          },
+        ],
+      },
+      {
+        id: "group-sizes",
+        label: "Group Sizes in Conflict",
+        rules: [
+          {
+            id: "6.4",
+            title: "Tiered Group Caps",
+            severity: "failrp",
+            body: "Player limits scale with the activity. Up to <strong>4 per side</strong> for petty crime, street altercations, and low-tier robberies. Up to <strong>6 per side</strong> for major robberies, heists, and approved gang wars. Up to <strong>8 per side</strong> only for staff-sanctioned large-scale scenarios. Downed members count toward the cap and may not be replaced mid-scene.",
+          },
+          {
+            id: "6.5",
+            title: "Equal Numbers",
+            severity: "failrp",
+            body: "Heavily outnumbering an opposing group (for example 10 versus 3) without prior RP justification is not allowed. Keep engagements proportionate; staff judge intent when numbers are uneven.",
+          },
+          {
+            id: "6.6",
+            title: "Third Party",
+            severity: "failrp",
+            body: "Do not jump into an ongoing gang conflict unless you are directly involved through prior roleplay. Friendship, alliance flavour, or being &ldquo;in the area&rdquo; is not sufficient.",
+          },
+        ],
+      },
+      {
+        id: "escalation",
+        label: "Conflict & Escalation",
+        rules: [
+          {
+            id: "6.7",
+            title: "Spinback Rule",
+            severity: "note",
+            body: "If a gang disrespects you on your block (verbal, threats, or open presence), you may retaliate on their block. Retaliation must be reasonable and built through RP; it is not an automatic green light for gunplay.",
+          },
+          {
+            id: "6.8",
+            title: "Play Your Block",
+            severity: "failrp",
+            body: "If you actively engage in conflict, you must be prepared to defend your area. Provoking situations and then disappearing, logging, or refusing to RP defence is FailRP.",
+          },
+          {
+            id: "6.9",
+            title: "No Random Escalation",
+            severity: "failrp",
+            body: "Conflict must build through interaction. Jumping straight to shootings without prior tension or RP is treated as RDM, regardless of faction history.",
+          },
+          {
+            id: "6.10",
+            title: "Gang Wars & Cooldowns",
+            severity: "failrp",
+            body: "A war requires documented in-character conflict and a <strong>48-hour cooldown</strong> between major engagements. Smaller justified confrontations between mass engagements are allowed; each requires fresh IC reason.",
+          },
+          {
+            id: "6.11",
+            title: "Territory & Turf",
+            severity: "failrp",
+            body: "Territorial claims require visible, ongoing in-character presence and roleplay. Disputes must begin with negotiation and pressure RP before any violence.",
+          },
+        ],
+      },
+      {
+        id: "prohibited",
+        label: "Prohibited Behaviour",
+        rules: [
+          {
+            id: "6.12",
+            title: "No Body Camping",
+            severity: "failrp",
+            body: "Do not wait around downed players to re-engage, farm kills, or interrogate corpses.",
+          },
+          {
+            id: "6.13",
+            title: "No Location Camping",
+            severity: "failrp",
+            body: "Repeatedly sitting on rival blocks, spawns, or hospitals purely to catch players off-guard is not allowed.",
+          },
+          {
+            id: "6.14",
+            title: "No Mass Attacks Without RP",
+            severity: "failrp",
+            body: "Large-scale fights must have prior tension or storyline. Coordinated mass attacks with no roleplay setup are FailRP.",
+          },
+          {
+            id: "6.15",
+            title: "No Memory Wipes on Ongoing Conflict",
+            severity: "failrp",
+            body: "NLR applies to your death, not to your gang. You must remember ongoing gang conflicts, rivalries, and relationships even if your character has been downed previously.",
+          },
+        ],
+      },
+      {
+        id: "rp-standards",
+        label: "Roleplay Standards",
+        rules: [
+          {
+            id: "6.16",
+            title: "Criminal Activity Standards",
+            severity: "failrp",
+            body: "Drug labs, arms dealing, robberies, and other illicit operations require active roleplay setup. Running scripts purely for output without scenes is FailRP.",
+          },
+          {
+            id: "6.17",
+            title: "No &ldquo;Win Mentality&rdquo;",
+            severity: "note",
+            body: "Gang RP is about territory, reputation, and story, not winning fights. Crews that consistently prioritise kill counts over scenes risk losing whitelist status.",
+          },
+          {
+            id: "6.18",
+            title: "Downed Rule",
+            severity: "failrp",
+            body: "Once downed, you are out of the fight. No comms, no location calls, no info passing to teammates until you are revived and the scene allows.",
+          },
+          {
+            id: "6.19",
+            title: "Vehicles in Gang RP",
+            severity: "failrp",
+            body: "Standard RVDM rules apply. Vehicles may not be used as weapons in gang conflict; ramming, pinning, and running over rivals are not substitutes for proper engagement.",
+          },
+        ],
+      },
+      {
+        id: "membership",
+        label: "Membership, Leadership & CKs",
+        rules: [
+          {
+            id: "6.20",
+            title: "Leadership Accountability",
+            severity: "note",
+            body: "Faction leadership is directly responsible for member behaviour. Repeated violations under a leader's watch escalate to forced demotion, faction sanction, or disbandment.",
+          },
+          {
+            id: "6.21",
+            title: "Asset Dumping",
+            severity: "bannable",
+            body: "Gangs may not transfer assets to allies before a perma-death, departure, or known sanction. Transfers connected to imminent exits are reversed and may carry additional sanction.",
+          },
+          {
+            id: "6.22",
+            title: "Gang Cooldown",
+            severity: "note",
+            body: "Players may hold membership in only one organised crime group across all characters. Leaving or being removed from a gang triggers a <strong>2-week cooldown</strong> before joining another.",
+          },
+          {
+            id: "6.23",
+            title: "Character Kill (CK)",
+            severity: "note",
+            body: "CKs require strong RP build-up and must be approved by staff. They may be initiated via contracts, storyline arcs, or escalated conflict. An approved CK is the permanent death of that character with no return.",
+          },
+        ],
+      },
+      {
+        id: "strikes",
+        label: "Strike System",
+        rules: [
+          {
+            id: "6.24",
+            title: "Three-Strike Rule",
+            severity: "bannable",
+            display: "strike-pips",
+            body: "Gangs operate on a 3-strike system. Three strikes results in disbandment. More than one strike in a single week results in immediate disbandment for sustained poor roleplay. On disbandment, the gang's leader cannot form a new gang for <strong>2 weeks</strong>; the standard member cooldown is waived for disbanded members so they can rebuild elsewhere.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    num: "07",
+    slug: "section-7",
+    variant: "warn",
+    icon: "fa-map-location-dot",
+    title: "Zones & Restricted Areas",
+    description:
+      "Locations on the map where the normal rules of escalation change. Know where you are before you draw.",
+    tocLabel: "Zones",
+    rules: [
+      {
+        id: "7.1",
+        title: "Safe Zones",
+        severity: "note",
+        body: "Hospitals, police stations, courts, the unemployment office, and the city spawn point are safe zones. No crime, hostile roleplay, drawn weapons, or aggressive pursuit is permitted inside.",
+      },
+      {
+        id: "7.2",
+        title: "Safe Zone Exploitation",
+        severity: "failrp",
+        body: "You may not flee into a safe zone to escape an active scene. Aggressors must disengage at the perimeter; victims who run into a safe zone with active pursuers may be sanctioned for FailRP.",
+      },
+      {
+        id: "7.3",
+        title: "Government & Civil Service Buildings",
+        severity: "note",
+        body: "Major crime (armed robbery, drive-bys, hostage scenes) is prohibited within the immediate vicinity of government and civil service buildings unless part of a staff-approved large-scale scenario.",
+      },
+      {
+        id: "7.4",
+        title: "Crime Escalation Zones",
+        severity: "note",
+        body: "Drug markets, arms routes, and contested turf are high-risk by design. Entering implies acknowledgement of risk, but lethal force still requires proper initiation.",
+      },
+      {
+        id: "7.5",
+        title: "Aircraft Restrictions",
+        severity: "failrp",
+        body: "Aircraft are a privilege restricted to whitelisted roles. Stealing, flying, or using aircraft to evade police, drop into conflicts, or shortcut chases without authorisation is FailRP.",
+      },
+    ],
+  },
+  {
+    num: "08",
+    slug: "section-8",
+    variant: "danger",
+    icon: "fa-bug",
+    title: "Cheating, Exploits & Integrity",
+    description:
+      "Zero tolerance. Every rule in this section is enforced strictly and most carry permanent bans. Read carefully.",
+    tocLabel: "Integrity",
+    rules: [
+      {
+        id: "8.1",
+        title: "Cheats & Hacks",
+        severity: "permaban",
+        body: "Any third-party cheat, modification, or injected client granting unfair advantage, including godmode, speed hacks, teleport, ESP, aimbot, or stat manipulation, is a permanent ban with no appeal.",
+      },
+      {
+        id: "8.2",
+        title: "Bug & Mechanic Exploitation",
+        severity: "bannable",
+        body: "Knowingly using a server or game bug for advantage is bannable. Discovering a bug carries an obligation to report it via ticket; continued use after discovery is treated as exploiting.",
+      },
+      {
+        id: "8.3",
+        title: "Macros & External Tools",
+        severity: "bannable",
+        body: "Macros, auto-clickers, scripts automating inputs, weighted controllers, and any tool simulating presence or actions are not permitted. Only official FiveM graphics enhancements are allowed.",
+      },
+      {
+        id: "8.4",
+        title: "AFK Farming",
+        severity: "bannable",
+        body: "Generating money, XP, or items while not actively at the keyboard, including macro-driven jobs and weighted keys, is prohibited and forfeits all gains.",
+      },
+      {
+        id: "8.5",
+        title: "Duplication & Asset Exploits",
+        severity: "permaban",
+        body: "Money, item, or asset duplication via exploit, server error, or cross-character transfer is a permanent ban plus full asset wipe for every involved account.",
+      },
+      {
+        id: "8.6",
+        title: "Reporting Obligation",
+        severity: "note",
+        body: "Players who discover an exploit must report it immediately via ticket. Good-faith reporters are rewarded; players who exploit first and report later are still sanctioned.",
+      },
+      {
+        id: "8.7",
+        title: "Report Evidence",
+        severity: "note",
+        body: "Reports require unedited video evidence with timestamps and clear context. Edited clips, isolated screenshots, and second-hand accounts are not sufficient for sanction.",
+      },
+    ],
+  },
+];
+
+const totalRules = sections.reduce((acc, s) => {
+  if (s.rules) return acc + s.rules.length;
+  if (s.subsections) return acc + s.subsections.reduce((a, sub) => a + sub.rules.length, 0);
+  return acc;
+}, 0);
+
+const lastRevised = "May 2026";
 ---
 
 <MainLayout title="Rules — Capital Roleplay">
 
-  {RULES_WIP && (
-    <div class="wip-overlay">
-      <div class="wip-inner">
-        <span class="wip-label">COMING SOON</span>
-        <h1 class="wip-title">WIP</h1>
-        <p class="wip-sub">The rules page is being updated. Check back soon.</p>
-        <a href="/" class="button">Back to Home</a>
-      </div>
-    </div>
-  )}
-
-  <div class:list={["rules-page", RULES_WIP && "rules-page--hidden"]}>
+  <div class="rules-page">
 
     <!-- Page header -->
     <div class="rules-header">
@@ -36,7 +742,7 @@ const RULES_WIP = true;
       <div class="rules-stats-row">
         <div class="rules-stat">
           <i class="fa-solid fa-list-ol"></i>
-          <span>42 rules across 7 sections</span>
+          <span>{totalRules} rules across {sections.length} sections</span>
         </div>
         <div class="rules-stat rules-stat--warn">
           <i class="fa-solid fa-ban"></i>
@@ -48,7 +754,7 @@ const RULES_WIP = true;
         </div>
         <div class="rules-stat">
           <i class="fa-solid fa-clock-rotate-left"></i>
-          <span>Last revised March 2026</span>
+          <span>Last revised {lastRevised}</span>
         </div>
       </div>
     </div>
@@ -61,34 +767,12 @@ const RULES_WIP = true;
         <aside class="rules-sidebar">
           <p class="rules-toc-label">On this page</p>
           <nav class="rules-toc">
-            <a href="#section-1" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-scale-balanced"></i></span>
-              <span class="rules-toc-num">01</span>General Rules
-            </a>
-            <a href="#section-2" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-masks-theater"></i></span>
-              <span class="rules-toc-num">02</span>In-Character Rules
-            </a>
-            <a href="#section-3" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-shield-halved"></i></span>
-              <span class="rules-toc-num">03</span>Police &amp; Emergency
-            </a>
-            <a href="#section-4" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-briefcase"></i></span>
-              <span class="rules-toc-num">04</span>Business &amp; Civilian
-            </a>
-            <a href="#section-5" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-user-secret"></i></span>
-              <span class="rules-toc-num">05</span>Organised Crime
-            </a>
-            <a href="#section-6" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-map-location-dot"></i></span>
-              <span class="rules-toc-num">06</span>Zone Rules
-            </a>
-            <a href="#section-7" class="rules-toc-link">
-              <span class="rules-toc-icon"><i class="fa-solid fa-bug"></i></span>
-              <span class="rules-toc-num">07</span>Cheating &amp; Exploits
-            </a>
+            {sections.map((s) => (
+              <a href={`#${s.slug}`} class="rules-toc-link" data-section={s.slug}>
+                <span class="rules-toc-icon"><i class={`fa-solid ${s.icon}`}></i></span>
+                <span class="rules-toc-num">{s.num}</span>{s.tocLabel}
+              </a>
+            ))}
           </nav>
         </aside>
 
@@ -101,779 +785,146 @@ const RULES_WIP = true;
             <div>
               These rules are effective immediately and subject to update without prior notice.
               Violations may result in a warning, kick, temporary ban, or permanent ban at staff
-              discretion. <strong>Last revised: March 2026.</strong>
+              discretion. <strong>Last revised: {lastRevised}.</strong>
             </div>
           </div>
 
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 1: GENERAL RULES -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-1" class="rules-section">
-            <div class="rules-section-header" data-num="01">
-              <div class="rules-section-watermark">01</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap">
-                  <i class="fa-solid fa-scale-balanced"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge">Section 01</div>
-                  <h2>General Rules</h2>
-                  <p>
-                    Core conduct expectations that apply across the entire community — in-game,
-                    on Discord, and in any Capital Roleplay space.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item">
-                <div class="rule-num">1.1</div>
-                <div class="rule-body">
-                  <strong>Respect &amp; Conduct</strong>
-                  <p>
-                    Harassment, discrimination, or targeted toxicity based on race, gender,
-                    sexuality, religion, disability, or nationality is not tolerated in any
-                    community space — in-game, Discord, or otherwise. Violations carry
-                    immediate action.
-                  </p>
+          {sections.map((section) => (
+            <section id={section.slug} class="rules-section">
+              <div
+                class:list={[
+                  "rules-section-header",
+                  section.variant && `rules-section-header--${section.variant}`,
+                ]}
+                data-num={section.num}
+              >
+                <div class="rules-section-watermark">{section.num}</div>
+                <div class="rules-section-inner">
+                  <div
+                    class:list={[
+                      "rules-section-icon-wrap",
+                      section.variant && `rules-section-icon-wrap--${section.variant}`,
+                    ]}
+                  >
+                    <i class={`fa-solid ${section.icon}`}></i>
+                  </div>
+                  <div class="rules-section-copy">
+                    <div
+                      class:list={[
+                        "rules-section-badge",
+                        section.variant && `rules-section-badge--${section.variant}`,
+                      ]}
+                    >
+                      Section {section.num}
+                    </div>
+                    <h2>{section.title}</h2>
+                    <p>{section.description}</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="rule-item">
-                <div class="rule-num">1.2</div>
-                <div class="rule-body">
-                  <strong>Roleplay Quality</strong>
-                  <p>
-                    Capital Roleplay is a whitelisted serious server. All roleplay must
-                    meet that standard at all times. Low-effort, joke, or GTA Online-style
-                    behaviour will result in removal. If you are not here to seriously
-                    roleplay, this is not the server for you.
-                  </p>
+              {section.rules && (
+                <div class="rules-list">
+                  {section.rules.map((rule) => (
+                    <div class="rule-item" id={`rule-${rule.id}`}>
+                      <a class="rule-num" href={`#rule-${rule.id}`} aria-label={`Link to rule ${rule.id}`}>{rule.id}</a>
+                      <div class="rule-body">
+                        <div class="rule-head">
+                          <strong set:html={rule.title} />
+                          <span class={`severity-pill severity-pill--${rule.severity}`}>
+                            <i class={`fa-solid ${sevIcon[rule.severity]}`}></i>
+                            {sevLabel[rule.severity]}
+                          </span>
+                        </div>
+                        <p set:html={rule.body} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
 
-              <div class="rule-item">
-                <div class="rule-num">1.3</div>
-                <div class="rule-body">
-                  <strong>Stay In Character</strong>
-                  <p>
-                    Unless an admin has paused a situation, remain in character at all
-                    times while in the city. Breaking character mid-scenario — including
-                    referencing real-world things out of context — disrupts everyone else's
-                    experience and will be treated as FailRP.
-                  </p>
+              {section.subsections && (
+                <div class="rules-subsections">
+                  {section.subsections.map((sub) => (
+                    <div class="rules-subsection" id={`${section.slug}-${sub.id}`}>
+                      <div class="rules-subsection-heading">
+                        <span class="rules-subsection-rule"></span>
+                        <span class="rules-subsection-label">{sub.label}</span>
+                      </div>
+
+                      <div class="rules-list">
+                        {sub.rules.map((rule) => (
+                          <>
+                            {rule.display === "tier-cards" && (
+                              <div class="tier-cards">
+                                <div class="tier-card tier-card--one">
+                                  <div class="tier-card-head">
+                                    <span class="tier-card-tag">Tier 1</span>
+                                    <span class="tier-card-label">Non-Whitelisted</span>
+                                  </div>
+                                  <h3 class="tier-card-title">Up to 6 members</h3>
+                                  <ul class="tier-card-list">
+                                    <li>Shared clothing colour only</li>
+                                    <li>No flags or masks</li>
+                                    <li>No official perks</li>
+                                    <li>Build rep before applying for whitelist</li>
+                                  </ul>
+                                </div>
+                                <div class="tier-card tier-card--two">
+                                  <div class="tier-card-head">
+                                    <span class="tier-card-tag tier-card-tag--two">Tier 2</span>
+                                    <span class="tier-card-label">Whitelisted</span>
+                                  </div>
+                                  <h3 class="tier-card-title">Up to 12 members</h3>
+                                  <ul class="tier-card-list">
+                                    <li>Identifier required at all times</li>
+                                    <li>Flag, mask, or registered colours</li>
+                                    <li>Eligible for gang wars &amp; territory</li>
+                                    <li>Access to shipments &amp; supplier arcs</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            )}
+
+                            <div class="rule-item" id={`rule-${rule.id}`}>
+                              <a class="rule-num" href={`#rule-${rule.id}`} aria-label={`Link to rule ${rule.id}`}>{rule.id}</a>
+                              <div class="rule-body">
+                                <div class="rule-head">
+                                  <strong set:html={rule.title} />
+                                  <span class={`severity-pill severity-pill--${rule.severity}`}>
+                                    <i class={`fa-solid ${sevIcon[rule.severity]}`}></i>
+                                    {sevLabel[rule.severity]}
+                                  </span>
+                                </div>
+                                <p set:html={rule.body} />
+
+                                {rule.display === "strike-pips" && (
+                                  <div class="strike-pips">
+                                    <div class="strike-pip strike-pip--one">
+                                      <span class="strike-pip-num">1</span>
+                                      <span class="strike-pip-label">Strike One</span>
+                                    </div>
+                                    <div class="strike-pip strike-pip--two">
+                                      <span class="strike-pip-num">2</span>
+                                      <span class="strike-pip-label">Strike Two</span>
+                                    </div>
+                                    <div class="strike-pip strike-pip--three">
+                                      <span class="strike-pip-num">3</span>
+                                      <span class="strike-pip-label">Disband</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">1.4</div>
-                <div class="rule-body">
-                  <strong>Combat Logging</strong>
-                  <p>
-                    Disconnecting from the server to avoid a roleplay situation, arrest,
-                    robbery, or death is strictly prohibited. If you crash legitimately,
-                    message staff on Discord immediately. Repeated or suspicious disconnects
-                    will be treated as intentional.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">1.5</div>
-                <div class="rule-body">
-                  <strong>New Life Rule (NLR)</strong>
-                  <p>
-                    If your character is downed and revived or respawns, they retain no
-                    memory of the events that led to their death. You may not return to
-                    the scene of your death for <strong>10 minutes</strong> following
-                    respawn, and you may not seek revenge on those involved in the scenario.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">1.6</div>
-                <div class="rule-body">
-                  <strong>Value Your Life (NVL)</strong>
-                  <p>
-                    Your character must act with realistic regard for their own life.
-                    If you are outnumbered, outgunned, or held at gunpoint with no
-                    realistic means of escape, you must comply. Suicidal charges or
-                    deliberate disregard for self-preservation is FailRP.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">1.7</div>
-                <div class="rule-body">
-                  <strong>Sensitive &amp; Extreme Content</strong>
-                  <p>
-                    Sexual roleplay, torture for the sake of torture, suicide roleplay,
-                    and roleplay that directly mirrors real-world tragedies or disasters
-                    are prohibited. Serious themes that serve a clear narrative purpose
-                    must be agreed upon by all parties before commencing.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 2: IN-CHARACTER RULES -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-2" class="rules-section">
-            <div class="rules-section-header" data-num="02">
-              <div class="rules-section-watermark">02</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap">
-                  <i class="fa-solid fa-masks-theater"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge">Section 02</div>
-                  <h2>In-Character Rules</h2>
-                  <p>
-                    Standards governing direct in-game interactions, combat, and
-                    the integrity of roleplay scenarios.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item">
-                <div class="rule-num">2.1</div>
-                <div class="rule-body">
-                  <strong>Metagaming</strong>
-                  <p>
-                    Using information your character could not realistically know
-                    in-character is metagaming and is forbidden. This includes acting
-                    on information heard in Discord voice chats, stream chats, or any
-                    other out-of-character source. Cross-character information sharing
-                    — even through a third party — is also metagaming.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.2</div>
-                <div class="rule-body">
-                  <strong>Powergaming</strong>
-                  <p>
-                    Forcing an unrealistic outcome on another player without giving
-                    them a fair opportunity to respond is powergaming. Examples include:
-                    performing actions your character has no realistic skill to perform,
-                    refusing to acknowledge injuries, or using an emote to bypass an
-                    active physical situation.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.3</div>
-                <div class="rule-body">
-                  <strong>Random Deathmatch (RDM)</strong>
-                  <p>
-                    Attacking or killing another player without valid in-character
-                    initiation is RDM. You must clearly communicate a threat or demand
-                    before opening fire. The other party must be given reasonable time —
-                    at minimum <strong>7 seconds</strong> — to respond before
-                    escalation is permitted.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.4</div>
-                <div class="rule-body">
-                  <strong>Vehicle Deathmatch (VDM)</strong>
-                  <p>
-                    Using a vehicle as a weapon against another player without
-                    in-character justification is VDM. Intentionally ramming pedestrians
-                    is never acceptable. Vehicle-to-vehicle contact during a chase must
-                    be proportionate and have a clear RP reason — excessive ramming
-                    constitutes VDM even against a hostile player.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.5</div>
-                <div class="rule-body">
-                  <strong>Hostile Initiation</strong>
-                  <p>
-                    To initiate a hostile scenario you must make a clear verbal demand
-                    while specifying who you are addressing — either by pointing a weapon
-                    or describing their appearance. Vague or ambiguous initiations are
-                    not valid. Initiation carries over for the duration of an active
-                    situation but expires once all parties have disengaged.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.6</div>
-                <div class="rule-body">
-                  <strong>Combat Storing</strong>
-                  <p>
-                    Storing, moving, or dropping items — including weapons, drugs,
-                    or money — during an active situation in order to avoid loss through
-                    robbery or arrest is prohibited. All items on your person at the
-                    time of an encounter are subject to the outcome of that encounter.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">2.7</div>
-                <div class="rule-body">
-                  <strong>Kidnapping &amp; Hostages</strong>
-                  <p>
-                    Kidnapping for monetary gain is limited to <strong>once per
-                    real-world 24 hours</strong> per criminal group. Hostages must
-                    be treated with in-character realism — extended torture without
-                    narrative purpose, forced banking transactions, and sexual
-                    scenarios are strictly prohibited regardless of hostage consent.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 3: POLICE & EMERGENCY SERVICES -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-3" class="rules-section">
-            <div class="rules-section-header rules-section-header--police" data-num="03">
-              <div class="rules-section-watermark">03</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap rules-section-icon-wrap--police">
-                  <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge rules-section-badge--police">Section 03</div>
-                  <h2>Police &amp; Emergency Services</h2>
-                  <p>
-                    Rules for all whitelisted emergency service roles — Police, Sheriff,
-                    NHS/EMS, and Fire. These standards govern both on-duty conduct and
-                    the use of faction-exclusive resources.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item">
-                <div class="rule-num">3.1</div>
-                <div class="rule-body">
-                  <strong>On-Duty Conduct</strong>
-                  <p>
-                    All emergency service personnel must actively roleplay their duties
-                    while on shift. Logging into a faction role and remaining idle,
-                    using it as a passive income source, or treating the role as a
-                    social slot will result in removal from that faction. If you are
-                    on duty, you are expected to be engaged.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.2</div>
-                <div class="rule-body">
-                  <strong>Use of Force</strong>
-                  <p>
-                    Police must follow a realistic use-of-force escalation. Lethal force
-                    is only justified when a suspect poses an immediate threat of death or
-                    serious injury to officers or civilians. Executing a surrendered,
-                    compliant, or downed suspect is prohibited under any circumstances
-                    and constitutes FailRP.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.3</div>
-                <div class="rule-body">
-                  <strong>Corruption Roleplay</strong>
-                  <p>
-                    Corruption roleplay — planting evidence, accepting bribes, leaking
-                    information to criminals — must be pre-approved by both your faction
-                    leadership and a senior staff member. Unapproved corruption is
-                    treated as abuse of a whitelisted role and will result in permanent
-                    faction removal.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.4</div>
-                <div class="rule-body">
-                  <strong>Radio &amp; Intel Security</strong>
-                  <p>
-                    Police and emergency service radio communications, patrol strategies,
-                    and operational intel are confidential in-character. Sharing radio
-                    frequencies, unit locations, or active pursuit details with
-                    civilians or criminals — whether in-game or via OOC channels —
-                    is metagaming and a dismissible faction offence.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.5</div>
-                <div class="rule-body">
-                  <strong>EMS Neutrality</strong>
-                  <p>
-                    NHS and EMS personnel must treat all injured parties regardless of
-                    criminal status, gang affiliation, or active warrants. Refusing
-                    to revive a player due to their faction, withholding treatment
-                    as leverage, or selectively responding to calls based on who
-                    is involved is a serious breach of faction conduct.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.6</div>
-                <div class="rule-body">
-                  <strong>Faction Impersonation</strong>
-                  <p>
-                    Impersonating a Police, Sheriff, NHS, Fire, or any other emergency
-                    service role — including wearing branded uniform, using faction-exclusive
-                    vehicles, or issuing commands under a false rank — is a bannable
-                    offence. No civilian may claim to be an on-duty officer without
-                    holding that whitelisted role.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">3.7</div>
-                <div class="rule-body">
-                  <strong>Jurisdiction &amp; Cross-Faction Coordination</strong>
-                  <p>
-                    Emergency services may coordinate in-character via established
-                    radio protocols. Off-duty officers may not exercise police authority
-                    or carry police-issue weapons in a civilian capacity. Going
-                    off-duty does not grant permission to assist criminal groups using
-                    information gained while on duty.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 4: BUSINESS & CIVILIAN GROUPS -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-4" class="rules-section">
-            <div class="rules-section-header rules-section-header--civilian" data-num="04">
-              <div class="rules-section-watermark">04</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap rules-section-icon-wrap--civilian">
-                  <i class="fa-solid fa-briefcase"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge rules-section-badge--civilian">Section 04</div>
-                  <h2>Business &amp; Civilian Groups</h2>
-                  <p>
-                    Rules for players operating legitimate businesses, civilian organisations,
-                    and non-criminal whitelisted roles within the city.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item">
-                <div class="rule-num">4.1</div>
-                <div class="rule-body">
-                  <strong>Legitimate Operations</strong>
-                  <p>
-                    All player-run businesses and civilian organisations must operate
-                    within their approved scope. A business approved as a legal
-                    dealership may not front illegal weapon sales without explicit
-                    staff approval for that narrative. Unapproved criminal activity
-                    conducted through a legal business will result in that business
-                    being revoked.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">4.2</div>
-                <div class="rule-body">
-                  <strong>Owner Responsibility</strong>
-                  <p>
-                    Business and group owners are accountable for the conduct of their
-                    employees and members. Repeated rule violations by the same group
-                    will escalate to action against ownership. If you cannot manage
-                    your organisation's behaviour, you should not be running it.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">4.3</div>
-                <div class="rule-body">
-                  <strong>Civilian Escalation</strong>
-                  <p>
-                    Civilians and business operators are not exempt from hostile RP rules.
-                    If you choose to involve your civilian character in a dangerous
-                    situation — entering a crime scene, confronting armed individuals,
-                    interfering with police operations — you accept the realistic
-                    consequences of that decision.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">4.4</div>
-                <div class="rule-body">
-                  <strong>Business Premises &amp; Robbery</strong>
-                  <p>
-                    Player-owned business premises may be robbed by criminal players
-                    in accordance with robbery rules — with valid initiation, during
-                    reasonable hours, and without excessive repetition. Robbing the
-                    same business or owner more than <strong>twice within 24 hours</strong>
-                    is considered harassment and is prohibited.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">4.5</div>
-                <div class="rule-body">
-                  <strong>Civilian Weaponry</strong>
-                  <p>
-                    Civilian characters may carry legally licensed firearms in-character.
-                    Civilian carry must be consistent with your character's story and
-                    licencing. Civilians may not carry military-grade, fully automatic,
-                    or suppressed weapons without a specific approved character background.
-                    Displaying weapons in public without cause constitutes brandishing.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 5: ORGANISED CRIME -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-5" class="rules-section">
-            <div class="rules-section-header rules-section-header--crime" data-num="05">
-              <div class="rules-section-watermark">05</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap rules-section-icon-wrap--crime">
-                  <i class="fa-solid fa-user-secret"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge rules-section-badge--crime">Section 05</div>
-                  <h2>Organised Crime</h2>
-                  <p>
-                    Rules governing criminal factions, gangs, and any player-led
-                    organisation conducting illegal activity within the city.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item">
-                <div class="rule-num">5.1</div>
-                <div class="rule-body">
-                  <strong>Faction Registration</strong>
-                  <p>
-                    Criminal organisations with more than <strong>3 regular members</strong>
-                    must be registered with server leadership. Unregistered groups
-                    operating as an organised faction — including coordinating crimes,
-                    claiming territory, or wearing matching identifiers — will be
-                    treated as a rule violation. Registration does not guarantee approval;
-                    factions that do not meet RP quality standards will be declined.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">5.2</div>
-                <div class="rule-body">
-                  <strong>Active Player Limits</strong>
-                  <p>
-                    A maximum of <strong>4 players</strong> from any criminal group
-                    may be involved in a hostile situation at one time. Planned large-scale
-                    scenarios — such as a declared gang war — may involve up to
-                    <strong>6 players</strong> per side with prior staff approval.
-                    Exceeding these limits constitutes a mass RP rule violation.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">5.3</div>
-                <div class="rule-body">
-                  <strong>Gang Warfare &amp; Cooldowns</strong>
-                  <p>
-                    Declaring open war on a rival faction requires a documented in-character
-                    conflict arc. Following any mass engagement, a <strong>48-hour
-                    real-world cooldown</strong> applies before the same groups may
-                    engage in another large-scale conflict. Smaller, individually initiated
-                    confrontations may still occur within reason.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">5.4</div>
-                <div class="rule-body">
-                  <strong>Territory &amp; Turf</strong>
-                  <p>
-                    Territory claims must be established and contested through in-character
-                    roleplay. You may not claim a zone simply by being present; a visible,
-                    ongoing RP presence is required. Territory disputes must be conducted
-                    through roleplay first — jumping straight to violence without an
-                    established conflict narrative constitutes RDM, not turf warfare.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">5.5</div>
-                <div class="rule-body">
-                  <strong>Criminal Activity Standards</strong>
-                  <p>
-                    All criminal operations — drug production, arms deals, heists, extortion —
-                    must be conducted through active roleplay. Running a heist script without
-                    any RP setup, using an exploit to bypass an in-game job, or conducting
-                    criminal activity with zero narrative constitutes FailRP and will be
-                    treated accordingly.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">5.6</div>
-                <div class="rule-body">
-                  <strong>Leadership Accountability</strong>
-                  <p>
-                    Faction leadership is directly accountable for the behaviour of their
-                    members. Repeated violations by the same faction will result in
-                    escalating sanctions against leadership, up to and including forced
-                    disbandment of the organisation. Running an organised crime group
-                    is a privilege that depends on maintaining server standards.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 6: ZONE RULES -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-6" class="rules-section">
-            <div class="rules-section-header rules-section-header--warn" data-num="06">
-              <div class="rules-section-watermark">06</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap rules-section-icon-wrap--warn">
-                  <i class="fa-solid fa-map-location-dot"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge rules-section-badge--warn">Section 06</div>
-                  <h2>Zone Rules</h2>
-                  <p>
-                    Location-specific rules that govern criminal activity and hostile
-                    roleplay in designated areas of the city.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item rule-item--warn">
-                <div class="rule-num rule-num--warn">6.1</div>
-                <div class="rule-body">
-                  <strong>Safe Zones (Green Zones)</strong>
-                  <p>
-                    The following locations are permanent safe zones where no crime,
-                    hostile RP, or weapon use is permitted: <strong>all hospitals,
-                    all police stations, the courthouse, the unemployment office,
-                    and the city spawn area.</strong> Passive and civilian roleplay
-                    within safe zones is allowed and encouraged.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item rule-item--warn">
-                <div class="rule-num rule-num--warn">6.2</div>
-                <div class="rule-body">
-                  <strong>Safe Zone Exploitation</strong>
-                  <p>
-                    Fleeing into a safe zone to escape an active criminal scenario,
-                    police pursuit, or hostile engagement is FailRP. If a situation
-                    began outside a safe zone and extends into one, the aggressing
-                    party must disengage. Deliberately using safe zones as shields
-                    or stash points during an active scenario will be penalised.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">6.3</div>
-                <div class="rule-body">
-                  <strong>Government Buildings</strong>
-                  <p>
-                    Major criminal acts — armed robbery, drive-bys, hostage situations —
-                    may not take place immediately outside or against government
-                    buildings including City Hall, courts, and police headquarters unless
-                    they are part of a pre-planned, staff-approved large-scale scenario.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">6.4</div>
-                <div class="rule-body">
-                  <strong>Crime Escalation Zones</strong>
-                  <p>
-                    Active drug trade zones, illegal arms areas, and criminal turf
-                    zones are considered high-risk areas. Entering a known criminal
-                    zone — even as a civilian — is considered implicit acknowledgement
-                    of the associated risk. However, escalation to lethal force
-                    still requires prior initiation; zones do not grant blanket
-                    kill-on-sight rights.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- ──────────────────────────────────────────── -->
-          <!-- SECTION 7: CHEATING & EXPLOITS -->
-          <!-- ──────────────────────────────────────────── -->
-          <section id="section-7" class="rules-section">
-            <div class="rules-section-header rules-section-header--danger" data-num="07">
-              <div class="rules-section-watermark">07</div>
-              <div class="rules-section-inner">
-                <div class="rules-section-icon-wrap rules-section-icon-wrap--danger">
-                  <i class="fa-solid fa-bug"></i>
-                </div>
-                <div class="rules-section-copy">
-                  <div class="rules-section-badge rules-section-badge--danger">Section 07</div>
-                  <h2>Cheating &amp; Exploits</h2>
-                  <p>
-                    Zero-tolerance policies for any modification or abuse of game
-                    systems that provides an unfair advantage.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Zero tolerance callout -->
-            <div class="rules-zero-tolerance">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <span>Zero tolerance — violations in this section result in a <strong>permanent ban</strong> with no appeal process.</span>
-            </div>
-
-            <div class="rules-list">
-
-              <div class="rule-item rule-item--danger">
-                <div class="rule-num rule-num--danger">7.1</div>
-                <div class="rule-body">
-                  <strong>Cheats &amp; Hacks</strong>
-                  <p>
-                    The use of any cheat menu, trainer, injected mod, or external
-                    application that modifies game behaviour is a <strong>permanent ban
-                    with no appeal.</strong> This includes godmode, speed hacks, teleportation,
-                    ESP, aimbot, or any form of stat manipulation. Our systems detect
-                    and log unusual activity automatically.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item rule-item--danger">
-                <div class="rule-num rule-num--danger">7.2</div>
-                <div class="rule-body">
-                  <strong>Bug &amp; Mechanic Exploitation</strong>
-                  <p>
-                    Intentionally abusing a bug, unintended mechanic, or server-side
-                    glitch to gain an advantage — including duplicating items, bypassing
-                    locked areas, or triggering invalid payouts — is a bannable offence.
-                    If you discover a bug, you are <em>required</em> to report it to
-                    staff via a ticket. Exploiting a known bug without reporting it
-                    is itself an offence.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">7.3</div>
-                <div class="rule-body">
-                  <strong>Macros &amp; External Modifications</strong>
-                  <p>
-                    Macros, auto-clickers, scripts, or any third-party tool that
-                    automates in-game inputs or actions are not permitted. Only
-                    officially approved client modifications (such as FiveM-native
-                    graphics enhancements) are allowed. If in doubt, ask staff
-                    before using it.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">7.4</div>
-                <div class="rule-body">
-                  <strong>AFK Farming</strong>
-                  <p>
-                    Using any technique — macros, weighted inputs, or otherwise —
-                    to accumulate in-game money, XP, or resources while not actively
-                    playing is prohibited. Characters that are logged in must be
-                    actively engaged in roleplay or standard game actions.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item rule-item--danger">
-                <div class="rule-num rule-num--danger">7.5</div>
-                <div class="rule-body">
-                  <strong>Item &amp; Money Duplication</strong>
-                  <p>
-                    Any intentional duplication of in-game currency, items, vehicles,
-                    or property through exploits or cross-character transfers will
-                    result in a <strong>permanent ban and full asset wipe.</strong>
-                    Economy integrity is essential to the server experience and
-                    will be defended absolutely.
-                  </p>
-                </div>
-              </div>
-
-              <div class="rule-item">
-                <div class="rule-num">7.6</div>
-                <div class="rule-body">
-                  <strong>Reporting Obligation</strong>
-                  <p>
-                    Any player who discovers an exploit, dupe method, or unintended
-                    mechanic has an obligation to report it immediately via a staff
-                    ticket. Players who report exploits in good faith will be rewarded.
-                    Players who discover an exploit, exploit it, and then report it
-                    later will still face disciplinary action.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </section>
+              )}
+            </section>
+          ))}
 
           <!-- Footer CTA -->
           <div class="rules-footer-cta">
@@ -988,10 +1039,21 @@ const RULES_WIP = true;
   .rules-sidebar {
     position: sticky;
     top: 106px;
-    padding: 0 20px 60px 0;
+    padding: 16px 14px 18px;
     max-height: calc(100vh - 140px);
     overflow-y: auto;
     scrollbar-width: none;
+    background:
+      linear-gradient(180deg, rgba(8, 22, 34, 0.94), rgba(5, 12, 19, 0.9)),
+      radial-gradient(circle at 15% 0%, rgba(0, 174, 255, 0.16), transparent 42%);
+    border: 1px solid rgba(0, 174, 255, 0.18);
+    border-left: 2px solid rgba(0, 174, 255, 0.45);
+    border-radius: 8px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 18px 38px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .rules-toc-label {
@@ -999,48 +1061,55 @@ const RULES_WIP = true;
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #2e4255;
-    margin-bottom: 12px;
-    padding-left: 2px;
+    color: #8ecfee;
+    margin-bottom: 14px;
+    padding: 0 4px 10px;
+    border-bottom: 1px solid rgba(0, 174, 255, 0.14);
   }
 
   .rules-toc {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 6px;
   }
 
   .rules-toc-link {
     display: flex;
     align-items: center;
     gap: 9px;
-    padding: 8px 10px;
-    border-radius: 7px;
-    color: #5c7d96;
+    min-height: 42px;
+    padding: 10px 11px;
+    border-radius: 8px;
+    color: #a6bed2;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 650;
     text-decoration: none;
-    border: 1px solid transparent;
-    transition: color var(--transition), background var(--transition), border-color var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    background: rgba(255, 255, 255, 0.025);
+    transition: color var(--transition), background var(--transition), border-color var(--transition), box-shadow var(--transition);
   }
 
   .rules-toc-link:hover {
-    color: #a8c8df;
-    background: rgba(255, 255, 255, 0.04);
+    color: #f4f8ff;
+    background: rgba(0, 174, 255, 0.08);
+    border-color: rgba(0, 174, 255, 0.22);
   }
 
   .rules-toc-link.active {
-    color: #cceeff;
-    background: rgba(0, 174, 255, 0.09);
-    border-color: rgba(0, 174, 255, 0.16);
-    font-weight: 600;
+    color: #f7fbff;
+    background: linear-gradient(90deg, rgba(0, 174, 255, 0.2), rgba(0, 174, 255, 0.07));
+    border-color: rgba(0, 174, 255, 0.38);
+    box-shadow:
+      inset 3px 0 0 rgba(0, 174, 255, 0.95),
+      0 0 18px rgba(0, 174, 255, 0.12);
+    font-weight: 750;
   }
 
   .rules-toc-icon {
     width: 18px;
     flex-shrink: 0;
     text-align: center;
-    color: #2e4558;
+    color: #6ea8c9;
     font-size: 0.75rem;
     transition: color var(--transition);
   }
@@ -1054,7 +1123,7 @@ const RULES_WIP = true;
     font-family: "Space Grotesk", sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
-    color: #2e4558;
+    color: #73b9dc;
     width: 20px;
     flex-shrink: 0;
     transition: color var(--transition);
@@ -1108,48 +1177,65 @@ const RULES_WIP = true;
     overflow: hidden;
     margin-bottom: 36px;
     padding: 28px 32px;
-    background: linear-gradient(135deg, rgba(0, 174, 255, 0.07) 0%, rgba(0, 174, 255, 0.02) 100%);
-    border: 1px solid rgba(0, 174, 255, 0.16);
+    background: linear-gradient(135deg, rgba(0, 174, 255, 0.11) 0%, rgba(0, 174, 255, 0.035) 100%);
+    border: 1px solid rgba(0, 174, 255, 0.22);
     border-left: 3px solid rgba(0, 174, 255, 0.7);
     clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.045),
+      0 18px 42px rgba(0, 0, 0, 0.24);
   }
 
-  /* Police & Emergency Services — teal/cyan tint */
+  /* Roleplay Standards — indigo */
+  .rules-section-header--standards {
+    background: linear-gradient(135deg, rgba(110, 130, 240, 0.12) 0%, rgba(110, 130, 240, 0.035) 100%);
+    border-color: rgba(110, 130, 240, 0.24);
+    border-left-color: rgba(110, 130, 240, 0.7);
+  }
+
+  /* In-Character Conduct — rose */
+  .rules-section-header--conduct {
+    background: linear-gradient(135deg, rgba(230, 110, 150, 0.12) 0%, rgba(230, 110, 150, 0.035) 100%);
+    border-color: rgba(230, 110, 150, 0.26);
+    border-left-color: rgba(230, 110, 150, 0.7);
+  }
+
+  /* Police & CHS - teal */
   .rules-section-header--police {
-    background: linear-gradient(135deg, rgba(0, 210, 200, 0.07) 0%, rgba(0, 174, 255, 0.02) 100%);
-    border-color: rgba(0, 210, 200, 0.18);
+    background: linear-gradient(135deg, rgba(0, 210, 200, 0.12) 0%, rgba(0, 174, 255, 0.035) 100%);
+    border-color: rgba(0, 210, 200, 0.24);
     border-left-color: rgba(0, 220, 210, 0.75);
   }
 
-  /* Business & Civilian — emerald tint */
+  /* Business & Civilian — emerald */
   .rules-section-header--civilian {
-    background: linear-gradient(135deg, rgba(50, 200, 120, 0.07) 0%, rgba(50, 200, 120, 0.02) 100%);
-    border-color: rgba(50, 200, 120, 0.18);
+    background: linear-gradient(135deg, rgba(50, 200, 120, 0.12) 0%, rgba(50, 200, 120, 0.035) 100%);
+    border-color: rgba(50, 200, 120, 0.24);
     border-left-color: rgba(50, 200, 120, 0.7);
   }
 
-  /* Organised Crime — violet/purple tint */
+  /* Organised Crime — violet */
   .rules-section-header--crime {
-    background: linear-gradient(135deg, rgba(160, 80, 220, 0.08) 0%, rgba(160, 80, 220, 0.02) 100%);
-    border-color: rgba(160, 80, 220, 0.2);
+    background: linear-gradient(135deg, rgba(160, 80, 220, 0.13) 0%, rgba(160, 80, 220, 0.04) 100%);
+    border-color: rgba(160, 80, 220, 0.27);
     border-left-color: rgba(160, 80, 220, 0.7);
   }
 
-  /* Zone Rules — amber */
+  /* Zones — amber */
   .rules-section-header--warn {
-    background: linear-gradient(135deg, rgba(255, 180, 0, 0.07) 0%, rgba(255, 180, 0, 0.02) 100%);
-    border-color: rgba(255, 180, 0, 0.16);
+    background: linear-gradient(135deg, rgba(255, 180, 0, 0.12) 0%, rgba(255, 180, 0, 0.035) 100%);
+    border-color: rgba(255, 180, 0, 0.23);
     border-left-color: rgba(255, 180, 0, 0.7);
   }
 
-  /* Cheating & Exploits — red */
+  /* Integrity — red */
   .rules-section-header--danger {
-    background: linear-gradient(135deg, rgba(220, 60, 60, 0.09) 0%, rgba(220, 60, 60, 0.02) 100%);
-    border-color: rgba(220, 60, 60, 0.2);
+    background: linear-gradient(135deg, rgba(220, 60, 60, 0.14) 0%, rgba(220, 60, 60, 0.04) 100%);
+    border-color: rgba(220, 60, 60, 0.28);
     border-left-color: rgba(220, 60, 60, 0.75);
   }
 
-  /* Large watermark number behind content */
+  /* Watermark */
   .rules-section-watermark {
     position: absolute;
     right: 20px;
@@ -1160,16 +1246,18 @@ const RULES_WIP = true;
     font-weight: 900;
     letter-spacing: -0.06em;
     line-height: 1;
-    color: rgba(0, 174, 255, 0.055);
+    color: rgba(0, 174, 255, 0.045);
     pointer-events: none;
     user-select: none;
   }
 
-  .rules-section-header--police .rules-section-watermark   { color: rgba(0, 220, 210, 0.065); }
-  .rules-section-header--civilian .rules-section-watermark { color: rgba(50, 200, 120, 0.07); }
-  .rules-section-header--crime .rules-section-watermark    { color: rgba(160, 80, 220, 0.07); }
-  .rules-section-header--warn .rules-section-watermark     { color: rgba(255, 180, 0, 0.07); }
-  .rules-section-header--danger .rules-section-watermark   { color: rgba(220, 60, 60, 0.08); }
+  .rules-section-header--standards .rules-section-watermark { color: rgba(110, 130, 240, 0.055); }
+  .rules-section-header--conduct   .rules-section-watermark { color: rgba(230, 110, 150, 0.06);  }
+  .rules-section-header--police    .rules-section-watermark { color: rgba(0, 220, 210, 0.055);   }
+  .rules-section-header--civilian  .rules-section-watermark { color: rgba(50, 200, 120, 0.06);   }
+  .rules-section-header--crime     .rules-section-watermark { color: rgba(160, 80, 220, 0.06);   }
+  .rules-section-header--warn      .rules-section-watermark { color: rgba(255, 180, 0, 0.06);    }
+  .rules-section-header--danger    .rules-section-watermark { color: rgba(220, 60, 60, 0.07);    }
 
   /* Icon + copy row */
   .rules-section-inner {
@@ -1194,6 +1282,20 @@ const RULES_WIP = true;
     font-size: 1rem;
     filter: drop-shadow(0 0 8px rgba(0, 174, 255, 0.25));
     margin-top: 2px;
+  }
+
+  .rules-section-icon-wrap--standards {
+    background: rgba(110, 130, 240, 0.1);
+    border-color: rgba(110, 130, 240, 0.26);
+    color: #8a9bff;
+    filter: drop-shadow(0 0 8px rgba(110, 130, 240, 0.22));
+  }
+
+  .rules-section-icon-wrap--conduct {
+    background: rgba(230, 110, 150, 0.1);
+    border-color: rgba(230, 110, 150, 0.28);
+    color: #ee8aa8;
+    filter: drop-shadow(0 0 8px rgba(230, 110, 150, 0.22));
   }
 
   .rules-section-icon-wrap--police {
@@ -1243,11 +1345,13 @@ const RULES_WIP = true;
     margin-bottom: 6px;
   }
 
-  .rules-section-badge--police   { color: #00dcd2; }
-  .rules-section-badge--civilian { color: #4cd68a; }
-  .rules-section-badge--crime    { color: #c080e8; }
-  .rules-section-badge--warn     { color: #f0b429; }
-  .rules-section-badge--danger   { color: #e05a5a; }
+  .rules-section-badge--standards { color: #8a9bff; }
+  .rules-section-badge--conduct   { color: #ee8aa8; }
+  .rules-section-badge--police    { color: #00dcd2; }
+  .rules-section-badge--civilian  { color: #4cd68a; }
+  .rules-section-badge--crime     { color: #c080e8; }
+  .rules-section-badge--warn      { color: #f0b429; }
+  .rules-section-badge--danger    { color: #e05a5a; }
 
   .rules-section-copy h2 {
     font-family: "Space Grotesk", sans-serif;
@@ -1261,6 +1365,14 @@ const RULES_WIP = true;
     background-clip: text;
   }
 
+  .rules-section-header--standards .rules-section-copy h2 {
+    background: linear-gradient(135deg, #f4f8ff 40%, #aebcff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .rules-section-header--conduct .rules-section-copy h2 {
+    background: linear-gradient(135deg, #f4f8ff 40%, #ffadc6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
   .rules-section-header--police .rules-section-copy h2 {
     background: linear-gradient(135deg, #f4f8ff 40%, #80f0e8 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -1289,30 +1401,42 @@ const RULES_WIP = true;
     max-width: 62ch;
   }
 
-  /* --- Zero tolerance callout (section 7) --- */
-  .rules-zero-tolerance {
+  /* --- Subsection (section 6) --- */
+  .rules-subsections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .rules-subsection {
+    scroll-margin-top: 120px;
+  }
+
+  .rules-subsection-heading {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 13px 18px;
-    margin-bottom: 8px;
-    background: rgba(220, 60, 60, 0.07);
-    border: 1px solid rgba(220, 60, 60, 0.22);
-    border-left: 3px solid rgba(220, 60, 60, 0.65);
-    border-radius: 6px;
-    color: #f0a0a0;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    gap: 14px;
+    margin: 8px 0 14px;
   }
 
-  .rules-zero-tolerance > i {
-    color: #e05a5a;
-    font-size: 0.95rem;
-    flex-shrink: 0;
+  .rules-subsection-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(160, 80, 220, 0.32), rgba(160, 80, 220, 0));
+    max-width: 28px;
   }
 
-  .rules-zero-tolerance strong {
-    color: #ffbbbb;
+  .rules-subsection-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c080e8;
+    padding: 4px 10px;
+    background: rgba(160, 80, 220, 0.08);
+    border: 1px solid rgba(160, 80, 220, 0.2);
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
   }
 
   /* --- Rules list --- */
@@ -1330,6 +1454,7 @@ const RULES_WIP = true;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 4px;
     transition: background var(--transition), box-shadow var(--transition);
+    scroll-margin-top: 120px;
   }
 
   .rule-item:last-child {
@@ -1341,17 +1466,12 @@ const RULES_WIP = true;
     box-shadow: inset 3px 0 0 rgba(0, 174, 255, 0.45);
   }
 
-  .rule-item--warn:hover {
-    background: rgba(255, 180, 0, 0.03);
-    box-shadow: inset 3px 0 0 rgba(255, 180, 0, 0.45);
+  .rule-item:target {
+    background: rgba(0, 174, 255, 0.06);
+    box-shadow: inset 3px 0 0 rgba(0, 174, 255, 0.65);
   }
 
-  .rule-item--danger:hover {
-    background: rgba(220, 60, 60, 0.04);
-    box-shadow: inset 3px 0 0 rgba(220, 60, 60, 0.5);
-  }
-
-  /* Rule number badge */
+  /* Rule number badge — now anchor link */
   .rule-num {
     font-family: "Space Grotesk", sans-serif;
     font-size: 0.72rem;
@@ -1366,49 +1486,35 @@ const RULES_WIP = true;
     align-self: flex-start;
     margin-top: 3px;
     white-space: nowrap;
+    text-decoration: none;
     transition: background var(--transition), color var(--transition), border-color var(--transition);
   }
 
-  .rule-item:hover .rule-num {
+  .rule-item:hover .rule-num,
+  .rule-num:focus-visible {
     color: var(--primary);
     background: rgba(0, 174, 255, 0.1);
     border-color: rgba(0, 174, 255, 0.25);
-  }
-
-  .rule-num--warn {
-    color: #c49800 !important;
-    background: rgba(255, 180, 0, 0.09) !important;
-    border-color: rgba(255, 180, 0, 0.22) !important;
-  }
-
-  .rule-item--warn:hover .rule-num--warn {
-    color: #f0b429 !important;
-    background: rgba(255, 180, 0, 0.15) !important;
-    border-color: rgba(255, 180, 0, 0.4) !important;
-  }
-
-  .rule-num--danger {
-    color: #c04040 !important;
-    background: rgba(220, 60, 60, 0.1) !important;
-    border-color: rgba(220, 60, 60, 0.24) !important;
-  }
-
-  .rule-item--danger:hover .rule-num--danger {
-    color: #e87070 !important;
-    background: rgba(220, 60, 60, 0.18) !important;
-    border-color: rgba(220, 60, 60, 0.45) !important;
+    outline: none;
   }
 
   .rule-body {
     min-width: 0;
+    flex: 1;
+  }
+
+  .rule-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
   }
 
   .rule-body strong {
-    display: block;
     font-family: "Space Grotesk", sans-serif;
     font-size: 1rem;
     color: var(--text);
-    margin-bottom: 6px;
   }
 
   .rule-body p {
@@ -1418,11 +1524,226 @@ const RULES_WIP = true;
     max-width: 68ch;
   }
 
-  .rule-body strong em,
   .rule-body p strong {
     color: #d4f0ff;
-    font-style: normal;
+    font-family: inherit;
+    font-size: inherit;
   }
+
+  .rule-body p code {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.85em;
+    padding: 1px 6px;
+    background: rgba(0, 174, 255, 0.08);
+    border: 1px solid rgba(0, 174, 255, 0.2);
+    border-radius: 4px;
+    color: #b0dff5;
+  }
+
+  /* --- Severity pill --- */
+  .severity-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    white-space: nowrap;
+  }
+
+  .severity-pill i {
+    font-size: 0.62rem;
+  }
+
+  .severity-pill--permaban {
+    background: rgba(220, 60, 60, 0.12);
+    border: 1px solid rgba(220, 60, 60, 0.32);
+    color: #ff8a8a;
+  }
+
+  .severity-pill--bannable {
+    background: rgba(255, 180, 0, 0.1);
+    border: 1px solid rgba(255, 180, 0, 0.28);
+    color: #f5c454;
+  }
+
+  .severity-pill--failrp {
+    background: rgba(140, 160, 180, 0.08);
+    border: 1px solid rgba(140, 160, 180, 0.2);
+    color: #a8bfd4;
+  }
+
+  .severity-pill--note {
+    background: rgba(0, 174, 255, 0.08);
+    border: 1px solid rgba(0, 174, 255, 0.22);
+    color: #8ecfee;
+  }
+
+  /* --- Tier cards (section 6) --- */
+  .tier-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 8px 0 28px;
+  }
+
+  .tier-card {
+    position: relative;
+    padding: 22px 22px 20px;
+    background: linear-gradient(155deg, rgba(160, 80, 220, 0.07) 0%, rgba(160, 80, 220, 0.015) 100%);
+    border: 1px solid rgba(160, 80, 220, 0.22);
+    border-left: 3px solid rgba(160, 80, 220, 0.6);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tier-card--two {
+    background: linear-gradient(155deg, rgba(160, 80, 220, 0.11) 0%, rgba(240, 180, 41, 0.04) 100%);
+    border-color: rgba(240, 180, 41, 0.34);
+    border-left-color: rgba(240, 180, 41, 0.7);
+  }
+
+  .tier-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .tier-card-tag {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    background: rgba(160, 80, 220, 0.16);
+    border: 1px solid rgba(160, 80, 220, 0.35);
+    color: #d9a0f4;
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+  }
+
+  .tier-card-tag--two {
+    background: rgba(240, 180, 41, 0.16);
+    border-color: rgba(240, 180, 41, 0.42);
+    color: #f5cc6a;
+  }
+
+  .tier-card-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #9db0c6;
+    letter-spacing: 0.02em;
+  }
+
+  .tier-card-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin: 2px 0 10px;
+  }
+
+  .tier-card--two .tier-card-title {
+    background: linear-gradient(135deg, #f4f8ff 30%, #ffd87a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tier-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tier-card-list li {
+    position: relative;
+    padding-left: 18px;
+    color: #a8bcd2;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .tier-card-list li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 9px;
+    width: 6px;
+    height: 1px;
+    background: rgba(160, 80, 220, 0.7);
+  }
+
+  .tier-card--two .tier-card-list li::before {
+    background: rgba(240, 180, 41, 0.85);
+  }
+
+  /* --- Strike pips (rule 6.25) --- */
+  .strike-pips {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .strike-pip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255, 180, 0, 0.05);
+    border: 1px solid rgba(255, 180, 0, 0.2);
+    border-left: 2px solid rgba(255, 180, 0, 0.55);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  .strike-pip--two {
+    background: rgba(240, 130, 41, 0.06);
+    border-color: rgba(240, 130, 41, 0.26);
+    border-left-color: rgba(240, 130, 41, 0.7);
+  }
+
+  .strike-pip--three {
+    background: rgba(220, 60, 60, 0.08);
+    border-color: rgba(220, 60, 60, 0.3);
+    border-left-color: rgba(220, 60, 60, 0.75);
+  }
+
+  .strike-pip-num {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #f0b429;
+    line-height: 1;
+    width: 22px;
+    text-align: center;
+  }
+
+  .strike-pip--two .strike-pip-num  { color: #f08229; }
+  .strike-pip--three .strike-pip-num { color: #e05a5a; }
+
+  .strike-pip-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #d4a850;
+  }
+
+  .strike-pip--two .strike-pip-label   { color: #d8945a; }
+  .strike-pip--three .strike-pip-label { color: #ff9090; }
 
   /* --- Footer CTA --- */
   .rules-footer-cta {
@@ -1468,10 +1789,6 @@ const RULES_WIP = true;
     color: var(--muted);
     font-size: 0.94rem;
     line-height: 1.6;
-  }
-
-  .rules-page--hidden {
-    display: none;
   }
 
   /* --- Responsive --- */
@@ -1528,6 +1845,14 @@ const RULES_WIP = true;
       font-size: 4rem;
     }
 
+    .tier-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .strike-pips {
+      grid-template-columns: 1fr;
+    }
+
     .rules-footer-cta {
       flex-direction: column;
       align-items: flex-start;
@@ -1537,7 +1862,17 @@ const RULES_WIP = true;
     .rules-footer-cta-icon {
       display: none;
     }
+  }
 
+  @media (max-width: 560px) {
+    .rule-head {
+      gap: 8px;
+    }
+
+    .severity-pill {
+      font-size: 0.55rem;
+      padding: 2px 7px;
+    }
   }
 </style>
 
