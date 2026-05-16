@@ -579,12 +579,45 @@ const navItems = [
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border);
       }
 
-      /* Bare flex wrapper — chrome lives on the inner .fc-status-tag badge. */
-      .pm-identity {
-        display: inline-flex;
-        align-items: center;
+      /* Status tag inside the FiveM panel header — mirrors the Discord "Online"
+         pill exactly: dark-glass body, green border, breathing green dot, no
+         outer halo pulse (only the dot breathes). Scoped to .pm-status-tag so
+         this lives independently of .dc-online-tag (which also adds margins). */
+      .pm-status-tag {
+        align-self: auto;
+      }
+
+      .pm-status-tag .dc-online-dot {
+        position: relative;
+        z-index: 1;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #74e8a4;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.65);
+        transform-origin: center;
+        animation: dc-online-breath 1.8s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      /* Match the ONLINE pill: silence the outer ::before pulse so only the
+         dot breathes. */
+      .pm-status-tag.fc-status-tag--live::before { animation: none !important; }
+
+      /* Offline variant: red dot, no breath. */
+      .pm-status-tag.fc-status-tag--popular .dc-online-dot {
+        background: #ff8a8a;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.55);
+        animation: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .pm-status-tag .dc-online-dot { animation: none; }
       }
 
       .pm-dot {
@@ -644,7 +677,7 @@ const navItems = [
         opacity: 0.6;
       }
 
-      /* big focal count — inline row */
+      /* Focal player count — inline baseline row: NN / MAX · Players online. */
       .pm-body {
         display: flex;
         align-items: baseline;
@@ -817,6 +850,7 @@ const navItems = [
         color: var(--muted);
         letter-spacing: -0.03em;
         line-height: 1;
+        font-variant-numeric: tabular-nums;
       }
 
       .pm-in-game {
@@ -829,6 +863,13 @@ const navItems = [
         align-self: flex-end;
         padding-bottom: 7px;
         margin-left: 2px;
+      }
+
+      /* Green status bloom layered over the existing cyan glow when online. */
+      .panel-main.is-online::after {
+        background:
+          radial-gradient(ellipse 80% 80% at 50% 110%, rgba(34,197,94,0.07), transparent 65%),
+          radial-gradient(ellipse 90% 70% at 50% 0%, rgba(0,174,255,0.10), transparent 60%);
       }
 
       /* connect button — full width */

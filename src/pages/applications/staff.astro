@@ -16,7 +16,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
       </a>
       <div class="staff-badge">
         <span class="staff-badge-label">Staff Team</span>
-        <span class="staff-badge-value">Closed</span>
+        <span class="staff-badge-value">Open</span>
       </div>
       <h1>Staff Application</h1>
       <p>
@@ -131,7 +131,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
   </section>
 
   <script>
-    const STAFF_APPLICATIONS_OPEN = false;
+    const STAFF_APPLICATIONS_OPEN = true;
 
     (function () {
       function esc(str: string) {
@@ -653,8 +653,8 @@ import MainLayout from "../../layouts/MainLayout.astro";
   }
 
   .staff-badge-value {
-    color: #f0b1b1;
-    background: rgba(110, 42, 42, 0.34);
+    color: #b9e7c6;
+    background: rgba(35, 111, 72, 0.34);
     font-weight: 700;
   }
 </style>

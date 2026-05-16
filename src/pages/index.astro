@@ -1,15 +1,5 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-
-// Initial countdown values rendered at build time so first paint is approximate;
-// the client-side JS smooths to the exact remaining time within ms of hydration.
-const LAUNCH_AT_MS = Date.UTC(2026, 4, 15, 17, 0, 0); // Fri 15 May 2026, 17:00 UTC
-const _remaining = Math.max(0, LAUNCH_AT_MS - Date.now());
-const _totalSeconds = Math.floor(_remaining / 1000);
-const initialDays    = Math.floor(_totalSeconds / 86400);
-const initialHours   = Math.floor((_totalSeconds % 86400) / 3600);
-const initialMinutes = Math.floor((_totalSeconds % 3600) / 60);
-const initialSeconds = _totalSeconds % 60;
 ---
 
 <MainLayout title="Capital Roleplay — Serious UK FiveM Roleplay">
@@ -53,9 +43,12 @@ const initialSeconds = _totalSeconds % 60;
           </div>
         </div>
 
-        <div class="panel-card panel-main panel-main--release-soon" id="fivemPanel">
+        <div class="panel-card panel-main" id="fivemPanel">
           <div class="pm-header">
-            <div class="pm-identity" id="fivemIdentity"></div>
+            <span class="fc-status-tag fc-status-tag--live pm-status-tag" id="fivemStatusPill">
+              <span class="dc-online-dot" aria-hidden="true"></span>
+              <span id="fivemStatusLabel">Live</span>
+            </span>
             <span class="pm-server-name">Capital Roleplay</span>
           </div>
 
@@ -63,21 +56,7 @@ const initialSeconds = _totalSeconds % 60;
             <span class="pm-num" id="fivemPlayerCount">—</span>
             <span class="pm-slash">/</span>
             <span class="pm-of-max" id="fivemMaxPlayers">—</span>
-            <span class="pm-in-game">Players in-game</span>
-          </div>
-
-          <div class="pm-release-block" id="fivemReleaseBlock">
-            <span class="pm-release-eyebrow">Clear Your Calendar</span>
-            <p class="pm-release-countdown" id="fivemCountdownText" aria-live="off">
-              <span class="pm-release-countdown-label">Server releases in:</span>
-              <span class="pm-release-countdown-time">
-                <b id="cdDays">{initialDays} day{initialDays === 1 ? "" : "s"}</b>,
-                <b id="cdHours">{initialHours} hr{initialHours === 1 ? "" : "s"}</b>,
-                <b id="cdMinutes">{initialMinutes} min{initialMinutes === 1 ? "" : "s"}</b>,
-                <b id="cdSeconds">{initialSeconds} sec{initialSeconds === 1 ? "" : "s"}</b>
-              </span>
-            </p>
-            <span class="pm-release-date">Fri 15 May 2026 · 6PM GMT</span>
+            <span class="pm-in-game">Players online</span>
           </div>
 
           <div class="pm-offline-block" aria-live="polite">
@@ -86,7 +65,7 @@ const initialSeconds = _totalSeconds % 60;
           </div>
 
           <a class="pm-connect" id="fivemConnectBtn" href="#" target="_blank" rel="noreferrer">
-            Apply for whitelist to join launch day <i class="fa-solid fa-arrow-right"></i>
+            Connect to server <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </div>
@@ -744,59 +723,14 @@ const initialSeconds = _totalSeconds % 60;
 
   <script>
     // ── FiveM Live Server Stats ──────────────────────────────────────────────
-    const RELEASE_SOON_FRONT = true;
     const FIVEM_CACHE_P = "fivem_players";
     const FIVEM_CACHE_M = "fivem_max";
 
     const fivemPanelEl    = document.getElementById("fivemPanel");
-    const fivemIdentityEl = document.getElementById("fivemIdentity");
     const fivemCountEl    = document.getElementById("fivemPlayerCount");
     const fivemMaxEl      = document.getElementById("fivemMaxPlayers");
-    const fivemDotEl      = document.getElementById("fivemStatusDot");
     const fivemLabelEl    = document.getElementById("fivemStatusLabel");
     const fivemConnectBtn = document.getElementById("fivemConnectBtn") as HTMLAnchorElement | null;
-
-    // ── Launch countdown ────────────────────────────────────────────────────
-    // Updates the four <b> nodes (cdDays / cdHours / cdMinutes / cdSeconds)
-    // every second. At t≤0 the sentence collapses to a "server is live now"
-    // line and the timer clears — renderFiveM handles the actual go-live state.
-    {
-      const cdDaysEl    = document.getElementById("cdDays");
-      const cdHoursEl   = document.getElementById("cdHours");
-      const cdMinutesEl = document.getElementById("cdMinutes");
-      const cdSecondsEl = document.getElementById("cdSeconds");
-      const cdTextEl    = document.getElementById("fivemCountdownText");
-
-      if (cdDaysEl && cdHoursEl && cdMinutesEl && cdSecondsEl && cdTextEl) {
-        const LAUNCH_AT = Date.UTC(2026, 4, 15, 17, 0, 0); // Fri 15 May 2026, 17:00 UTC
-        let countdownTimer: ReturnType<typeof setInterval> | null = null;
-
-        function tickCountdown() {
-          if (!cdDaysEl || !cdHoursEl || !cdMinutesEl || !cdSecondsEl || !cdTextEl) return;
-          const remaining = LAUNCH_AT - Date.now();
-          if (remaining <= 0) {
-            cdTextEl.textContent = "The server is live now.";
-            if (countdownTimer !== null) {
-              clearInterval(countdownTimer);
-              countdownTimer = null;
-            }
-            return;
-          }
-          const totalSeconds = Math.floor(remaining / 1000);
-          const days    = Math.floor(totalSeconds / 86400);
-          const hours   = Math.floor((totalSeconds % 86400) / 3600);
-          const minutes = Math.floor((totalSeconds % 3600) / 60);
-          const seconds = totalSeconds % 60;
-          cdDaysEl.textContent    = `${days} day${days       === 1 ? "" : "s"}`;
-          cdHoursEl.textContent   = `${hours} hr${hours      === 1 ? "" : "s"}`;
-          cdMinutesEl.textContent = `${minutes} min${minutes === 1 ? "" : "s"}`;
-          cdSecondsEl.textContent = `${seconds} sec${seconds === 1 ? "" : "s"}`;
-        }
-
-        tickCountdown();
-        countdownTimer = setInterval(tickCountdown, 1000);
-      }
-    }
 
     let cachedPlayers = parseInt(localStorage.getItem(FIVEM_CACHE_P) ?? "0", 10);
     let cachedMax     = parseInt(localStorage.getItem(FIVEM_CACHE_M) ?? "0", 10);
@@ -804,27 +738,6 @@ const initialSeconds = _totalSeconds % 60;
     let stickyMax     = cachedMax;          // last known good maxPlayers — never decays to 0
     let offlineStreak = 0;                  // consecutive offline reports
     const OFFLINE_FLIP_AFTER = 2;           // require N back-to-back offline reports before flipping UI
-
-    function applyReleaseSoonFront() {
-      if (!RELEASE_SOON_FRONT) return;
-
-      fivemPanelEl?.classList.add("panel-main--release-soon");
-
-      if (fivemDotEl) {
-        fivemDotEl.className = "pm-dot pm-dot--hidden";
-      }
-      if (fivemIdentityEl) {
-        fivemIdentityEl.className = "pm-identity pm-identity--release-soon";
-      }
-      if (fivemLabelEl) {
-        fivemLabelEl.textContent = "WIP";
-        fivemLabelEl.className = "fc-status-tag fc-status-tag--bestseller";
-      }
-      if (fivemConnectBtn) {
-        fivemConnectBtn.classList.add("is-release-soon");
-        fivemConnectBtn.innerHTML = 'Apply for whitelist to join launch day <i class="fa-solid fa-arrow-right"></i>';
-      }
-    }
 
     // Animate the count from current displayed value to target — gives the
     // counter a "live, breathing" feel when the number changes.
@@ -857,8 +770,10 @@ const initialSeconds = _totalSeconds % 60;
       if (maxPlayers > 0) stickyMax = maxPlayers;
       if (fivemMaxEl) fivemMaxEl.textContent = stickyMax > 0 ? String(stickyMax) : "—";
 
+      fivemPanelEl?.classList.toggle("is-online", online);
+      fivemPanelEl?.classList.toggle("is-offline", !online);
+
       if (online) {
-        fivemPanelEl?.classList.remove("is-offline");
         if (fivemCountEl) {
           if (displayedPlayers !== players) {
             animateCount(displayedPlayers, players);
@@ -868,20 +783,16 @@ const initialSeconds = _totalSeconds % 60;
           }
         }
       } else {
-        fivemPanelEl?.classList.add("is-offline");
         if (fivemCountEl) fivemCountEl.textContent = "—";
         displayedPlayers = 0;
       }
 
-      if (fivemDotEl) {
-        fivemDotEl.className = "pm-dot" + (online ? " pm-dot--online" : " pm-dot--offline");
-      }
-      if (fivemIdentityEl) {
-        fivemIdentityEl.className = "pm-identity " + (online ? "pm-identity--online" : "pm-identity--offline");
+      const pillEl = document.getElementById("fivemStatusPill");
+      if (pillEl) {
+        pillEl.className = "fc-status-tag pm-status-tag " + (online ? "fc-status-tag--live" : "fc-status-tag--popular");
       }
       if (fivemLabelEl) {
         fivemLabelEl.textContent = online ? "Live" : "Offline";
-        fivemLabelEl.className   = "fc-status-tag " + (online ? "fc-status-tag--live" : "fc-status-tag--popular");
       }
       if (fivemConnectBtn) {
         if (online) {
@@ -892,14 +803,10 @@ const initialSeconds = _totalSeconds % 60;
           fivemConnectBtn.textContent = "Server is currently offline";
         }
       }
-
-      applyReleaseSoonFront();
     }
 
     // Seed cached values instantly — no blank state for returning visitors
     if (cachedMax > 0) renderFiveM(cachedPlayers, cachedMax, true);
-    else if (fivemDotEl) fivemDotEl.className = "pm-dot";
-    applyReleaseSoonFront();
 
     // Don't flip to "Offline" on a single bad report — the worker's data
     // sources (FXServer endpoints, CFX) are flaky and an isolated failure
